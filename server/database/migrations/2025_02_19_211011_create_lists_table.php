@@ -13,6 +13,11 @@ return new class extends Migration
     {
         Schema::create('lists', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('board_id')->constrained('boards')->onDelete('cascade');
+            
+            $table->string('name');
+            $table->integer('position')->default(0);
+
             $table->timestamps();
         });
     }
