@@ -7,6 +7,8 @@ use App\Http\Requests\UpdateTaskListRequest;
 
 use App\Http\Controllers\Controller;
 
+use Illuminate\Http\Request;
+
 use App\Models\Board;
 use App\Models\TaskList;
 
@@ -69,7 +71,7 @@ class TaskListController extends Controller
         ], 201);
     }
 
-    public function update(Request $request, TaskList $tasklist)
+    public function update(Request $request, TaskList $listId)
     {
         $validator = Validator::make($request->all(), [
             'name' => 'nullable|string|max:255',
@@ -80,7 +82,7 @@ class TaskListController extends Controller
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        $board = $tasklist->board;
+        $board = $listId->board;
         $userBoard = $board->users()->where('user_id', Auth::id())->first();
 
         if (!$userBoard || $userBoard->pivot->role !== 'admin') {
@@ -88,18 +90,18 @@ class TaskListController extends Controller
         }
 
         if ($request->has('name')) {
-            $tasklist->name = $request->name;
+            $listId->name = $request->name;
         }
 
         if ($request->has('priority')) {
-            $tasklist->priority = $request->priority;
+            $listId->priority = $request->priority;
         }
 
-        $tasklist->save();
+        $listId->save();
 
         return response()->json([
             'message' => 'Task List updated successfully!',
-            'taskList' => $tasklist,
+            'taskList' => $listId,
         ]);
     }
 }
