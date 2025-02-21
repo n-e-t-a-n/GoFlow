@@ -76,6 +76,7 @@ class UserController extends Controller
                 'user' => $user,
                 'token' => $token
             ], 201);
+            
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'An error occurred. Please try again.',
