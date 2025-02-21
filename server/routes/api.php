@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\V1\BoardController;
 use App\Http\Controllers\Api\V1\UserController;
 use App\Http\Controllers\Api\V1\TaskListController;
+use App\Http\Controllers\Api\V1\TaskController;
 
 Route::prefix('auth')->group(function () {
     Route::post('/login', [UserController::class, 'login']);
@@ -25,6 +26,17 @@ Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
         Route::get('/{boardId}', [TaskListController::class, 'index']);
         Route::post('/', [TaskListController::class, 'create']);
         Route::put('/{listId}', [TaskListController::class, 'update']);
+    });
+
+    Route::prefix('task')->group(function () {
+        Route::get('/{boardId}', [TaskController::class, 'index']);
+        Route::post('/', [TaskController::class, 'create']);
+        Route::put('/{taskId}/edit', [TaskController::class, 'edit']);
+        Route::put('/{taskId}/move', [TaskController::class, 'move']);
+        Route::put('/{taskId}/assignee', [TaskController::class, 'setAssignee']);
+        Route::put('/{taskId}/status', [TaskController::class, 'setStatus']);
+        Route::put('/{taskId}/due-date', [TaskController::class, 'setDueDate']);
+        Route::put('/{taskId}/priority', [TaskController::class, 'setPriority']);
     });
 });
 
