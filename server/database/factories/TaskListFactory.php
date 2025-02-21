@@ -21,7 +21,7 @@ class TaskListFactory extends Factory
     public function definition(): array
     {
         return [
-            'board_id' => $this->faker->numberBetween(1, 20),
+            'board_id' => $this->faker->numberBetween(1, 3),
             'name' => $this->faker->word,
             'position' => $this->faker->unique()->numberBetween(1, 100),
         ];

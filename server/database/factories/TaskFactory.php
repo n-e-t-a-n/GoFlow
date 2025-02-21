@@ -17,7 +17,7 @@ class TaskFactory extends Factory
     public function definition(): array
     {
         return [
-            'board_id' => $this->faker->numberBetween(1, 20),
+            'board_id' => $this->faker->numberBetween(1, 3),
             'task_list_id' => $this->faker->numberBetween(1, 20),
             'title' => $this->faker->sentence,
             'description' => $this->faker->paragraph,
