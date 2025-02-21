@@ -32,29 +32,21 @@ class BoardController extends Controller
 
         $user = Auth::user();
 
-        try {
-            $board = Board::create([
-                'name' => $request->name,
-                'description' => $request->description,
-            ]);
+        $board = Board::create([
+            'name' => $request->name,
+            'description' => $request->description,
+        ]);
 
-            UserBoard::create([
-                'user_id' => $user->id,
-                'board_id' => $board->id,
-                'role' => 'admin',
-            ]);
+        UserBoard::create([
+            'user_id' => $user->id,
+            'board_id' => $board->id,
+            'role' => 'admin',
+        ]);
 
-            return response()->json([
-                'message' => 'Board created successfully.',
-                'board' => $board
-            ], 201);
-
-        } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'An error occurred while creating the board.',
-                'error' => $e->getMessage(),
-            ], 500);
-        }
+        return response()->json([
+            'message' => 'Board created successfully.',
+            'board' => $board
+        ], 201);
     }
 
     public function update(Request $request, $boardId)
@@ -66,40 +58,32 @@ class BoardController extends Controller
 
         $user = Auth::user();
 
-        try {
-            $board = Board::find($boardId);
+        $board = Board::find($boardId);
 
-            if (!$board) {
-                return response()->json([
-                    'message' => 'Board not found.',
-                ], 404);
-            }
-
-            $userBoard = UserBoard::where('user_id', $user->id)
-                                ->where('board_id', $board->id)
-                                ->first();
-
-            if (!$userBoard || $userBoard->role !== 'admin') {
-                return response()->json([
-                    'message' => 'You are not authorized to update this board.',
-                ], 403);
-            }
-
-            $board->update([
-                'name' => $request->name ?? $board->name,
-                'description' => $request->description ?? $board->description,
-            ]);
-
+        if (!$board) {
             return response()->json([
-                'message' => 'Board updated successfully!',
-                'board' => $board,
-            ], 200);
-
-        } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'An error occurred while editing the board details.',
-                'error' => $e->getMessage(),
-            ], 500);
+                'message' => 'Board not found.',
+            ], 404);
         }
+
+        $userBoard = UserBoard::where('user_id', $user->id)
+                            ->where('board_id', $board->id)
+                            ->first();
+
+        if (!$userBoard || $userBoard->role !== 'admin') {
+            return response()->json([
+                'message' => 'You are not authorized to update this board.',
+            ], 403);
+        }
+
+        $board->update([
+            'name' => $request->name ?? $board->name,
+            'description' => $request->description ?? $board->description,
+        ]);
+
+        return response()->json([
+            'message' => 'Board updated successfully!',
+            'board' => $board,
+        ], 200);
     }
 }

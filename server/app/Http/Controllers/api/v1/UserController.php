@@ -61,27 +61,19 @@ class UserController extends Controller
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
+        
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+        ]);
 
-        try {
-            $user = User::create([
-                'name' => $request->name,
-                'email' => $request->email,
-                'password' => Hash::make($request->password),
-            ]);
+        $token = $user->createToken('API Token')->plainTextToken;
 
-            $token = $user->createToken('API Token')->plainTextToken;
-
-            return response()->json([
-                'message' => 'User registered successfully!',
-                'user' => $user,
-                'token' => $token
-            ], 201);
-            
-        } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'An error occurred. Please try again.',
-                'error' => $e->getMessage()
-            ], 500);
-        }
+        return response()->json([
+            'message' => 'User registered successfully!',
+            'user' => $user,
+            'token' => $token
+        ], 201);
     }
 }
