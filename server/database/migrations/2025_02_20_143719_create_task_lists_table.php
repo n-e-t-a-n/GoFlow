@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('board_id')->constrained('boards')->onDelete('cascade');
             
             $table->string('name');
-            $table->integer('position')->default(0);
+            $table->integer('priority')->default(0);
 
             $table->timestamps();
         });
