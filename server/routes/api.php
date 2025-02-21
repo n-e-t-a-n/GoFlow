@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\V1\BoardController;
 use App\Http\Controllers\Api\V1\UserController;
 use App\Http\Controllers\Api\V1\TaskListController;
 use App\Http\Controllers\Api\V1\TaskController;
+use App\Http\Controllers\Api\V1\UserBoardController;
 
 Route::prefix('auth')->group(function () {
     Route::post('/login', [UserController::class, 'login']);
@@ -37,6 +38,14 @@ Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
         Route::put('/{taskId}/status', [TaskController::class, 'setStatus']);
         Route::put('/{taskId}/due-date', [TaskController::class, 'setDueDate']);
         Route::put('/{taskId}/priority', [TaskController::class, 'setPriority']);
+    });
+
+    Route::prefix('user-board')->group(function () {
+        Route::get('/{boardId}', [UserBoardController::class, 'index']);
+        Route::post('/{boardId}', [UserBoardController::class, 'add']);
+        Route::delete('/{boardId}/user/{userId}', [UserBoardController::class, 'remove']);
+        Route::put('/{boardId}/user/{userId}/promote', [UserBoardController::class, 'promote']);
+        Route::put('/{boardId}/user/{userId}/demote', [UserBoardController::class, 'demote']);
     });
 });
 
