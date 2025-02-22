@@ -1,7 +1,9 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
+
+import TaskCard from '@/components/TaskCard.vue';
+
 import type { PropType } from 'vue';
-import TaskCard from './TaskCard.vue';
 
 import type { List, Task } from '@/types';
 

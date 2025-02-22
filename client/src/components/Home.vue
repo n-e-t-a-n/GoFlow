@@ -1,7 +1,8 @@
 <script lang="ts">
 import { defineComponent, ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import BoardCard from './BoardCard.vue';
+
+import BoardCard from '@/components/BoardCard.vue';
 
 export default defineComponent({
   name: 'Home',

@@ -1,7 +1,8 @@
 <script lang="ts">
 import { defineComponent, onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
-import ListCard from './ListCard.vue';
+
+import ListCard from '@/components/ListCard.vue';
 
 import type { List, Task, BoardData } from '@/types';
 

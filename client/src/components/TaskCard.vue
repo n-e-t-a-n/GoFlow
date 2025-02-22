@@ -1,6 +1,8 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
+
 import { useRouter } from 'vue-router';
+
 import type { PropType } from 'vue';
 
 import type { Task } from '@/types';
