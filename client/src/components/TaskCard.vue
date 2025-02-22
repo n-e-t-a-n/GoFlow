@@ -1,10 +1,8 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
-
 import { useRouter } from 'vue-router';
 
 import type { PropType } from 'vue';
-
 import type { Task } from '@/types';
 
 export default defineComponent({
@@ -30,9 +28,11 @@ export default defineComponent({
 </script>
 
 <template>
-  <div class="bg-white p-4 rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300">
-    <h3 class="text-xl font-semibold text-gray-800">{{ task.title }}</h3>
-    <p class="text-gray-600">{{ task.description || 'No description provided' }}</p>
+  <div
+    @click="viewTask"
+    class="bg-white p-4 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 w-[85%] max-w-[300px] min-h-30 overflow-hidden cursor-pointer"
+  >
+    <h3 class="text-xl font-semibold text-gray-800 truncate">{{ task.title }}</h3>
     <div class="mt-2">
       <p class="text-sm text-gray-500">
         <strong>Priority:</strong>
@@ -63,11 +63,5 @@ export default defineComponent({
         {{ task.due_date ? new Date(task.due_date).toLocaleDateString() : 'No due date' }}
       </p>
     </div>
-    <button
-      @click="viewTask"
-      class="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-700 transition duration-200"
-    >
-      View Task
-    </button>
   </div>
 </template>
