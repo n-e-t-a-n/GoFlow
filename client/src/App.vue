@@ -1,9 +1,7 @@
-<script setup lang="ts">
-</script>
+<script setup lang="ts"></script>
 
 <template>
-  <div class="underline">Hello world!</div>
+  <div id="app">
+    <router-view></router-view>
+  </div>
 </template>
-
-<style scoped>
-</style>
