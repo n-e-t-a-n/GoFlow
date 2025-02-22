@@ -57,7 +57,7 @@ export default router;
 
 async function checkTokenValidity(token: string): Promise<boolean> {
   try {
-    const response = await fetch('http://127.0.0.1:8000/api/auth/verify', {
+    const response = await fetch(`${import.meta.env.VITE_BASE_URL}/auth/verify`, {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${token}`,
