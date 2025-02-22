@@ -5,9 +5,32 @@ export default defineComponent({
   name: 'Home',
   methods: {
     logout() {
-      localStorage.removeItem('token');
+      const token = localStorage.getItem('token');
+  
+      if (!token) {
+        this.$router.push({ name: 'Login' });
+        return;
+      }
 
-      this.$router.push({ name: 'Login' });
+      fetch(`${import.meta.env.VITE_BASE_URL}/auth/logout`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+      })
+      .then((response) => {
+        if (response.ok) {
+          localStorage.removeItem('token');
+          
+          this.$router.push({ name: 'Login' });
+        } else {
+          console.error('Logout failed');
+        }
+      })
+      .catch((error) => {
+        console.error('Error during logout:', error);
+      });
     },
   },
 });
