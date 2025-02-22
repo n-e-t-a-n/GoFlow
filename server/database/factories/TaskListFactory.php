@@ -23,7 +23,7 @@ class TaskListFactory extends Factory
         return [
             'board_id' => $this->faker->numberBetween(1, 3),
             'name' => $this->faker->word,
-            'position' => $this->faker->unique()->numberBetween(1, 100),
+            'priority' => $this->faker->unique()->numberBetween(1, 100),
         ];
     }
 }
