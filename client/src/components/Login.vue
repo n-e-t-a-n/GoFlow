@@ -1,0 +1,77 @@
+<script lang="ts">
+import { ref } from 'vue';
+
+export default {
+  name: 'Login',
+  setup() {
+    const email = ref('');
+    const password = ref('');
+    const isLoading = ref(false);
+    const errorMessage = ref('');
+
+    const login = async () => {
+      isLoading.value = true;
+      errorMessage.value = '';
+
+      const formData = new URLSearchParams();
+
+      formData.append('email', email.value);
+      formData.append('password', password.value);
+
+      try {
+        const response = await fetch('http://127.0.0.1:8000/api/auth/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: formData.toString(),
+          credentials: 'include',
+        });
+
+        if (!response.ok) {
+          const data = await response.json();
+          throw new Error(data.message || 'Login failed');
+        }
+
+        const data = await response.json();
+        console.log('Login successful:', data);
+        localStorage.setItem('token', data.token);
+
+        window.location.href = '/';
+      } catch (error: any) {
+        errorMessage.value = error.message || 'An error occurred. Please try again.';
+      } finally {
+        isLoading.value = false;
+      }
+    };
+
+    return {
+      email,
+      password,
+      isLoading,
+      errorMessage,
+      login,
+    };
+  },
+};
+</script>
+
+<template>
+  <div class="login">
+    <h2>Login</h2>
+    <form @submit.prevent="login">
+      <div>
+        <label for="email">Email</label>
+        <input v-model="email" type="email" id="email" placeholder="Email" required />
+      </div>
+      <div>
+        <label for="password">Password</label>
+        <input v-model="password" type="password" id="password" placeholder="Password" required />
+      </div>
+      <button type="submit">Login</button>
+    </form>
+
+    <div v-if="isLoading">Logging in...</div>
+    <div v-if="errorMessage" style="color: red">{{ errorMessage }}</div>
+  </div>
+</template>
