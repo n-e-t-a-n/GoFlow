@@ -6,9 +6,6 @@ use App\Models\User;
 use App\Models\Board;
 use App\Models\UserBoard;
 
-use App\Http\Requests\StoreBoardRequest;
-use App\Http\Requests\UpdateBoardRequest;
-
 use App\Http\Controllers\Controller;
 
 use Illuminate\Support\Facades\Auth;

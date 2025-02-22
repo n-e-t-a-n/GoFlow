@@ -2,18 +2,15 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\Http\Requests\StoreTaskListRequest;
-use App\Http\Requests\UpdateTaskListRequest;
-
-use App\Http\Controllers\Controller;
-
-use Illuminate\Http\Request;
-
 use App\Models\Board;
 use App\Models\TaskList;
 
+use App\Http\Controllers\Controller;
+
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+
+use Illuminate\Http\Request;
 
 class TaskListController extends Controller
 {
