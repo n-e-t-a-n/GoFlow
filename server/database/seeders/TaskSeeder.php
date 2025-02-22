@@ -18,6 +18,7 @@ class TaskSeeder extends Seeder
     {
         TaskList::all()->each(function ($list) {
             Task::factory(3)->create([
+                'board_id' => $list->board_id,
                 'task_list_id' => $list->id,
                 'assigned_user_id' => User::inRandomOrder()->first()->id,
             ]);
