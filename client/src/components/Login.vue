@@ -57,21 +57,48 @@ export default {
 </script>
 
 <template>
-  <div class="login">
-    <h2>Login</h2>
-    <form @submit.prevent="login">
-      <div>
-        <label for="email">Email</label>
-        <input v-model="email" type="email" id="email" placeholder="Email" required />
+  <div class="flex justify-center items-center min-h-screen bg-white">
+    <div class="bg-white p-8 w-full max-w-sm border-2 border-gray-300">
+      <div class="flex justify-center mb-6">
+        <img src="../assets/images/logo.png" alt="Logo" class="h-36" />
       </div>
-      <div>
-        <label for="password">Password</label>
-        <input v-model="password" type="password" id="password" placeholder="Password" required />
-      </div>
-      <button type="submit">Login</button>
-    </form>
+      <form @submit.prevent="login">
+        <div>
+          <label for="email" class="block text-dark-blue font-semibold text-lg">Email</label>
+          <input
+            v-model="email"
+            type="email"
+            id="email"
+            placeholder="Email"
+            required
+            class="w-full mb-6 p-4 mt-1 border border-gray-300 rounded-md text-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
 
-    <div v-if="isLoading">Logging in...</div>
-    <div v-if="errorMessage" style="color: red">{{ errorMessage }}</div>
+        <div>
+          <label for="password" class="block text-dark-blue font-semibold text-lg">Password</label>
+          <input
+            v-model="password"
+            type="password"
+            id="password"
+            placeholder="Password"
+            required
+            class="w-full p-4 mt-1 border mb-4 border-gray-300 rounded-md text-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+
+        <div class="flex justify-center">
+          <button
+            type="submit"
+            class="w-full max-w-xs py-3 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-700 transition duration-200 text-lg"
+          >
+            Login
+          </button>
+        </div>
+      </form>
+
+      <div v-if="isLoading" class="text-center text-gray-600 mt-4">Logging in...</div>
+      <div v-if="errorMessage" class="text-center text-red-600 mt-4">{{ errorMessage }}</div>
+    </div>
   </div>
 </template>
