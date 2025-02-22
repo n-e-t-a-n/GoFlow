@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Models\Task;
+use App\Models\TaskList;
 use App\Models\UserBoard;
 
 use App\Http\Controllers\Controller;
@@ -46,7 +47,12 @@ class TaskController extends Controller
                     ->with('taskList') 
                     ->get();
 
-        return response()->json($tasks);
+        $lists = TaskList::where('board_id', $boardId)->get();
+
+        return response()->json([
+            'tasks' => $tasks,
+            'lists' => $lists,
+        ]);
     }
 
     public function create(Request $request)
