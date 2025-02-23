@@ -127,17 +127,17 @@ export default defineComponent({
 </script>
 
 <template>
-  <div>
+  <div class="min-h-screen bg-gray-50">
     <div class="p-6">
       <button
         @click="openModal"
-        class="text-white bg-green-500 px-4 py-2 rounded-md hover:bg-green-700 transition duration-200"
+        class="text-white bg-green-500 px-6 py-3 rounded-lg shadow-md hover:bg-green-600 transition duration-200"
       >
         Create New Board
       </button>
     </div>
 
-    <div class="space-y-6 p-6">
+    <div class="space-y-6 p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       <BoardCard v-for="board in boards" :key="board.id" :board="board" />
     </div>
 
@@ -150,7 +150,7 @@ export default defineComponent({
           id="name"
           v-model="newBoard.name"
           type="text"
-          class="w-full p-2 border border-gray-300 rounded-md"
+          class="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500"
           placeholder="Enter board name"
         />
 
@@ -158,7 +158,7 @@ export default defineComponent({
         <textarea
           id="description"
           v-model="newBoard.description"
-          class="w-full p-2 border border-gray-300 rounded-md"
+          class="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500"
           placeholder="Enter board description"
         ></textarea>
       </div>
@@ -166,13 +166,13 @@ export default defineComponent({
       <div class="flex justify-end gap-4 mt-4">
         <button
           @click="closeModal"
-          class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600 transition"
+          class="bg-gray-500 text-white px-6 py-3 rounded-md hover:bg-gray-600 transition"
         >
           Cancel
         </button>
         <button
           @click="createBoard"
-          class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
+          class="bg-blue-500 text-white px-6 py-3 rounded-md hover:bg-blue-600 transition"
         >
           Create
         </button>

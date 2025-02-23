@@ -48,7 +48,9 @@ export default defineComponent({
 </script>
 
 <template>
-  <div class="bg-lightblue min-h-[7vh] py-10 px-8 flex justify-between items-center shadow-lg">
+  <div
+    class="bg-lightblue min-h-[5vh] max-h-[5vh] py-10 px-8 flex justify-between items-center shadow-lg"
+  >
     <button
       @click="goToHome"
       class="text-white px-6 py-2 rounded-lg transition duration-200 transform hover:scale-105"

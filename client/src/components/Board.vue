@@ -238,7 +238,7 @@ export default defineComponent({
       </div>
       <div
         @click="openCreateModal"
-        class="bg-gray-100 p-4 rounded-lg shadow-md min-w-[250px] max-w-[250px] mb-4 flex-shrink-0 w-full"
+        class="bg-gray-100 p-4 rounded-lg shadow-md min-h-[80vh] max-h-[80vh] min-w-[250px] max-w-[250px] mb-4 flex-shrink-0 w-full"
       ></div>
     </div>
 

@@ -58,7 +58,7 @@ export default {
 
 <template>
   <div class="flex justify-center items-center min-h-screen bg-white">
-    <div class="bg-white p-8 w-full max-w-sm border-2 border-gray-300">
+    <div class="bg-white p-8 w-full max-w-2xl border-2 border-gray-300 rounded-2xl">
       <div class="flex justify-center mb-6">
         <img src="../assets/images/logo.png" alt="Logo" class="h-36" />
       </div>
@@ -71,7 +71,7 @@ export default {
             id="email"
             placeholder="Email"
             required
-            class="w-full mb-6 p-4 mt-1 border border-gray-300 rounded-md text-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            class="w-full mb-4 p-4 mt-1 border border-gray-300 rounded-md text-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
 
@@ -83,7 +83,7 @@ export default {
             id="password"
             placeholder="Password"
             required
-            class="w-full p-4 mt-1 border mb-4 border-gray-300 rounded-md text-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            class="w-full p-4 mt-1 border mb-8 border-gray-300 rounded-md text-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
 

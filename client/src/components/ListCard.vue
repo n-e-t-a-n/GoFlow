@@ -151,7 +151,7 @@ export default defineComponent({
 
 <template>
   <div
-    class="bg-gray-100 p-4 rounded-lg shadow-md min-w-[250px] max-w-[250px] mb-4 flex-shrink-0 w-full"
+    class="bg-gray-100 p-4 rounded-lg shadow-md min-w-[250px] max-w-[250px] mb-4 flex-shrink-0 w-full min-h-[80vh] max-h-[80vh]"
   >
     <h3
       @click="openEditModal"
@@ -160,7 +160,7 @@ export default defineComponent({
       {{ list.name }}
     </h3>
 
-    <div class="overflow-y-auto flex flex-col items-center justify-start gap-4 h-[80vh]">
+    <div class="overflow-y-auto flex flex-col items-center justify-start gap-4 max-h-[75vh]">
       <TaskCard v-for="task in filteredTasks" :key="task.id" :task="task" />
 
       <div

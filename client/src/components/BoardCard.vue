@@ -84,50 +84,59 @@ export default defineComponent({
 </script>
 
 <template>
-  <div class="bg-white p-4 rounded-lg duration-300">
-    <h3 class="text-xl font-semibold text-gray-800">{{ board.name }}</h3>
-    <p class="text-gray-600">{{ board.description }}</p>
-    <button
-      @click="viewBoard"
-      class="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-700 transition duration-200 mb-8"
-    >
-      View Board
-    </button>
-    <button
-      v-if="board.pivot.role === 'admin'"
-      @click="openEditModal"
-      class="mt-4 ml-4 px-4 py-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-700 transition duration-200 mb-8"
-    >
-      Edit Details
-    </button>
+  <div class="bg-white shadow-lg rounded-lg p-6 space-y-4">
+    <h1 class="font-semibold text-gray-800">{{ board.name }}</h1>
+    <p class="text-sm">{{ board.description }}</p>
+
+    <div class="flex space-x-4">
+      <button
+        @click="viewBoard"
+        class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-200"
+      >
+        View Board
+      </button>
+      <button
+        v-if="board.pivot.role === 'admin'"
+        @click="openEditModal"
+        class="px-4 py-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-600 transition duration-200"
+      >
+        Edit Details
+      </button>
+    </div>
 
     <Modal :isOpen="isModalOpen" @update:isOpen="isModalOpen = $event">
       <template #default>
-        <div class="flex flex-col space-y-4">
-          <h2 class="text-xl font-semibold">Edit Board Details</h2>
+        <div class="flex flex-col space-y-6 p-6">
+          <h2 class="text-2xl font-semibold text-gray-800">Edit Board Details</h2>
+
           <label for="boardName" class="text-gray-700">Board Name</label>
           <input
             id="boardName"
             v-model="editedName"
             type="text"
-            class="px-4 py-2 border rounded-md"
+            class="px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Enter board name"
           />
+
           <label for="boardDescription" class="text-gray-700">Board Description</label>
           <textarea
             id="boardDescription"
             v-model="editedDescription"
-            class="px-4 py-2 border rounded-md"
+            class="px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Enter board description"
           ></textarea>
+
           <div class="flex justify-end space-x-4">
             <button
               @click="isModalOpen = false"
-              class="px-4 py-2 bg-gray-300 text-gray-800 rounded-md"
+              class="px-6 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 transition"
             >
               Cancel
             </button>
-            <button @click="saveChanges" class="px-4 py-2 bg-blue-500 text-white rounded-md">
+            <button
+              @click="saveChanges"
+              class="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
+            >
               Save Changes
             </button>
           </div>
