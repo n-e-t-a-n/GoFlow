@@ -47,7 +47,7 @@ export default {
         const data = await response.json();
         console.log('Registration successful:', data);
 
-        localStorage.setItem("token", data.token);
+        localStorage.setItem('token', data.token);
         window.location.reload();
       } catch (error: any) {
         errorMessage.value = error.message || 'An error occurred. Please try again.';
