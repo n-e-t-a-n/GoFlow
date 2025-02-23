@@ -48,7 +48,7 @@ Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
     Route::prefix('user-board')->group(function () {
         Route::get('/{boardId}', [UserBoardController::class, 'index']);
         Route::post('/{boardId}', [UserBoardController::class, 'add']);
-        Route::delete('/{boardId}/user/{userId}', [UserBoardController::class, 'remove']);
+        Route::delete('/{boardId}', [UserBoardController::class, 'remove']);
         Route::put('/{boardId}/user/{userId}/promote', [UserBoardController::class, 'promote']);
         Route::put('/{boardId}/user/{userId}/demote', [UserBoardController::class, 'demote']);
     });
