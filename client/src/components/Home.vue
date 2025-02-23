@@ -3,11 +3,13 @@ import { defineComponent, ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 
 import BoardCard from '@/components/BoardCard.vue';
+import Modal from '@/components/Modal.vue';
 
 export default defineComponent({
   name: 'Home',
   components: {
     BoardCard,
+    Modal,
   },
   setup() {
     const boards = ref<any[]>([]);
@@ -139,47 +141,42 @@ export default defineComponent({
       <BoardCard v-for="board in boards" :key="board.id" :board="board" />
     </div>
 
-    <div
-      v-if="isModalVisible"
-      class="fixed inset-0 backdrop-blur-sm flex items-center justify-center z-50"
-    >
-      <div class="bg-white p-6 rounded-lg max-w-lg w-full">
-        <h2 class="text-2xl font-bold text-gray-800 mb-4">Create New Board</h2>
+    <Modal :isOpen="isModalVisible" @update:isOpen="isModalVisible = $event">
+      <h2 class="text-2xl font-bold text-gray-800 mb-4">Create New Board</h2>
 
-        <div class="mb-4">
-          <label class="block text-gray-700 mb-2" for="name">Board Name:</label>
-          <input
-            id="name"
-            v-model="newBoard.name"
-            type="text"
-            class="w-full p-2 border border-gray-300 rounded-md"
-            placeholder="Enter board name"
-          />
+      <div class="mb-4">
+        <label class="block text-gray-700 mb-2" for="name">Board Name:</label>
+        <input
+          id="name"
+          v-model="newBoard.name"
+          type="text"
+          class="w-full p-2 border border-gray-300 rounded-md"
+          placeholder="Enter board name"
+        />
 
-          <label class="block text-gray-700 mt-4 mb-2" for="description">Description:</label>
-          <textarea
-            id="description"
-            v-model="newBoard.description"
-            class="w-full p-2 border border-gray-300 rounded-md"
-            placeholder="Enter board description"
-          ></textarea>
-        </div>
-
-        <div class="flex justify-end gap-4 mt-4">
-          <button
-            @click="closeModal"
-            class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600 transition"
-          >
-            Cancel
-          </button>
-          <button
-            @click="createBoard"
-            class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
-          >
-            Create
-          </button>
-        </div>
+        <label class="block text-gray-700 mt-4 mb-2" for="description">Description:</label>
+        <textarea
+          id="description"
+          v-model="newBoard.description"
+          class="w-full p-2 border border-gray-300 rounded-md"
+          placeholder="Enter board description"
+        ></textarea>
       </div>
-    </div>
+
+      <div class="flex justify-end gap-4 mt-4">
+        <button
+          @click="closeModal"
+          class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600 transition"
+        >
+          Cancel
+        </button>
+        <button
+          @click="createBoard"
+          class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
+        >
+          Create
+        </button>
+      </div>
+    </Modal>
   </div>
 </template>
