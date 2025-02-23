@@ -18,6 +18,7 @@ export default defineComponent({
     const tasks = ref<Task[]>([]);
     const lists = ref<List[]>([]);
     const members = ref<UserBoard[]>([]);
+    const userIsAdmin = ref(false);
     const isModalOpen = ref(false);
     const isAddMemberModalOpen = ref(false);
     const newMemberEmail = ref('');
@@ -46,6 +47,8 @@ export default defineComponent({
 
           lists.value = data.lists;
           tasks.value = data.tasks;
+
+          userIsAdmin.value = data.isAdmin;
         } else {
           console.error('Failed to fetch lists');
         }
@@ -174,6 +177,7 @@ export default defineComponent({
       closeAddMemberModal,
       addMember,
       removeMember,
+      userIsAdmin,
     };
   },
 });
@@ -200,6 +204,7 @@ export default defineComponent({
 
     <div class="mt-6">
       <button
+        v-if="userIsAdmin"
         @click="openAddMemberModal"
         class="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-green-600 focus:outline-none transition duration-200"
       >
