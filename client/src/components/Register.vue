@@ -142,7 +142,9 @@ export default {
       <div v-if="successMessage" class="text-center text-green-600 mt-4">{{ successMessage }}</div>
 
       <p class="text-center mt-4 text-lightblue">
-        <router-link to="/" class="font-semibold"> Already have an account? Login </router-link>
+        <router-link to="/" class="font-semibold">
+          Already have an account? <strong class="font-bold">Login</strong>
+        </router-link>
       </p>
     </div>
   </div>

@@ -102,7 +102,7 @@ export default {
 
       <p class="text-center mt-4 text-lightblue">
         <router-link to="/register" class="font-semibold">
-          Don't have an account? Register
+          Don't have an account? <strong class="font-bold">Register</strong>
         </router-link>
       </p>
     </div>
