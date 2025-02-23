@@ -131,7 +131,7 @@ export default defineComponent({
     <div class="p-6">
       <button
         @click="openModal"
-        class="text-white bg-green-500 px-6 py-3 rounded-lg shadow-md hover:bg-green-600 transition duration-200"
+        class="text-white text-lg bg-green-500 px-6 py-3 rounded-lg shadow-md hover:bg-green-600 transition duration-200"
       >
         Create New Board
       </button>

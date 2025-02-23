@@ -28,6 +28,7 @@ export default defineComponent({
     const isModalOpen = ref(false);
     const editedName = ref(props.board.name);
     const editedDescription = ref(props.board.description);
+    const isAdmin = ref(props.board.pivot.role);
 
     const viewBoard = () => {
       router.push({ name: 'Board', params: { id: props.board.id } });
@@ -78,17 +79,26 @@ export default defineComponent({
       viewBoard,
       openEditModal,
       saveChanges,
+      isAdmin,
     };
   },
 });
 </script>
 
 <template>
-  <div class="bg-white shadow-lg rounded-lg p-6 space-y-4">
-    <h1 class="font-semibold text-gray-800">{{ board.name }}</h1>
-    <p class="text-sm">{{ board.description }}</p>
+  <div
+    class="bg-white border-2 border-gray-400 rounded-lg p-6 space-y-4 min-h-[300px] max-h-[30vh] flex flex-col justify-between"
+  >
+    <div>
+      <div class="flex justify-between">
+        <h1 class="font-bold text-3xl">{{ board.name }}</h1>
+        <h1 v-if="isAdmin === 'admin'" class="font-semibold">Admin</h1>
+        <h1 v-else>Member</h1>
+      </div>
+      <p class="text-sm text-gray-800">{{ board.description }}</p>
+    </div>
 
-    <div class="flex space-x-4">
+    <div class="flex space-x-4 mt-auto">
       <button
         @click="viewBoard"
         class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-200"
@@ -103,45 +113,45 @@ export default defineComponent({
         Edit Details
       </button>
     </div>
-
-    <Modal :isOpen="isModalOpen" @update:isOpen="isModalOpen = $event">
-      <template #default>
-        <div class="flex flex-col space-y-6 p-6">
-          <h2 class="text-2xl font-semibold text-gray-800">Edit Board Details</h2>
-
-          <label for="boardName" class="text-gray-700">Board Name</label>
-          <input
-            id="boardName"
-            v-model="editedName"
-            type="text"
-            class="px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="Enter board name"
-          />
-
-          <label for="boardDescription" class="text-gray-700">Board Description</label>
-          <textarea
-            id="boardDescription"
-            v-model="editedDescription"
-            class="px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="Enter board description"
-          ></textarea>
-
-          <div class="flex justify-end space-x-4">
-            <button
-              @click="isModalOpen = false"
-              class="px-6 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 transition"
-            >
-              Cancel
-            </button>
-            <button
-              @click="saveChanges"
-              class="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
-            >
-              Save Changes
-            </button>
-          </div>
-        </div>
-      </template>
-    </Modal>
   </div>
+
+  <Modal :isOpen="isModalOpen" @update:isOpen="isModalOpen = $event">
+    <template #default>
+      <div class="flex flex-col space-y-6 p-6">
+        <h2 class="text-2xl font-semibold text-gray-800">Edit Board Details</h2>
+
+        <label for="boardName" class="text-gray-700">Board Name</label>
+        <input
+          id="boardName"
+          v-model="editedName"
+          type="text"
+          class="px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-lightblue"
+          placeholder="Enter board name"
+        />
+
+        <label for="boardDescription" class="text-gray-700">Board Description</label>
+        <textarea
+          id="boardDescription"
+          v-model="editedDescription"
+          class="px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-lightblue"
+          placeholder="Enter board description"
+        ></textarea>
+
+        <div class="flex justify-end space-x-4">
+          <button
+            @click="isModalOpen = false"
+            class="px-6 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 transition"
+          >
+            Cancel
+          </button>
+          <button
+            @click="saveChanges"
+            class="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
+          >
+            Save Changes
+          </button>
+        </div>
+      </div>
+    </template>
+  </Modal>
 </template>

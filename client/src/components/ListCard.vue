@@ -151,11 +151,11 @@ export default defineComponent({
 
 <template>
   <div
-    class="bg-gray-100 p-4 rounded-lg shadow-md min-w-[250px] max-w-[250px] mb-4 flex-shrink-0 w-full min-h-[80vh] max-h-[80vh]"
+    class="p-4 rounded-lg border-2 border-gray-400 min-w-[250px] max-w-[30vw] mb-4 flex-shrink-0 w-full"
   >
     <h3
       @click="openEditModal"
-      class="text-xl font-semibold text-gray-800 mb-4 width-100 truncate max-w-full overflow-hidden text-ellipsis whitespace-nowrap"
+      class="text-center text-xl font-semibold text-gray-800 mb-4 width-100 truncate max-w-full overflow-hidden text-ellipsis whitespace-nowrap"
     >
       {{ list.name }}
     </h3>
@@ -165,9 +165,9 @@ export default defineComponent({
 
       <div
         @click="openCreateTaskModal"
-        class="bg-white p-4 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 w-[85%] max-w-[300px] min-h-30 overflow-hidden cursor-pointer"
+        class="flex items-center justify-center bg-white p-4 rounded-md border-3 transition-shadow duration-300 w-[85%] max-w-[300px] min-h-30 overflow-hidden cursor-pointer"
       >
-        <h3 class="text-xl font-semibold text-gray-800 truncate"></h3>
+        <img src="../assets/images/add.png" alt="add" class="w-8 h-8" />
         <div class="mt-2"></div>
       </div>
     </div>

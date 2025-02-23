@@ -53,13 +53,13 @@ export default defineComponent({
   >
     <button
       @click="goToHome"
-      class="text-white px-6 py-2 rounded-lg transition duration-200 transform hover:scale-105"
+      class="text-white font-semibold text-3xl py-2 rounded-lg transition duration-200 transform hover:scale-105"
     >
       GoFlow Kanban
     </button>
     <button
       @click="logout"
-      class="text-white px-6 py-2 rounded-lg transition duration-200 transform hover:scale-105"
+      class="text-white bg-red-700 font-semibold text-2xl px-6 py-2 rounded-lg transition duration-200 transform hover:scale-105"
     >
       Logout
     </button>
