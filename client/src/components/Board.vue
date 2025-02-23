@@ -20,8 +20,8 @@ export default defineComponent({
     const members = ref<UserBoard[]>([]);
     const isModalOpen = ref(false);
     const isAddMemberModalOpen = ref(false);
-    const newMemberEmail = ref(''); 
-    const isAdmin = ref(false); 
+    const newMemberEmail = ref('');
+    const isAdmin = ref(false);
 
     onMounted(() => {
       const boardID = Array.isArray(route.params.id) ? route.params.id[0] : route.params.id;
@@ -35,7 +35,7 @@ export default defineComponent({
       try {
         const token = localStorage.getItem('token');
 
-        const response = await fetch(`http://127.0.0.1:8000/api/v1/task/${boardID}`, {
+        const response = await fetch(`${import.meta.env.VITE_BASE_URL}/v1/task/${boardID}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -87,12 +87,12 @@ export default defineComponent({
     };
 
     const openAddMemberModal = () => {
-      isAddMemberModalOpen.value = true; 
+      isAddMemberModalOpen.value = true;
     };
 
     const closeAddMemberModal = () => {
-      isAddMemberModalOpen.value = false; 
-      newMemberEmail.value = ''; 
+      isAddMemberModalOpen.value = false;
+      newMemberEmail.value = '';
       isAdmin.value = false;
     };
 
@@ -120,7 +120,7 @@ export default defineComponent({
           const data = await response.json();
           console.log('Member added:', data);
           closeAddMemberModal();
-          fetchMembers(); 
+          fetchMembers();
         } else {
           console.error('Failed to add member');
         }
@@ -151,7 +151,7 @@ export default defineComponent({
           console.log('Member removed:', data);
 
           closeAddMemberModal();
-          fetchMembers(); 
+          fetchMembers();
         } else {
           console.error('Failed to remove member.');
         }
