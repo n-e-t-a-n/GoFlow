@@ -21,8 +21,10 @@ export default defineComponent({
     const userIsAdmin = ref(false);
     const isModalOpen = ref(false);
     const isAddMemberModalOpen = ref(false);
+    const isCreateModalOpen = ref(false);
     const newMemberEmail = ref('');
     const isAdmin = ref(false);
+    const newListTitle = ref('');
 
     onMounted(() => {
       const boardID = Array.isArray(route.params.id) ? route.params.id[0] : route.params.id;
@@ -80,6 +82,37 @@ export default defineComponent({
       }
     };
 
+    const createNewList = async () => {
+      try {
+        const token = localStorage.getItem('token');
+
+        const boardID = Array.isArray(route.params.id) ? route.params.id[0] : route.params.id;
+
+        const response = await fetch(`${import.meta.env.VITE_BASE_URL}/v1/list/`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            board_id: boardID,
+            name: newListTitle.value,
+            priority: 100,
+          }),
+        });
+
+        if (response.ok) {
+          console.log('Successfully added new board.');
+          fetchBoardData(boardID);
+          closeCreateModal();
+        } else {
+          console.error('Failed to add new board.');
+        }
+      } catch (error) {
+        console.error('Error adding new board:', error);
+      }
+    }
+
     const openModal = async () => {
       await fetchMembers();
       isModalOpen.value = true;
@@ -97,6 +130,15 @@ export default defineComponent({
       isAddMemberModalOpen.value = false;
       newMemberEmail.value = '';
       isAdmin.value = false;
+    };
+
+    const openCreateModal = () => {
+      isCreateModalOpen.value = true;
+    };
+
+    const closeCreateModal = () => {
+      isCreateModalOpen.value = false;
+      newListTitle.value = '';
     };
 
     const addMember = async () => {
@@ -178,6 +220,11 @@ export default defineComponent({
       addMember,
       removeMember,
       userIsAdmin,
+      isCreateModalOpen,
+      openCreateModal,
+      closeCreateModal,
+      newListTitle,
+      createNewList,
     };
   },
 });
@@ -190,6 +237,12 @@ export default defineComponent({
     <div class="mt-6 flex overflow-x-auto gap-4 pb-2 justify-start">
       <div v-for="list in lists" :key="list.id" class="flex-shrink-0">
         <ListCard :list="list" :tasks="tasks" />
+      </div>
+      <div
+        @click="openCreateModal"
+        class="bg-gray-100 p-4 rounded-lg shadow-md min-w-[250px] max-w-[250px] mb-4 flex-shrink-0 w-full"
+      >
+      
       </div>
     </div>
 
@@ -296,5 +349,33 @@ export default defineComponent({
         </div>
       </div>
     </Modal>
+
+    <Modal :isOpen="isCreateModalOpen" @update:isOpen="closeCreateModal">
+    <h2 class="text-2xl font-bold text-gray-800 mb-4">Edit List Title</h2>
+
+    <div class="mb-4">
+      <input
+        v-model="newListTitle"
+        type="text"
+        class="w-full p-2 border border-gray-300 rounded-lg"
+        placeholder="Enter new list title"
+      />
+    </div>
+
+    <div class="flex justify-between">
+      <button
+        @click="createNewList"
+        class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition"
+      >
+        Save
+      </button>
+      <button
+        @click="closeCreateModal"
+        class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition"
+      >
+        Cancel
+      </button>
+    </div>
+  </Modal>
   </div>
 </template>
