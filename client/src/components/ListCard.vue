@@ -3,7 +3,7 @@ import { defineComponent, ref, watch } from 'vue';
 import TaskCard from '@/components/TaskCard.vue';
 
 import type { PropType } from 'vue';
-import type { List, Task } from '@/types';
+import type { List, Task, UserBoard } from '@/types';
 
 import Modal from '@/components/Modal.vue';
 
@@ -23,6 +23,10 @@ export default defineComponent({
       required: true,
     },
     role: Boolean,
+    members: {
+      type: Array as PropType<UserBoard[]>,
+      required: true,
+    }
   },
   setup(props) {
     const filteredTasks = ref(props.tasks.filter((task) => task.task_list_id === props.list.id));
@@ -46,7 +50,7 @@ export default defineComponent({
       title: '',
       description: null,
       status: 'pending',
-      assigned_user_id: null,
+      assigned_user_id: '',
       due_date: null,
       priority: 'medium',
     });
@@ -100,6 +104,9 @@ export default defineComponent({
     const createNewTask = async () => {
       try {
         const token = localStorage.getItem('token');
+        const matchedUser = props.members.find((user) => user.email === newTask.value.assigned_user_id);
+
+        console.log(matchedUser)
 
         const response = await fetch(`${import.meta.env.VITE_BASE_URL}/v1/task`, {
           method: 'POST',
@@ -112,7 +119,7 @@ export default defineComponent({
             task_list_id: props.list.id,
             title: newTask.value.title,
             description: newTask.value.description,
-            assigned_user_id: newTask.value.assigned_user_id,
+            assigned_user_id: matchedUser?.user_id || null,
             due_date: newTask.value.due_date,
             priority: newTask.value.priority,
             status: newTask.value.status,
@@ -162,7 +169,7 @@ export default defineComponent({
     </h3>
 
     <div class="overflow-y-auto flex flex-col items-center justify-start gap-4 max-h-[75vh]">
-      <TaskCard v-for="task in filteredTasks" :key="task.id" :task="task" />
+      <TaskCard v-for="task in filteredTasks" :key="task.id" :task="task" :listName="$props.list.name" :members="$props.members"/>
 
       <div
         @click="openCreateTaskModal"

@@ -1,9 +1,9 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 
-import type { PropType } from 'vue';
+import type { Prop, PropType } from 'vue';
 
-import type { Task } from '@/types';
+import type { Task, UserBoard } from '@/types';
 
 import Modal from '@/components/Modal.vue';
 
@@ -17,6 +17,11 @@ export default defineComponent({
       type: Object as PropType<Task>,
       required: true,
     },
+    listName: String,
+    members: {
+      type: Array as PropType<UserBoard[]>,
+      required: true,
+    }
   },
   setup(props) {
     const isModalVisible = ref(false);
@@ -109,7 +114,7 @@ function formatString(str: string) {
     <h2 class="text-2xl font-bold text-gray-800 mb-4">{{ taskDetails?.title }}</h2>
 
     <div class="mb-4">
-      <p>
+      <p class="mb-4">
         <strong>Priority:</strong>
         <span
           :class="[
@@ -126,7 +131,7 @@ function formatString(str: string) {
           }}</span
         >
       </p>
-      <p>
+      <p class="mb-4">
         <strong>Status:</strong>
         <span
           :class="[
@@ -141,22 +146,26 @@ function formatString(str: string) {
           >{{ taskDetails?.status ? formatString(taskDetails.status) : 'No status set' }}</span
         >
       </p>
-      <p>
+      <p class="mb-4">
         <strong>Due Date:</strong>
         {{
           taskDetails?.due_date
             ? new Date(taskDetails.due_date).toLocaleDateString('en-US', {
-                weekday: 'short',
+                weekday: 'long',
                 year: 'numeric',
-                month: 'short',
+                month: 'long',
                 day: 'numeric',
               })
             : 'N/A'
         }}
       </p>
-      <p>
+      <p class="mb-4">
         <strong>Description:</strong>
-        {{ taskDetails?.description || 'No description available' }}
+        {{ taskDetails?.description || 'No description available.' }}
+      </p>
+      <p>
+        <strong>Assignee:</strong>
+        {{ $props.members.find((user) => user.user_id === $props.task.assigned_user_id)?.name || 'None' }}
       </p>
     </div>
 
