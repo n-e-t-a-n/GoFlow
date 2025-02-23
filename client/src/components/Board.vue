@@ -111,7 +111,7 @@ export default defineComponent({
       } catch (error) {
         console.error('Error adding new board:', error);
       }
-    }
+    };
 
     const openModal = async () => {
       await fetchMembers();
@@ -241,9 +241,7 @@ export default defineComponent({
       <div
         @click="openCreateModal"
         class="bg-gray-100 p-4 rounded-lg shadow-md min-w-[250px] max-w-[250px] mb-4 flex-shrink-0 w-full"
-      >
-      
-      </div>
+      ></div>
     </div>
 
     <div class="mt-6">
@@ -351,31 +349,31 @@ export default defineComponent({
     </Modal>
 
     <Modal :isOpen="isCreateModalOpen" @update:isOpen="closeCreateModal">
-    <h2 class="text-2xl font-bold text-gray-800 mb-4">Edit List Title</h2>
+      <h2 class="text-2xl font-bold text-gray-800 mb-4">Edit List Title</h2>
 
-    <div class="mb-4">
-      <input
-        v-model="newListTitle"
-        type="text"
-        class="w-full p-2 border border-gray-300 rounded-lg"
-        placeholder="Enter new list title"
-      />
-    </div>
+      <div class="mb-4">
+        <input
+          v-model="newListTitle"
+          type="text"
+          class="w-full p-2 border border-gray-300 rounded-lg"
+          placeholder="Enter new list title"
+        />
+      </div>
 
-    <div class="flex justify-between">
-      <button
-        @click="createNewList"
-        class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition"
-      >
-        Save
-      </button>
-      <button
-        @click="closeCreateModal"
-        class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition"
-      >
-        Cancel
-      </button>
-    </div>
-  </Modal>
+      <div class="flex justify-between">
+        <button
+          @click="createNewList"
+          class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition"
+        >
+          Save
+        </button>
+        <button
+          @click="closeCreateModal"
+          class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition"
+        >
+          Cancel
+        </button>
+      </div>
+    </Modal>
   </div>
 </template>
