@@ -45,8 +45,10 @@ export default {
         }
 
         const data = await response.json();
-        successMessage.value = 'Registration successful! You can now login.';
         console.log('Registration successful:', data);
+
+        localStorage.setItem("token", data.token);
+        window.location.reload();
       } catch (error: any) {
         errorMessage.value = error.message || 'An error occurred. Please try again.';
       } finally {
@@ -83,7 +85,7 @@ export default {
             id="name"
             placeholder="Full Name"
             required
-            class="w-full mb-6 p-4 mt-1 border border-gray-300 rounded-md text-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            class="w-full mb-6 p-4 mt-1 border border-gray-300 rounded-md text-lg focus:outline-none focus:ring-2 focus:ring-lightblue"
           />
         </div>
 
@@ -95,7 +97,7 @@ export default {
             id="email"
             placeholder="Email"
             required
-            class="w-full mb-6 p-4 mt-1 border border-gray-300 rounded-md text-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            class="w-full mb-6 p-4 mt-1 border border-gray-300 rounded-md text-lg focus:outline-none focus:ring-2 focus:ring-lightblue"
           />
         </div>
 
@@ -107,7 +109,7 @@ export default {
             id="password"
             placeholder="Password"
             required
-            class="w-full p-4 mt-1 border mb-4 border-gray-300 rounded-md text-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            class="w-full p-4 mt-1 border mb-4 border-gray-300 rounded-md text-lg focus:outline-none focus:ring-2 focus:ring-lightblue"
           />
         </div>
 
@@ -121,14 +123,14 @@ export default {
             id="password_confirmation"
             placeholder="Confirm Password"
             required
-            class="w-full p-4 mt-1 border mb-6 border-gray-300 rounded-md text-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            class="w-full p-4 mt-1 border mb-6 border-gray-300 rounded-md text-lg focus:outline-none focus:ring-2 focus:ring-lightblue"
           />
         </div>
 
         <div class="flex justify-center">
           <button
             type="submit"
-            class="w-full max-w-xs py-3 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-700 transition duration-200 text-lg mb-3"
+            class="w-full max-w-xs py-3 bg-lightblue text-white font-semibold rounded-md hover:bg-darkblue transition duration-200 text-lg mb-3"
           >
             Register
           </button>
@@ -139,7 +141,7 @@ export default {
       <div v-if="errorMessage" class="text-center text-red-600 mt-4">{{ errorMessage }}</div>
       <div v-if="successMessage" class="text-center text-green-600 mt-4">{{ successMessage }}</div>
 
-      <p class="text-center mt-4 text-blue-500">
+      <p class="text-center mt-4 text-lightblue">
         <router-link to="/" class="font-semibold"> Already have an account? Login </router-link>
       </p>
     </div>
