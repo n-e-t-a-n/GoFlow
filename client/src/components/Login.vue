@@ -90,7 +90,7 @@ export default {
         <div class="flex justify-center">
           <button
             type="submit"
-            class="w-full max-w-xs py-3 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-700 transition duration-200 text-lg mb-3"
+            class="w-full max-w-xs py-3 bg-lightblue text-white font-semibold rounded-md hover:bg-darkblue transition duration-200 text-lg mb-3"
           >
             Login
           </button>
@@ -100,7 +100,7 @@ export default {
       <div v-if="isLoading" class="text-center text-gray-600 mt-4">Logging in...</div>
       <div v-if="errorMessage" class="text-center text-red-600 mt-4">{{ errorMessage }}</div>
 
-      <p class="text-center mt-4 text-blue-500">
+      <p class="text-center mt-4 text-lightblue">
         <router-link to="/register" class="font-semibold">
           Don't have an account? Register
         </router-link>
