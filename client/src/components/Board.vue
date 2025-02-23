@@ -231,6 +231,25 @@ export default defineComponent({
 </script>
 
 <template>
+  <div class="mt-6">
+    <button
+      @click="openModal"
+      class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none transition duration-200"
+    >
+      View Board Members
+    </button>
+  </div>
+
+  <div class="mt-6">
+    <button
+      v-if="userIsAdmin"
+      @click="openAddMemberModal"
+      class="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-green-600 focus:outline-none transition duration-200"
+    >
+      Add/Remove Member
+    </button>
+  </div>
+
   <div>
     <div class="mt-6 flex overflow-x-auto gap-4 pb-2 justify-start">
       <div v-for="list in lists" :key="list.id" class="flex-shrink-0">
@@ -238,31 +257,14 @@ export default defineComponent({
       </div>
       <div
         @click="openCreateModal"
-        class="bg-gray-100 p-4 rounded-lg shadow-md min-h-[80vh] max-h-[80vh] min-w-[250px] max-w-[250px] mb-4 flex-shrink-0 w-full"
-      ></div>
-    </div>
-
-    <div class="mt-6">
-      <button
-        @click="openModal"
-        class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none transition duration-200"
+        class="flex items-center justify-center p-4 rounded-lg border-3 min-h-[80vh] max-h-[80vh] min-w-[250px] max-w-[250px] mb-4 flex-shrink-0 w-full"
       >
-        View Board Members
-      </button>
-    </div>
-
-    <div class="mt-6">
-      <button
-        v-if="userIsAdmin"
-        @click="openAddMemberModal"
-        class="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-green-600 focus:outline-none transition duration-200"
-      >
-        Add/Remove Member
-      </button>
+        <img src="../assets/images/add.png" alt="add" class="w-24" />
+      </div>
     </div>
 
     <Modal :isOpen="isModalOpen" @update:isOpen="closeModal">
-      <div class="bg-white rounded-lg shadow-xl w-full max-w-lg mx-auto p-6 space-y-6">
+      <div class="bg-white rounded-lg w-full max-w-lg mx-auto p-6 space-y-6">
         <h2 class="text-xl font-semibold text-gray-800">Board Members</h2>
 
         <div v-if="members.length === 0" class="text-gray-500">No members found.</div>
