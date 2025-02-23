@@ -2,10 +2,16 @@
 import { defineComponent, ref } from 'vue';
 
 import type { PropType } from 'vue';
+
 import type { Task } from '@/types';
+
+import Modal from '@/components/Modal.vue';
 
 export default defineComponent({
   name: 'TaskCard',
+  components: {
+    Modal,
+  },
   props: {
     task: {
       type: Object as PropType<Task>,
@@ -14,16 +20,16 @@ export default defineComponent({
   },
   setup(props) {
     const isModalVisible = ref(false);
-    const taskDetails = ref<Task | null>(null); 
+    const taskDetails = ref<Task | null>(null);
 
     const viewTask = () => {
-      taskDetails.value = props.task; 
-      isModalVisible.value = true; 
+      taskDetails.value = props.task;
+      isModalVisible.value = true;
     };
 
     const closeModal = () => {
-      isModalVisible.value = false; 
-      taskDetails.value = null; 
+      isModalVisible.value = false;
+      taskDetails.value = null;
     };
 
     return {
@@ -74,58 +80,53 @@ export default defineComponent({
     </div>
   </div>
 
-  <div
-    v-if="isModalVisible"
-    class="fixed inset-0 backdrop-blur-sm flex items-center justify-center z-50"
-  >
-    <div class="bg-white p-6 rounded-lg max-w-lg w-full">
-      <h2 class="text-2xl font-bold text-gray-800 mb-4">{{ taskDetails?.title }}</h2>
+  <Modal :isOpen="isModalVisible" @update:isOpen="isModalVisible = $event">
+    <h2 class="text-2xl font-bold text-gray-800 mb-4">{{ taskDetails?.title }}</h2>
 
-      <div class="mb-4">
-        <p>
-          <strong>Priority:</strong>
-          <span
-            :class="{
-              'text-red-500': taskDetails?.priority === 'high',
-              'text-yellow-500': taskDetails?.priority === 'medium',
-              'text-green-500': taskDetails?.priority === 'low',
-              'text-gray-500': taskDetails?.priority === 'top',
-            }"
-            >{{ taskDetails?.priority || 'No priority set' }}</span
-          >
-        </p>
-        <p>
-          <strong>Status:</strong>
-          <span
-            :class="{
-              'text-blue-500': taskDetails?.status === 'pending',
-              'text-yellow-500': taskDetails?.status === 'in_progress',
-              'text-green-500': taskDetails?.status === 'completed',
-              'text-gray-500': taskDetails?.status === 'on_hold',
-            }"
-            >{{ taskDetails?.status || 'No status set' }}</span
-          >
-        </p>
-        <p>
-          <strong>Due Date:</strong>
-          {{
-            taskDetails?.due_date
-              ? new Date(taskDetails?.due_date).toLocaleDateString()
-              : 'No due date'
-          }}
-        </p>
-        <p>
-          <strong>Description:</strong>
-          {{ taskDetails?.description || 'No description available' }}
-        </p>
-      </div>
-
-      <button
-        @click="closeModal"
-        class="mt-4 bg-gray-500 text-white p-2 rounded-lg w-full hover:bg-gray-600 transition"
-      >
-        Close
-      </button>
+    <div class="mb-4">
+      <p>
+        <strong>Priority:</strong>
+        <span
+          :class="{
+            'text-red-500': taskDetails?.priority === 'high',
+            'text-yellow-500': taskDetails?.priority === 'medium',
+            'text-green-500': taskDetails?.priority === 'low',
+            'text-gray-500': taskDetails?.priority === 'top',
+          }"
+          >{{ taskDetails?.priority || 'No priority set' }}</span
+        >
+      </p>
+      <p>
+        <strong>Status:</strong>
+        <span
+          :class="{
+            'text-blue-500': taskDetails?.status === 'pending',
+            'text-yellow-500': taskDetails?.status === 'in_progress',
+            'text-green-500': taskDetails?.status === 'completed',
+            'text-gray-500': taskDetails?.status === 'on_hold',
+          }"
+          >{{ taskDetails?.status || 'No status set' }}</span
+        >
+      </p>
+      <p>
+        <strong>Due Date:</strong>
+        {{
+          taskDetails?.due_date
+            ? new Date(taskDetails?.due_date).toLocaleDateString()
+            : 'No due date'
+        }}
+      </p>
+      <p>
+        <strong>Description:</strong>
+        {{ taskDetails?.description || 'No description available' }}
+      </p>
     </div>
-  </div>
+
+    <button
+      @click="closeModal"
+      class="mt-4 bg-gray-500 text-white p-2 rounded-lg w-full hover:bg-gray-600 transition"
+    >
+      Close
+    </button>
+  </Modal>
 </template>
