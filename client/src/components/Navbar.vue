@@ -4,7 +4,6 @@ import { useRouter } from 'vue-router';
 
 export default defineComponent({
   name: 'Navbar',
-  components: {},
   setup() {
     const router = useRouter();
 
@@ -49,18 +48,18 @@ export default defineComponent({
 </script>
 
 <template>
-  <div class="bg-blue-500 p-4 flex justify-between items-center">
-    <div @click="goToHome">
-      <img src="../assets/images/logo.png" alt="Logo" class="h-8" />
-    </div>
-
-    <div>
-      <button
-        @click="logout"
-        class="text-white bg-red-500 px-4 py-2 rounded-md hover:bg-red-700 transition duration-200"
-      >
-        Logout
-      </button>
-    </div>
+  <div class="bg-lightblue min-h-[7vh] py-10 px-8 flex justify-between items-center shadow-lg">
+    <button
+      @click="goToHome"
+      class="text-white px-6 py-2 rounded-lg transition duration-200 transform hover:scale-105"
+    >
+      GoFlow Kanban
+    </button>
+    <button
+      @click="logout"
+      class="text-white px-6 py-2 rounded-lg transition duration-200 transform hover:scale-105"
+    >
+      Logout
+    </button>
   </div>
 </template>
