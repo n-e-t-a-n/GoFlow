@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent, ref, watch } from 'vue';
 import TaskCard from '@/components/TaskCard.vue';
 
 import type { PropType } from 'vue';
@@ -24,7 +24,16 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const filteredTasks = props.tasks.filter((task) => task.task_list_id === props.list.id);
+    const filteredTasks = ref(props.tasks.filter((task) => task.task_list_id === props.list.id));
+
+    watch(
+      () => props.tasks,
+      (newTasks) => {
+        filteredTasks.value = newTasks.filter((task) => task.task_list_id === props.list.id);
+      },
+      { immediate: true }
+    );
+
     const isEditModalVisible = ref(false);
     const newListTitle = ref<string>(props.list.name);
 
@@ -114,6 +123,7 @@ export default defineComponent({
           console.log('Successfully created new task:', data);
 
           closeCreateTaskModal();
+          filteredTasks.value.push(data);
         } else {
           console.error('Failed to create new task');
         }
@@ -150,7 +160,7 @@ export default defineComponent({
       {{ list.name }}
     </h3>
 
-    <div class="overflow-y-auto flex flex-col items-center justify-start gap-4 h-[50vh]">
+    <div class="overflow-y-auto flex flex-col items-center justify-start gap-4 h-[80vh]">
       <TaskCard v-for="task in filteredTasks" :key="task.id" :task="task" />
 
       <div
@@ -274,7 +284,7 @@ export default defineComponent({
         Save
       </button>
       <button
-        @click="closeEditModal"
+        @click="closeCreateTaskModal"
         class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition"
       >
         Cancel
