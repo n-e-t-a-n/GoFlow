@@ -9,8 +9,8 @@ export default defineComponent({
     const router = useRouter();
 
     const goToHome = () => {
-        router.push({ name: 'Home' });
-    }
+      router.push({ name: 'Home' });
+    };
 
     const logout = () => {
       const token = localStorage.getItem('token');
@@ -39,7 +39,7 @@ export default defineComponent({
           console.error('Error during logout:', error);
         });
     };
-   
+
     return {
       goToHome,
       logout,
@@ -49,9 +49,8 @@ export default defineComponent({
 </script>
 
 <template>
-    <div class="bg-blue-500 p-4 flex justify-between items-center">
-    <div
-      @click="goToHome">
+  <div class="bg-blue-500 p-4 flex justify-between items-center">
+    <div @click="goToHome">
       <img src="../assets/images/logo.png" alt="Logo" class="h-8" />
     </div>
 
