@@ -37,40 +37,56 @@ export default defineComponent({
       closeModal,
       isModalVisible,
       taskDetails,
+      formatString,
     };
   },
 });
+
+function formatString(str: string) {
+  let formattedStr = str.replace(/_/g, ' ');
+
+  formattedStr = ' ' + formattedStr;
+  formattedStr = formattedStr.replace(/\b\w/g, (char) => char.toUpperCase());
+
+  return formattedStr;
+}
 </script>
 
 <template>
   <div
     @click="viewTask"
-    class="bg-white p-4 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 w-[85%] max-w-[300px] min-h-30 overflow-hidden cursor-pointer"
+    class="bg-white border-1 p-4 rounded-md transition-shadow duration-300 w-[85%] max-w-[300px] min-h-30 overflow-hidden cursor-pointer"
   >
-    <h3 class="text-xl font-semibold text-gray-800 truncate">{{ task.title }}</h3>
+    <h3 class="text-md font-semibold text-gray-800 truncate">{{ task.title }}</h3>
     <div class="mt-2">
       <p class="text-sm text-gray-500">
         <strong>Priority:</strong>
         <span
-          :class="{
-            'text-red-500': task.priority === 'high',
-            'text-yellow-500': task.priority === 'medium',
-            'text-green-500': task.priority === 'low',
-            'text-gray-500': task.priority === 'top',
-          }"
-          >{{ task.priority || 'No priority set' }}</span
+          :class="[
+            'font-semibold',
+            {
+              'text-red-500': task.priority === 'high',
+              'text-yellow-500': task.priority === 'medium',
+              'text-green-500': task.priority === 'low',
+              'text-black font-bold': task.priority === 'top',
+            },
+          ]"
+          >{{ task?.priority ? formatString(task.priority) : ' No priority set' }}</span
         >
       </p>
       <p class="text-sm text-gray-500">
         <strong>Status:</strong>
         <span
-          :class="{
-            'text-blue-500': task.status === 'pending',
-            'text-yellow-500': task.status === 'in_progress',
-            'text-green-500': task.status === 'completed',
-            'text-gray-500': task.status === 'on_hold',
-          }"
-          >{{ task.status || 'No status set' }}</span
+          :class="[
+            'font-semibold',
+            {
+              'text-blue-500': task.status === 'pending',
+              'text-yellow-500': task.status === 'in_progress',
+              'text-green-500 font-bold': task.status === 'completed',
+              'text-gray-500': task.status === 'on_hold',
+            },
+          ]"
+          >{{ task.status ? formatString(task.status) : 'No status set' }}</span
         >
       </p>
       <p class="text-sm text-gray-500">
@@ -87,25 +103,33 @@ export default defineComponent({
       <p>
         <strong>Priority:</strong>
         <span
-          :class="{
-            'text-red-500': taskDetails?.priority === 'high',
-            'text-yellow-500': taskDetails?.priority === 'medium',
-            'text-green-500': taskDetails?.priority === 'low',
-            'text-gray-500': taskDetails?.priority === 'top',
-          }"
-          >{{ taskDetails?.priority || 'No priority set' }}</span
+          :class="[
+            'font-semibold',
+            {
+              'text-red-500': task.priority === 'high',
+              'text-yellow-500': task.priority === 'medium',
+              'text-green-500': task.priority === 'low',
+              'text-black font-bold': task.priority === 'top',
+            },
+          ]"
+          >{{
+            taskDetails?.priority ? formatString(taskDetails.priority) : ' No priority set'
+          }}</span
         >
       </p>
       <p>
         <strong>Status:</strong>
         <span
-          :class="{
-            'text-blue-500': taskDetails?.status === 'pending',
-            'text-yellow-500': taskDetails?.status === 'in_progress',
-            'text-green-500': taskDetails?.status === 'completed',
-            'text-gray-500': taskDetails?.status === 'on_hold',
-          }"
-          >{{ taskDetails?.status || 'No status set' }}</span
+          :class="[
+            'font-semibold',
+            {
+              'text-blue-500': taskDetails?.status === 'pending',
+              'text-yellow-500': taskDetails?.status === 'in_progress',
+              'text-green-500 font-bold': taskDetails?.status === 'completed',
+              'text-gray-500': taskDetails?.status === 'on_hold',
+            },
+          ]"
+          >{{ taskDetails?.status ? formatString(taskDetails.status) : 'No status set' }}</span
         >
       </p>
       <p>
