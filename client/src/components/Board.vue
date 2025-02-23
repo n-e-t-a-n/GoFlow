@@ -129,6 +129,37 @@ export default defineComponent({
       }
     };
 
+    const removeMember = async () => {
+      try {
+        const token = localStorage.getItem('token');
+
+        const boardID = Array.isArray(route.params.id) ? route.params.id[0] : route.params.id;
+
+        const response = await fetch(`${import.meta.env.VITE_BASE_URL}/v1/user-board/${boardID}`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            email: newMemberEmail.value,
+          }),
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          console.log('Member removed:', data);
+
+          closeAddMemberModal();
+          fetchMembers(); 
+        } else {
+          console.error('Failed to remove member.');
+        }
+      } catch (error) {
+        console.error('Error removing member:', error);
+      }
+    };
+
     return {
       tasks,
       lists,
@@ -142,6 +173,7 @@ export default defineComponent({
       openAddMemberModal,
       closeAddMemberModal,
       addMember,
+      removeMember,
     };
   },
 });
@@ -169,9 +201,9 @@ export default defineComponent({
     <div class="mt-6">
       <button
         @click="openAddMemberModal"
-        class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 focus:outline-none transition duration-200"
+        class="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-green-600 focus:outline-none transition duration-200"
       >
-        Add Member
+        Add/Remove Member
       </button>
     </div>
 
@@ -214,8 +246,6 @@ export default defineComponent({
 
     <Modal :isOpen="isAddMemberModalOpen" @update:isOpen="closeAddMemberModal">
       <div class="bg-white rounded-lg shadow-xl w-full max-w-md mx-auto p-6 space-y-6">
-        <h2 class="text-xl font-semibold text-gray-800">Add New Member</h2>
-
         <div class="space-y-4">
           <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
           <input
@@ -246,8 +276,15 @@ export default defineComponent({
           </button>
 
           <button
+            @click="removeMember"
+            class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+          >
+            Remove Member
+          </button>
+
+          <button
             @click="addMember"
-            class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+            class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
           >
             Add Member
           </button>
