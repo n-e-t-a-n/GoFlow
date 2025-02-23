@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Models\User;
 use App\Models\UserBoard;
+
 use App\Http\Requests\StoreUserBoardRequest;
 use App\Http\Requests\UpdateUserBoardRequest;
 
@@ -62,7 +64,7 @@ class UserBoardController extends Controller
         }
 
         $validator = Validator::make($request->all(), [
-            'user_id' => 'required|exists:users,id',
+            'email' => 'required|email|exists:users,email', 
             'role' => 'nullable|in:member,admin',
         ]);
 
@@ -72,22 +74,29 @@ class UserBoardController extends Controller
 
         $validatedData = $validator->validated();
 
-        $userExists = UserBoard::where('user_id', $validatedData['user_id'])
-                                  ->where('board_id', $boardId)
-                                  ->first();
+        $user = User::where('email', $validatedData['email'])->first();
+
+        if (!$user) {
+            return response()->json(['message' => 'User not found.'], 404);
+        }
+
+        $userExists = UserBoard::where('user_id', $user->id)
+                                ->where('board_id', $boardId)
+                                ->first();
 
         if ($userExists) {
             return response()->json(['message' => 'User already in board.'], 400);
         }
 
         UserBoard::create([
-            'user_id' => $validatedData['user_id'],
+            'user_id' => $user->id,
             'board_id' => $boardId,
             'role' => $validatedData['role'] ?? 'member',
         ]);
 
         return response()->json(['message' => 'User added to board successfully.'], 201);
     }
+
 
     public function remove(Request $request, $boardId, $userId)
     {
