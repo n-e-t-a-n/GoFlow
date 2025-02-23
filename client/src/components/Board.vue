@@ -232,8 +232,6 @@ export default defineComponent({
 
 <template>
   <div>
-    <h1 class="text-2xl font-bold">Board Tasks</h1>
-
     <div class="mt-6 flex overflow-x-auto gap-4 pb-2 justify-start">
       <div v-for="list in lists" :key="list.id" class="flex-shrink-0">
         <ListCard :list="list" :tasks="tasks" />

@@ -31,7 +31,7 @@ export default defineComponent({
       (newTasks) => {
         filteredTasks.value = newTasks.filter((task) => task.task_list_id === props.list.id);
       },
-      { immediate: true }
+      { immediate: true },
     );
 
     const isEditModalVisible = ref(false);
