@@ -30,7 +30,7 @@ export default defineComponent({
     const editedDescription = ref(props.board.description);
 
     const viewBoard = () => {
-      router.push({ name: 'Board', params: { id: props.board.id, role: props.board.pivot.role } });
+      router.push({ name: 'Board', params: { id: props.board.id } });
     };
 
     const openEditModal = () => {
