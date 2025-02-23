@@ -75,8 +75,14 @@ class TaskController extends Controller
 
         $validatedData = $validator->validated();
 
-        if (!$this->isAdmin($validatedData['board_id'])) {
+        if (!$this->isMember($validatedData['board_id'])) {
             return response()->json(['message' => 'You are not authorized to create tasks for this board.'], 403);
+        }
+
+        if (!$this->isAdmin($validatedData['board_id'])) {
+            $validatedData['due_date'] = null;
+            $validatedData['priority'] = null;
+            $validatedData['status'] = null;
         }
 
         $task = Task::create([
