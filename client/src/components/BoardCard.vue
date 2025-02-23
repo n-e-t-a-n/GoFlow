@@ -26,11 +26,11 @@ export default defineComponent({
     const router = useRouter();
 
     const isModalOpen = ref(false);
-    const editedName = ref(props.board.name); 
-    const editedDescription = ref(props.board.description); 
+    const editedName = ref(props.board.name);
+    const editedDescription = ref(props.board.description);
 
     const viewBoard = () => {
-      router.push({ name: 'Board', params: { id: props.board.id } });
+      router.push({ name: 'Board', params: { id: props.board.id, role: props.board.pivot.role } });
     };
 
     const openEditModal = () => {
@@ -62,7 +62,7 @@ export default defineComponent({
           props.board.name = updatedBoard.board.name;
           props.board.description = updatedBoard.board.description;
 
-          isModalOpen.value = false; 
+          isModalOpen.value = false;
         } else {
           console.error('Failed to update board details');
         }
@@ -100,7 +100,7 @@ export default defineComponent({
     >
       Edit Details
     </button>
-    
+
     <Modal :isOpen="isModalOpen" @update:isOpen="isModalOpen = $event">
       <template #default>
         <div class="flex flex-col space-y-4">
