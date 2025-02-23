@@ -1,2 +1,7 @@
 @import './base.css';
 @import 'tailwindcss';
+
+@theme {
+    --color-lightblue: #2E8EFF;
+    --color-darkblue: #0A2E9C;
+}
