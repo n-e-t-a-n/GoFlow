@@ -22,6 +22,7 @@ export default defineComponent({
       type: Array as PropType<Task[]>,
       required: true,
     },
+    role: Boolean,
   },
   setup(props) {
     const filteredTasks = ref(props.tasks.filter((task) => task.task_list_id === props.list.id));
@@ -240,7 +241,7 @@ export default defineComponent({
         </select>
       </div>
 
-      <div class="mt-4">
+      <div v-if="role" class="mt-4">
         <label for="assigned_user" class="block text-sm font-semibold">Assigned User</label>
         <input
           v-model="newTask.assigned_user_id"
@@ -251,7 +252,7 @@ export default defineComponent({
         />
       </div>
 
-      <div class="mt-4">
+      <div v-if="role" class="mt-4">
         <label for="due_date" class="block text-sm font-semibold">Due Date</label>
         <input
           v-model="newTask.due_date"
@@ -261,7 +262,7 @@ export default defineComponent({
         />
       </div>
 
-      <div class="mt-4">
+      <div v-if="role" class="mt-4">
         <label for="priority" class="block text-sm font-semibold">Priority</label>
         <select
           v-model="newTask.priority"
