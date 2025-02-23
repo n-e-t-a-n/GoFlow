@@ -90,7 +90,7 @@ export default defineComponent({
     >
       <TaskCard v-for="task in filteredTasks" :key="task.id" :task="task" />
     </div>
-    <div v-else class="text-gray-500">No tasks in this list</div>
+    <div v-else class="overflow-y-auto flex flex-col items-center justify-start gap-4 h-[50vh]">No tasks in this list</div>
   </div>
 
   <Modal :isOpen="isEditModalVisible" @update:isOpen="isEditModalVisible = $event">
