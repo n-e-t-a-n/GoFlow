@@ -231,7 +231,8 @@ export default defineComponent({
 </script>
 
 <template>
-  <div class="mt-6">
+  <div class="p-6">
+    <div class="mt-6">
     <button
       @click="openModal"
       class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none transition duration-200"
@@ -253,9 +254,10 @@ export default defineComponent({
   <div>
     <div class="mt-6 flex overflow-x-auto gap-4 pb-2 justify-start">
       <div v-for="list in lists" :key="list.id" class="flex-shrink-0">
-        <ListCard :list="list" :tasks="tasks" />
+        <ListCard :list="list" :tasks="tasks" :role="userIsAdmin"/>
       </div>
       <div
+        v-if="userIsAdmin"
         @click="openCreateModal"
         class="flex items-center justify-center p-4 rounded-lg border-3 min-h-[80vh] max-h-[80vh] min-w-[250px] max-w-[250px] mb-4 flex-shrink-0 w-full"
       >
@@ -375,5 +377,6 @@ export default defineComponent({
         </button>
       </div>
     </Modal>
+  </div>
   </div>
 </template>
