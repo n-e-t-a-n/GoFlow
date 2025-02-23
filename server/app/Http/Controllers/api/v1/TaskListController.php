@@ -71,7 +71,7 @@ class TaskListController extends Controller
     public function update(Request $request, TaskList $listId)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'nullable|string|max:255',
+            'name' => 'string|max:255',
             'priority' => 'nullable|integer',
         ]);
 
