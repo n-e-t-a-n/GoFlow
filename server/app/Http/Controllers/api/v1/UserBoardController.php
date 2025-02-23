@@ -36,7 +36,7 @@ class UserBoardController extends Controller
         return $userBoard && $userBoard->role === 'admin';
     }
 
-    public function getUserIdByEmail($email)
+    private function getUserIdByEmail($email)
     {
         $user = User::where('email', $email)->first();
 
@@ -107,13 +107,23 @@ class UserBoardController extends Controller
     }
 
 
-    public function remove(Request $request, $boardId, $userId)
+    public function remove(Request $request, $boardId)
     {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email|exists:users,email',
+        ]);
 
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
 
         if (!$this->isAdmin($boardId)) {
             return response()->json(['message' => 'You are not authorized to remove a member from this board.'], 403);
         }
+
+        $validatedData = $validator->validated();
+
+        $userId = $this->getUserIdByEmail($validatedData['email']);
 
         $userBoard = DB::table('user_boards')
                     ->where('user_id', $userId)
