@@ -117,23 +117,23 @@ export default defineComponent({
 
   <Modal :isOpen="isModalOpen" @update:isOpen="isModalOpen = $event">
     <template #default>
-      <div class="flex flex-col space-y-6 p-6">
+      <div class="flex flex-col space-y-3 p-6">
         <h2 class="text-2xl font-semibold text-gray-800">Edit Board Details</h2>
 
-        <label for="boardName" class="text-gray-700">Board Name</label>
+        <label for="boardName" class="text-gray-700 mb-1">Board Name</label>
         <input
           id="boardName"
           v-model="editedName"
           type="text"
-          class="px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-lightblue"
+          class="px-4 py-3 border mb-6 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-lightblue"
           placeholder="Enter board name"
         />
 
-        <label for="boardDescription" class="text-gray-700">Board Description</label>
+        <label for="boardDescription" class="text-gray-700 mb-1">Board Description</label>
         <textarea
           id="boardDescription"
           v-model="editedDescription"
-          class="px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-lightblue"
+          class="px-4 py-3 border mb-8 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-lightblue"
           placeholder="Enter board description"
         ></textarea>
 

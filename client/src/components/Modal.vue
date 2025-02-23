@@ -21,7 +21,7 @@ export default {
     class="fixed inset-0 z-50 backdrop-blur-sm flex justify-center items-center"
     @click.self="closeModal"
   >
-    <div class="relative bg-white rounded-lg p-6 w-1/3 shadow-lg">
+    <div class="relative bg-white rounded-lg p-6 w-1/3 border-2">
       <button
         @click="closeModal"
         class="absolute top-2 right-2 text-gray-500 hover:text-gray-700 focus:outline-none"

@@ -131,7 +131,7 @@ export default defineComponent({
     <div class="p-6">
       <button
         @click="openModal"
-        class="text-white text-lg bg-green-500 px-6 py-3 rounded-lg shadow-md hover:bg-green-600 transition duration-200"
+        class="text-white font-semibold text-lg bg-lightblue px-6 py-3 rounded-lg shadow-md hover:bg-darkblue transition duration-200"
       >
         Create New Board
       </button>
@@ -150,7 +150,7 @@ export default defineComponent({
           id="name"
           v-model="newBoard.name"
           type="text"
-          class="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500"
+          class="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-lightblue"
           placeholder="Enter board name"
         />
 
@@ -158,7 +158,7 @@ export default defineComponent({
         <textarea
           id="description"
           v-model="newBoard.description"
-          class="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500"
+          class="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-lightblue"
           placeholder="Enter board description"
         ></textarea>
       </div>

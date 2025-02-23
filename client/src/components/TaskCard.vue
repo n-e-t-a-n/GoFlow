@@ -91,7 +91,16 @@ function formatString(str: string) {
       </p>
       <p class="text-sm text-gray-500">
         <strong>Due Date:</strong>
-        {{ task.due_date ? new Date(task.due_date).toLocaleDateString() : 'No due date' }}
+        {{
+          task.due_date
+            ? new Date(task.due_date).toLocaleDateString('en-US', {
+                weekday: 'short',
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+              })
+            : 'N/A'
+        }}
       </p>
     </div>
   </div>
@@ -136,8 +145,13 @@ function formatString(str: string) {
         <strong>Due Date:</strong>
         {{
           taskDetails?.due_date
-            ? new Date(taskDetails?.due_date).toLocaleDateString()
-            : 'No due date'
+            ? new Date(taskDetails.due_date).toLocaleDateString('en-US', {
+                weekday: 'short',
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+              })
+            : 'N/A'
         }}
       </p>
       <p>

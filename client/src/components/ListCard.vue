@@ -188,16 +188,16 @@ export default defineComponent({
 
     <div class="flex justify-between">
       <button
-        @click="updateListTitle"
-        class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition"
-      >
-        Save
-      </button>
-      <button
         @click="closeEditModal"
         class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition"
       >
         Cancel
+      </button>
+      <button
+        @click="updateListTitle"
+        class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition"
+      >
+        Save
       </button>
     </div>
   </Modal>
@@ -277,18 +277,18 @@ export default defineComponent({
       </div>
     </div>
 
-    <div class="flex justify-between">
+    <div class="flex justify-between mt-6">
+      <button
+        @click="closeCreateTaskModal"
+        class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition"
+      >
+        Cancel
+      </button>
       <button
         @click="createNewTask"
         class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition"
       >
         Save
-      </button>
-      <button
-        @click="closeCreateTaskModal"
-        class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition"
-      >
-        Cancel
       </button>
     </div>
   </Modal>
