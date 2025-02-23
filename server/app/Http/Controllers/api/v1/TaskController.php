@@ -52,6 +52,7 @@ class TaskController extends Controller
         return response()->json([
             'tasks' => $tasks,
             'lists' => $lists,
+            'isAdmin' => $this->isAdmin($boardId),
         ]);
     }
 
