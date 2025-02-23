@@ -36,6 +36,15 @@ class UserBoardController extends Controller
         return $userBoard && $userBoard->role === 'admin';
     }
 
+    public function getUserIdByEmail($email)
+    {
+        $user = User::where('email', $email)->first();
+
+        if ($user) return $user->id;  
+        
+        return null;
+    }
+
     public function index(Request $request, $boardId)
     {
         if (!$this->isMember($boardId)) {
@@ -100,6 +109,8 @@ class UserBoardController extends Controller
 
     public function remove(Request $request, $boardId, $userId)
     {
+
+
         if (!$this->isAdmin($boardId)) {
             return response()->json(['message' => 'You are not authorized to remove a member from this board.'], 403);
         }
