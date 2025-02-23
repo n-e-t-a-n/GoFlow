@@ -71,7 +71,7 @@ class TaskListController extends Controller
     public function update(Request $request, TaskList $listId)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'string|max:255',
+            'name' => 'nullable|max:255',
             'priority' => 'nullable|integer',
         ]);
 
@@ -86,13 +86,8 @@ class TaskListController extends Controller
             return response()->json(['message' => 'Unauthorized: Only admins can edit task lists.'], 403);
         }
 
-        if ($request->has('name')) {
-            $listId->name = $request->name;
-        }
-
-        if ($request->has('priority')) {
-            $listId->priority = $request->priority;
-        }
+        $listId->name = $request->name ?? $listId->name;
+        $listId->priority = $request->priority ?? $listId->priority;
 
         $listId->save();
 
