@@ -8,9 +8,9 @@ GoFlow is a kanban-based mini-app created with the use of [Vue.js](https://vuejs
 
 ## General App Functionalities
 
-- **User Management**: Users can register, log in, and log out. Authentication is handled via JWT tokens, with role-based access control ensuring proper permissions for each user.
+- **User Management**: Users can register, log in, and log out. Authentication is handled via Laravel Sanctum personal access tokens, with role-based access control ensuring proper permissions for each user.
 
-- **Board Management**: Users can create, view, and manage boards. Admins have additional privileges to modify board details such as name and description.
+- **Board Management**: Users can create, view, and manage boards. Admins have additional privileges to modify board details such as list names, task due dates, assigned users, etc....
 
 - **Task Organization**: Boards are organized into task lists, and tasks can be created, updated, moved between lists, and assigned to specific users. Admins can set due dates, priorities, and manage assignees.
 
