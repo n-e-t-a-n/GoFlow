@@ -109,7 +109,12 @@ class TaskController extends Controller
 
         $validator = Validator::make($request->all(), [
             'title' => 'nullable|string|max:255',
+            'task_list_id' => 'required|exists:task_lists,id',
             'description' => 'nullable|string',
+            'assigned_user_id' => 'nullable|exists:users,id',
+            'due_date' => 'nullable|date',
+            'priority' => 'nullable|in:low,medium,high,top',
+            'status' => 'nullable|in:pending,in_progress,completed,on_hold',
         ]);
 
         if ($validator->fails()) {
