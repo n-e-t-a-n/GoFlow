@@ -169,7 +169,7 @@ export default defineComponent({
     </h3>
 
     <div class="overflow-y-auto flex flex-col items-center justify-start gap-4 max-h-[75vh]">
-      <TaskCard v-for="task in filteredTasks" :key="task.id" :task="task" :listName="$props.list.name" :members="$props.members"/>
+      <TaskCard v-for="task in filteredTasks" :key="task.id" :task="task" :role="role" :list="list" :listName="$props.list.name" :members="$props.members"/>
 
       <div
         @click="openCreateTaskModal"
