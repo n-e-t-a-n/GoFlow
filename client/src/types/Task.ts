@@ -11,5 +11,5 @@ export interface Task {
   assigned_user_id: string | null;
   due_date: string | null;
   priority: TaskPriority;
-  list_name: string;
+  list_name?: string;
 }
