@@ -119,7 +119,7 @@ export default defineComponent({
             task_list_id: props.list.id,
             title: newTask.value.title,
             description: newTask.value.description,
-            assigned_user_id: matchedUser?.user_id || null,
+            assigned_user_id: null,
             due_date: newTask.value.due_date,
             priority: newTask.value.priority,
             status: newTask.value.status,
@@ -248,7 +248,7 @@ export default defineComponent({
         </select>
       </div>
 
-      <div v-if="role" class="mt-4">
+      <!-- <div v-if="role" class="mt-4">
         <label for="assigned_user" class="block text-sm font-semibold">Assigned User</label>
         <input
           v-model="newTask.assigned_user_id"
@@ -257,7 +257,7 @@ export default defineComponent({
           class="w-full p-2 border border-gray-300 rounded-lg"
           placeholder="Enter assigned user"
         />
-      </div>
+      </div> -->
 
       <div v-if="role" class="mt-4">
         <label for="due_date" class="block text-sm font-semibold">Due Date</label>

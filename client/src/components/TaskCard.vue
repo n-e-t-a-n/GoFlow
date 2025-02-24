@@ -163,10 +163,10 @@ function formatString(str: string) {
         <strong>Description:</strong>
         {{ taskDetails?.description || 'No description available.' }}
       </p>
-      <p>
+      <!-- <p>
         <strong>Assignee:</strong>
         {{ $props.members.find((user) => user.user_id === $props.task.assigned_user_id)?.name || 'None' }}
-      </p>
+      </p> -->
     </div>
 
     <button
