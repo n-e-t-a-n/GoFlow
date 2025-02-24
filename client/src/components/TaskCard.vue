@@ -29,137 +29,143 @@ export default defineComponent({
     role: Boolean,
   },
   setup(props) {
-  const isModalVisible = ref(false);
-  const isEditModalVisible = ref(false);
-  const taskDetails = ref<Task | null>(null);
+    const isModalVisible = ref(false);
+    const isEditModalVisible = ref(false);
+    const taskDetails = ref<Task | null>(null);
 
-  const listArr = ref<List[]>([]);
-  const listNames = ref<string[]>([]); // This will store the list of list names
+    const listArr = ref<List[]>([]);
+    const listNames = ref<string[]>([]);
 
-  const viewTask = () => {
-    taskDetails.value = props.task;
-    isModalVisible.value = true;
-  };
-
-  const closeModal = () => {
-    isModalVisible.value = false;
-    taskDetails.value = null;
-  };
-
-  const openEditModal = () => {
-    isModalVisible.value = false;
-    isEditModalVisible.value = true;
-  };
-
-  const closeEditModal = () => {
-    isEditModalVisible.value = false;
-  };
-
-  const editTask = async () => {
-  try {
-    const token = localStorage.getItem('token');
-
-    if (!token) {
-      console.error('No token found');
-      return;
-    }
-
-    const selectedList = listArr.value.find((list) => list.name === props.task.list_name);
-
-    if (!selectedList) {
-      console.error('Selected list not found');
-      return;
-    }
-
-    const updatedTaskData = {
-      title: props.task.title,
-      description: props.task.description,
-      status: props.task.status,
-      priority: props.task.priority,
-      due_date: props.task.due_date,
-      task_list_id: selectedList.id,
+    const viewTask = () => {
+      taskDetails.value = props.task;
+      isModalVisible.value = true;
     };
 
-    const response = await fetch(`${import.meta.env.VITE_BASE_URL}/v1/task/${props.task.id}/edit`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(updatedTaskData),
+    const closeModal = () => {
+      isModalVisible.value = false;
+      taskDetails.value = null;
+    };
+
+    const openEditModal = () => {
+      isModalVisible.value = false;
+      isEditModalVisible.value = true;
+    };
+
+    const closeEditModal = () => {
+      isEditModalVisible.value = false;
+    };
+
+    const editTask = async () => {
+      try {
+        const token = localStorage.getItem('token');
+
+        if (!token) {
+          console.error('No token found');
+          return;
+        }
+
+        const selectedList = listArr.value.find((list) => list.name === props.task.list_name);
+
+        if (!selectedList) {
+          console.error('Selected list not found');
+          return;
+        }
+
+        const updatedTaskData = {
+          title: props.task.title,
+          description: props.task.description,
+          status: props.task.status,
+          priority: props.task.priority,
+          due_date: props.task.due_date,
+          task_list_id: selectedList.id,
+        };
+
+        const response = await fetch(
+          `${import.meta.env.VITE_BASE_URL}/v1/task/${props.task.id}/edit`,
+          {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify(updatedTaskData),
+          },
+        );
+
+        if (response.ok) {
+          const data = await response.json();
+          console.log('Successfully edited task:', data);
+          closeEditModal();
+          window.location.reload();
+        } else {
+          const errorData = await response.json();
+          console.error('Failed to edit task:', errorData);
+        }
+      } catch (error) {
+        console.error('Error occurred while editing task:', error);
+      }
+    };
+
+    const getNamesFromListArr = () => {
+      if (listArr.value) {
+        return listArr.value.map((item: { name: string }) => item.name);
+      } else {
+        console.log('listArr is undefined or empty');
+        return [];
+      }
+    };
+
+    const updateListNames = () => {
+      listNames.value = listArr.value.map((list) => list.name);
+    };
+
+    onMounted(async () => {
+      const token = localStorage.getItem('token');
+
+      if (!token) {
+        console.error('Token is missing');
+        return;
+      }
+
+      try {
+        const response = await fetch(
+          `${import.meta.env.VITE_BASE_URL}/v1/task/${props.task.board_id}`,
+          {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
+          },
+        );
+
+        if (response.ok) {
+          const data = await response.json();
+          console.log('Successfully retrieved tasks:', data);
+          listArr.value = data.lists;
+          updateListNames();
+        } else {
+          const errorData = await response.json();
+          console.error('Failed to retrieve tasks:', errorData);
+        }
+      } catch (error) {
+        console.error('Error occurred while fetching tasks:', error);
+      }
     });
 
-    if (response.ok) {
-      const data = await response.json();
-      console.log('Successfully edited task:', data);
-      closeEditModal();
-      window.location.reload();
-    } else {
-      const errorData = await response.json();
-      console.error('Failed to edit task:', errorData);
-    }
-  } catch (error) {
-    console.error('Error occurred while editing task:', error);
-  }
-};
-
-  const getNamesFromListArr = () => {
-    if (listArr.value) {
-      return listArr.value.map((item: { name: string }) => item.name);
-    } else {
-      console.log('listArr is undefined or empty');
-      return [];
-    }
-  };
-
-  const updateListNames = () => {
-    listNames.value = listArr.value.map((list) => list.name);
-  };
-
-  onMounted(async () => {
-    const token = localStorage.getItem('token');
-
-    if (!token) {
-      console.error('Token is missing');
-      return;
-    }
-
-    try {
-      const response = await fetch(`${import.meta.env.VITE_BASE_URL}/v1/task/${props.task.board_id}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        console.log('Successfully retrieved tasks:', data);
-        listArr.value = data.lists;
-        updateListNames(); 
-      } else {
-        const errorData = await response.json();
-        console.error('Failed to retrieve tasks:', errorData);
-      }
-    } catch (error) {
-      console.error('Error occurred while fetching tasks:', error);
-    }
-  });
-
-  return {
-    viewTask,
-    closeModal,
-    isModalVisible,
-    taskDetails,
-    formatString,
-    isEditModalVisible,
-    openEditModal,
-    closeEditModal,
-    editTask,
-    listNames
-  };
-},
+    return {
+      viewTask,
+      closeModal,
+      isModalVisible,
+      taskDetails,
+      formatString,
+      isEditModalVisible,
+      openEditModal,
+      closeEditModal,
+      editTask,
+      listNames,
+    };
+  },
 });
 
 function formatString(str: string) {
@@ -286,17 +292,17 @@ function formatString(str: string) {
 
     <div class="flex">
       <button
-      @click="closeModal"
-      class="mt-4 bg-gray-500 text-white p-2 rounded-lg w-full hover:bg-gray-600 transition"
-    >
-      Close
-    </button>
-    <button
-      @click="openEditModal"
-      class="mt-4 ml-8 bg-lightblue text-white p-2 rounded-lg w-full hover:bg-darkblue transition"
-    >
-      Edit
-    </button>
+        @click="closeModal"
+        class="mt-4 bg-gray-500 text-white p-2 rounded-lg w-full hover:bg-gray-600 transition"
+      >
+        Close
+      </button>
+      <button
+        @click="openEditModal"
+        class="mt-4 ml-8 bg-lightblue text-white p-2 rounded-lg w-full hover:bg-darkblue transition"
+      >
+        Edit
+      </button>
     </div>
   </Modal>
 
@@ -373,25 +379,21 @@ function formatString(str: string) {
           <option value="top">Top</option>
         </select>
       </div>
-
-  
     </div>
 
     <div class="mt-4">
       <label for="list" class="block text-sm font-semibold">List</label>
       <select
-        v-model="task.list_name" 
+        v-model="task.list_name"
         id="list"
         class="w-full p-2 border border-gray-300 rounded-lg"
       >
-        <option value="" disabled>Select a list</option> 
+        <option value="" disabled>Select a list</option>
         <option v-for="name in listNames" :key="name" :value="name">
           {{ name }}
         </option>
       </select>
     </div>
-
-
 
     <div class="flex justify-between mt-6">
       <button

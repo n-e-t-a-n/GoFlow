@@ -26,7 +26,7 @@ export default defineComponent({
     members: {
       type: Array as PropType<UserBoard[]>,
       required: true,
-    }
+    },
   },
   setup(props) {
     const filteredTasks = ref(props.tasks.filter((task) => task.task_list_id === props.list.id));
@@ -104,9 +104,11 @@ export default defineComponent({
     const createNewTask = async () => {
       try {
         const token = localStorage.getItem('token');
-        const matchedUser = props.members.find((user) => user.email === newTask.value.assigned_user_id);
+        const matchedUser = props.members.find(
+          (user) => user.email === newTask.value.assigned_user_id,
+        );
 
-        console.log(matchedUser)
+        console.log(matchedUser);
 
         const response = await fetch(`${import.meta.env.VITE_BASE_URL}/v1/task`, {
           method: 'POST',
@@ -169,7 +171,15 @@ export default defineComponent({
     </h3>
 
     <div class="overflow-y-auto flex flex-col items-center justify-start gap-4 max-h-[75vh]">
-      <TaskCard v-for="task in filteredTasks" :key="task.id" :task="task" :role="role" :list="list" :listName="$props.list.name" :members="$props.members"/>
+      <TaskCard
+        v-for="task in filteredTasks"
+        :key="task.id"
+        :task="task"
+        :role="role"
+        :list="list"
+        :listName="$props.list.name"
+        :members="$props.members"
+      />
 
       <div
         @click="openCreateTaskModal"
