@@ -8,7 +8,8 @@
 <script lang="ts">
 import { computed } from 'vue';
 import { useRoute } from 'vue-router';
-import Navbar from './components/Navbar.vue';
+
+import { Navbar } from '@/components/common';
 
 export default {
   name: 'App',

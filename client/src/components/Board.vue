@@ -2,8 +2,7 @@
 import { defineComponent, onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 
-import ListCard from '@/components/ListCard.vue';
-import Modal from '@/components/Modal.vue';
+import { ListCard, Modal } from '@/components/common';
 
 import type { List, Task, BoardData, UserBoard } from '@/types';
 

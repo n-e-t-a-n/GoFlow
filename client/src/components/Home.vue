@@ -2,8 +2,7 @@
 import { defineComponent, ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 
-import BoardCard from '@/components/BoardCard.vue';
-import Modal from '@/components/Modal.vue';
+import { BoardCard, Modal } from '@/components/common';
 
 export default defineComponent({
   name: 'Home',
