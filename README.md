@@ -25,12 +25,14 @@ GoFlow is a kanban-based mini-app created with the use of [Vue.js](https://vuejs
 ```bash
 docker compose up --build -d
 ```
-3. Congrats! Everything should be running.
+3. Remove .example from .env.example from the client and server subfolders to get the environment variables.
+4. Populate the database connection information in the server and the baseURL in the client.
+5. Congrats! Everything should be running.
 
 #### Optional: if you encounter the error "require(vendor/autoload.php): failed to open stream", do the following:
 
-4. Type 'docker ps' to get the ID of your container. 
-5. Copy your container ID and type the following command/s sequentially:
+6. Type 'docker ps' to get the ID of your container. 
+7. Copy your container ID and type the following command/s sequentially:
 
 ```bash
 docker exec -t <container_id_without_angle_brackets> sh
@@ -39,9 +41,7 @@ docker exec -t <container_id_without_angle_brackets> sh
 # exit
 ```
 
-6. That should fix the error with the autoload.php file not being generated. Everything should be working at this point!
-
-
+8. That should fix the error with the autoload.php file not being generated. Everything should be working at this point!
 
 ## Manual Setup
 
