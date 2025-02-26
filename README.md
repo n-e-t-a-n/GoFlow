@@ -1,4 +1,4 @@
-# GoFLow
+# GoFlow
 
 ![Last Update](https://img.shields.io/github/last-commit/n-e-t-a-n/GoFlow?color=blue&label=Last%20Update)
 
@@ -25,8 +25,8 @@ GoFlow is a kanban-based mini-app created with the use of [Vue.js](https://vuejs
 
 1. Clone this project to your local machine.
 2. Run an SQL-compatible database and keep track of the credentials.
-3. Remove .example from .env.example from the client and server subfolders to get the environment variables
-4. Populate the database connection information in the server and the baseURL in the client
+3. Remove .example from .env.example from the client and server subfolders to get the environment variables.
+4. Populate the database connection information in the server and the baseURL in the client.
 5.  Run the following scripts in a terminal.
 
 ```bash
