@@ -57,7 +57,7 @@ export default {
 </script>
 
 <template>
-  <div class="flex justify-center items-center min-h-screen bg-white">
+  <div class="flex justify-center items-center min-h-screen bg-lightblue">
     <div class="bg-white p-8 w-full max-w-2xl border-2 border-gray-300 rounded-2xl">
       <div class="flex justify-center mb-6">
         <img src="../assets/images/logo.png" alt="Logo" class="h-36" />
