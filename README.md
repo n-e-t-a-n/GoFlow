@@ -1,8 +1,6 @@
 # GoFlow
 
-![Last Update](https://img.shields.io/github/last-commit/n-e-t-a-n/GoFlow?color=blue&label=Last%20Update)
-
-![Activity](https://img.shields.io/badge/Activity-Completed-blue)
+![Last Update](https://img.shields.io/github/last-commit/n-e-t-a-n/GoFlow?color=blue&label=Last%20Update) ![Activity](https://img.shields.io/badge/Activity-Completed-blue)
 
 GoFlow is a kanban-based mini-app created with the use of [Vue.js](https://vuejs.org/), [Laravel](https://laravel.com/), [MySQL](https://www.mysql.com/), and [Tailwind CSS](https://tailwindcss.com/).
 
@@ -20,14 +18,38 @@ GoFlow is a kanban-based mini-app created with the use of [Vue.js](https://vuejs
 
 - **Team Collaboration**: The app allows seamless collaboration by organizing tasks into boards and lists, ensuring teams can manage their work efficiently with controlled access to features based on roles.
 
+## Docker Setup
 
-## Setup
+1. Go to the project's root directory.
+2. Type the following command:
+```bash
+docker compose up --build -d
+```
+3. Congrats! Everything should be running.
+
+#### Optional: if you encounter the error "require(vendor/autoload.php): failed to open stream", do the following:
+
+4. Type 'docker ps' to get the ID of your container. 
+5. Copy your container ID and type the following command/s sequentially:
+
+```bash
+docker exec -t <container_id_without_angle_brackets> sh
+
+# composer install
+# exit
+```
+
+6. That should fix the error with the autoload.php file not being generated. Everything should be working at this point!
+
+
+
+## Manual Setup
 
 1. Clone this project to your local machine.
 2. Run an SQL-compatible database and keep track of the credentials.
 3. Remove .example from .env.example from the client and server subfolders to get the environment variables.
 4. Populate the database connection information in the server and the baseURL in the client.
-5.  Run the following scripts in a terminal.
+5.  Run the following scripts in a terminal:
 
 ```bash
 # Install Vue.js dependencies
