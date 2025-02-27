@@ -1,4 +1,4 @@
-import type { PropType, Ref } from 'vue';
+import type { Ref } from 'vue';
 
 import type { Board, List, Task, UserBoard } from '@/types';
 
@@ -26,17 +26,20 @@ export async function getBoards(board: Ref<Board[]>) {
   }
 }
 
-export async function getMembers(members: Ref<UserBoard[]>, boardID: string) {
+export async function getMembers(members: Ref<UserBoard[]>, boardID: Ref<string>) {
   try {
     const token = localStorage.getItem('token');
 
     if (!token) return;
 
-    const response = await fetch(`${import.meta.env.VITE_BASE_URL}/v1/user-board/${boardID}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
+    const response = await fetch(
+      `${import.meta.env.VITE_BASE_URL}/v1/user-board/${boardID.value}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       },
-    });
+    );
 
     if (!response.ok) {
       throw new Error('Failed to fetch members');
@@ -53,12 +56,12 @@ export async function getTasks(
   tasks: Ref<Task[]>,
   lists: Ref<List[]>,
   userIsAdmin: Ref<boolean>,
-  boardID: string,
+  boardID: Ref<string>,
 ) {
   try {
     const token = localStorage.getItem('token');
 
-    const response = await fetch(`${import.meta.env.VITE_BASE_URL}/v1/task/${boardID}`, {
+    const response = await fetch(`${import.meta.env.VITE_BASE_URL}/v1/task/${boardID.value}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
