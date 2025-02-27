@@ -40,7 +40,7 @@ export async function createBoard(
 export async function createList(
   lists: Ref<List[]>,
   newListTitle: Ref<string>,
-  boardID: string,
+  boardID: Ref<string>,
   isCreateListModalOpen: Ref<boolean>,
 ) {
   try {
@@ -53,7 +53,7 @@ export async function createList(
         Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
-        board_id: boardID,
+        board_id: boardID.value,
         name: newListTitle.value,
         priority: 100,
       }),
@@ -75,7 +75,7 @@ export async function createList(
 }
 
 export async function createMember(
-  boardID: string,
+  boardID: Ref<string>,
   newMemberEmail: Ref<string>,
   isAdmin: Ref<boolean>,
   isCreateMemberModalOpen: Ref<boolean>,
@@ -83,18 +83,21 @@ export async function createMember(
   try {
     const token = localStorage.getItem('token');
 
-    const response = await fetch(`${import.meta.env.VITE_BASE_URL}/v1/user-board/${boardID}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
+    const response = await fetch(
+      `${import.meta.env.VITE_BASE_URL}/v1/user-board/${boardID.value}`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          board_id: boardID.value,
+          email: newMemberEmail.value,
+          role: isAdmin.value ? 'admin' : 'member',
+        }),
       },
-      body: JSON.stringify({
-        board_id: boardID,
-        email: newMemberEmail.value,
-        role: isAdmin.value ? 'admin' : 'member',
-      }),
-    });
+    );
 
     if (!response.ok) {
       throw new Error('Failed to add member');
