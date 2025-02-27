@@ -3,7 +3,7 @@ import { defineComponent, ref, onMounted } from 'vue';
 
 import { BoardCard, Modal } from '@/components/common';
 
-import { getBoards, createBoard, logout } from '@/helpers/database';
+import { getBoards, createBoard } from '@/helpers/database';
 import type { Board } from '@/types';
 
 export default defineComponent({
@@ -21,32 +21,29 @@ export default defineComponent({
 
     const isModalVisible = ref(false);
 
-    const openModal = () => {
-      newBoard.value.name = '';
-      newBoard.value.description = '';
-      isModalVisible.value = true;
+    const handleModal = () => {
+      if (isModalVisible.value) {
+        newBoard.value.name = '';
+        newBoard.value.description = '';
+      }
+
+      isModalVisible.value = !isModalVisible.value;
     };
 
-    const closeModal = () => {
-      isModalVisible.value = false;
+    const handleCreateBoard = () => {
+      createBoard(boards, newBoard, isModalVisible);
     };
 
     onMounted(() => {
       getBoards(boards);
     });
 
-    const handleCreateBoard = () => {
-      createBoard(boards, newBoard, isModalVisible);
-    };
-
     return {
       boards,
-      logout,
-      isModalVisible,
       newBoard,
+      isModalVisible,
+      handleModal,
       handleCreateBoard,
-      openModal,
-      closeModal,
     };
   },
 });
@@ -56,7 +53,7 @@ export default defineComponent({
   <div class="min-h-screen bg-gray-50">
     <div class="p-6">
       <button
-        @click="openModal"
+        @click="handleModal"
         class="text-white font-semibold text-lg bg-lightblue px-6 py-3 rounded-lg shadow-md hover:bg-darkblue transition duration-200"
       >
         Create New Board
@@ -67,7 +64,7 @@ export default defineComponent({
       <BoardCard v-for="board in boards" :key="board.id" :board="board" />
     </div>
 
-    <Modal :isOpen="isModalVisible" @update:isOpen="isModalVisible = $event">
+    <Modal :isOpen="isModalVisible">
       <h2 class="text-2xl font-bold text-gray-800 mb-4">Create New Board</h2>
 
       <div class="mb-4">
@@ -91,7 +88,7 @@ export default defineComponent({
 
       <div class="flex justify-end gap-4 mt-4">
         <button
-          @click="closeModal"
+          @click="handleModal"
           class="bg-gray-500 text-white px-6 py-3 rounded-md hover:bg-gray-600 transition"
         >
           Cancel
