@@ -3,21 +3,25 @@ import { ref } from 'vue';
 
 import { login } from '@/helpers/database';
 
+import type { Auth } from '@/types';
+
 export default {
   name: 'Login',
   setup() {
-    const email = ref('');
-    const password = ref('');
+    const auth = ref<Auth>({
+      email: '',
+      password: '',
+    });
+
     const isLoading = ref(false);
     const errorMessage = ref('');
 
     const handleLogin = () => {
-      login(email, password, isLoading, errorMessage);
+      login(auth.value, isLoading, errorMessage);
     };
 
     return {
-      email,
-      password,
+      auth,
       isLoading,
       errorMessage,
       handleLogin,
@@ -36,7 +40,7 @@ export default {
         <div>
           <label for="email" class="block text-dark-blue font-semibold text-lg">Email</label>
           <input
-            v-model="email"
+            v-model="auth.email"
             type="email"
             id="email"
             placeholder="Email"
@@ -48,7 +52,7 @@ export default {
         <div>
           <label for="password" class="block text-dark-blue font-semibold text-lg">Password</label>
           <input
-            v-model="password"
+            v-model="auth.password"
             type="password"
             id="password"
             placeholder="Password"
