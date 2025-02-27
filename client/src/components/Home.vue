@@ -3,7 +3,7 @@ import { defineComponent, ref, onMounted } from 'vue';
 
 import { BoardCard, Modal } from '@/components/common';
 
-import { getBoards, logout } from '@/helpers/database';
+import { getBoards, createBoard, logout } from '@/helpers/database';
 import type { Board } from '@/types';
 
 export default defineComponent({
@@ -14,38 +14,12 @@ export default defineComponent({
   },
   setup() {
     const boards = ref<Board[]>([]);
-    const isModalVisible = ref(false);
     const newBoard = ref({
       name: '',
       description: '',
     });
 
-    const createBoard = () => {
-      const token = localStorage.getItem('token');
-      if (!token || !newBoard.value.name || !newBoard.value.description) return;
-
-      fetch(`${import.meta.env.VITE_BASE_URL}/v1/board`, {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(newBoard.value),
-      })
-        .then((response) => {
-          if (response.ok) {
-            response.json().then(() => {
-              getBoards(boards);
-              isModalVisible.value = false;
-            });
-          } else {
-            console.error('Failed to create board.');
-          }
-        })
-        .catch((error) => {
-          console.error('Error creating board:', error);
-        });
-    };
+    const isModalVisible = ref(false);
 
     const openModal = () => {
       newBoard.value.name = '';
@@ -61,12 +35,16 @@ export default defineComponent({
       getBoards(boards);
     });
 
+    const handleCreateBoard = () => {
+      createBoard(boards, newBoard, isModalVisible);
+    };
+
     return {
       boards,
       logout,
       isModalVisible,
       newBoard,
-      createBoard,
+      handleCreateBoard,
       openModal,
       closeModal,
     };
@@ -119,7 +97,7 @@ export default defineComponent({
           Cancel
         </button>
         <button
-          @click="createBoard"
+          @click="handleCreateBoard"
           class="bg-blue-500 text-white px-6 py-3 rounded-md hover:bg-blue-600 transition"
         >
           Create
