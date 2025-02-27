@@ -22,11 +22,8 @@ export default {
     @click.self="closeModal"
   >
     <div class="relative bg-white rounded-lg p-6 w-1/3 border-2">
-      <button
-        @click="closeModal"
-        class="absolute top-2 right-2 text-gray-500 hover:text-gray-700 focus:outline-none"
-      >
-        <span class="text-xl">&times;</span>
+      <button @click="closeModal" class="absolute top-3 right-6">
+        <span class="text-2xl">&times;</span>
       </button>
       <div class="max-h-[80vh] overflow-y-auto">
         <slot></slot>
