@@ -65,7 +65,7 @@ export default defineComponent({
       <BoardCard v-for="board in boards" :key="board.id" :board="board" />
     </div>
 
-    <Modal :isOpen="isModalVisible">
+    <Modal :isOpen="isModalVisible" :handleModal="handleModal">
       <h2 class="text-2xl font-bold text-gray-800 mb-4">Create New Board</h2>
 
       <div class="mb-4">
