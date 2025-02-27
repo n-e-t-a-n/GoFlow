@@ -37,7 +37,12 @@ export async function createBoard(
   }
 }
 
-export async function createList(lists: Ref<List[]>, newListTitle: Ref<string>, boardID: string) {
+export async function createList(
+  lists: Ref<List[]>,
+  newListTitle: Ref<string>,
+  boardID: string,
+  isCreateListModalOpen: Ref<boolean>,
+) {
   try {
     const token = localStorage.getItem('token');
 
@@ -59,11 +64,47 @@ export async function createList(lists: Ref<List[]>, newListTitle: Ref<string>, 
       lists.value.push({
         name: newListTitle.value,
       });
-      closeCreateModal();
+      isCreateListModalOpen.value = false;
+      newListTitle.value = '';
     } else {
       console.error('Failed to add new board.');
     }
   } catch (error) {
     console.error('Error adding new board:', error);
+  }
+}
+
+export async function createMember(
+  boardID: string,
+  newMemberEmail: Ref<string>,
+  isAdmin: Ref<boolean>,
+  isCreateMemberModalOpen: Ref<boolean>,
+) {
+  try {
+    const token = localStorage.getItem('token');
+
+    const response = await fetch(`${import.meta.env.VITE_BASE_URL}/v1/user-board/${boardID}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        board_id: boardID,
+        email: newMemberEmail.value,
+        role: isAdmin.value ? 'admin' : 'member',
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to add member');
+    }
+    const data = await response.json();
+    console.log('Member added:', data);
+
+    isCreateMemberModalOpen.value = false;
+    newMemberEmail.value = '';
+  } catch (error) {
+    console.error('Error adding member:', error);
   }
 }
