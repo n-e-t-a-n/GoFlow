@@ -1,6 +1,6 @@
 import type { Ref } from 'vue';
 
-import type { Board } from '@/types';
+import type { Board, List } from '@/types';
 
 export async function createBoard(
   boards: Ref<Board[]>,
@@ -34,5 +34,36 @@ export async function createBoard(
     isModalVisible.value = false;
   } catch (error) {
     console.error('Error creating board:', error);
+  }
+}
+
+export async function createList(lists: Ref<List[]>, newListTitle: Ref<string>, boardID: string) {
+  try {
+    const token = localStorage.getItem('token');
+
+    const response = await fetch(`${import.meta.env.VITE_BASE_URL}/v1/list/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        board_id: boardID,
+        name: newListTitle.value,
+        priority: 100,
+      }),
+    });
+
+    if (response.ok) {
+      console.log('Successfully added new board.');
+      lists.value.push({
+        name: newListTitle.value,
+      });
+      closeCreateModal();
+    } else {
+      console.error('Failed to add new board.');
+    }
+  } catch (error) {
+    console.error('Error adding new board:', error);
   }
 }
