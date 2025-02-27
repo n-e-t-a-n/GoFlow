@@ -62,16 +62,21 @@ export default defineComponent({
     };
 
     return {
-      isUpdateBoardModalOpen,
-      handleUpdateBoardModal,
-      handleUpdateBoard,
-      editedName,
-      editedDescription,
-      viewBoard,
-      isAdmin,
       name,
       description,
       role,
+
+      editedName,
+      editedDescription,
+      isAdmin,
+
+      isUpdateBoardModalOpen,
+
+      handleUpdateBoardModal,
+
+      handleUpdateBoard,
+
+      viewBoard,
     };
   },
 });
