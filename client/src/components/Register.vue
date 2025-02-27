@@ -1,69 +1,32 @@
 <script lang="ts">
 import { ref } from 'vue';
 
+import { register } from '@/helpers/database';
+
+import type { Auth } from '@/types';
+
 export default {
   name: 'Register',
   setup() {
-    const name = ref('');
-    const email = ref('');
-    const password = ref('');
-    const passwordConfirmation = ref('');
+    const auth = ref<Auth>({
+      name: '',
+      email: '',
+      password: '',
+      password_confirmation: '',
+    });
+
     const isLoading = ref(false);
     const errorMessage = ref('');
-    const successMessage = ref('');
 
-    const register = async () => {
-      isLoading.value = true;
-      errorMessage.value = '';
-      successMessage.value = '';
-
-      if (password.value !== passwordConfirmation.value) {
-        errorMessage.value = 'Passwords do not match';
-        isLoading.value = false;
-        return;
-      }
-
-      const formData = new URLSearchParams();
-
-      formData.append('name', name.value);
-      formData.append('email', email.value);
-      formData.append('password', password.value);
-      formData.append('password_confirmation', passwordConfirmation.value);
-
-      try {
-        const response = await fetch(`${import.meta.env.VITE_BASE_URL}/auth/register`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-          body: formData.toString(),
-        });
-
-        if (!response.ok) {
-          const data = await response.json();
-          throw new Error(data.message || 'Registration failed');
-        }
-
-        const data = await response.json();
-        console.log('Registration successful:', data);
-
-        localStorage.setItem('token', data.token);
-        window.location.reload();
-      } catch (error: any) {
-        errorMessage.value = error.message || 'An error occurred. Please try again.';
-      } finally {
-        isLoading.value = false;
-      }
-    };
+    const handleRegister = () => {
+      register(auth.value, isLoading, errorMessage);
+    }
 
     return {
-      name,
-      email,
-      password,
-      passwordConfirmation,
+      auth,
+      handleRegister,
       isLoading,
       errorMessage,
-      successMessage,
       register,
     };
   },
@@ -76,11 +39,11 @@ export default {
       <div class="flex justify-center mb-6">
         <img src="../assets/images/logo.png" alt="Logo" class="h-36" />
       </div>
-      <form @submit.prevent="register">
+      <form @submit.prevent="handleRegister">
         <div>
           <label for="name" class="block text-dark-blue font-semibold text-lg">Name</label>
           <input
-            v-model="name"
+            v-model="auth.name"
             type="text"
             id="name"
             placeholder="Full Name"
@@ -92,7 +55,7 @@ export default {
         <div>
           <label for="email" class="block text-dark-blue font-semibold text-lg">Email</label>
           <input
-            v-model="email"
+            v-model="auth.email"
             type="email"
             id="email"
             placeholder="Email"
@@ -104,7 +67,7 @@ export default {
         <div>
           <label for="password" class="block text-dark-blue font-semibold text-lg">Password</label>
           <input
-            v-model="password"
+            v-model="auth.password"
             type="password"
             id="password"
             placeholder="Password"
@@ -118,7 +81,7 @@ export default {
             >Confirm Password</label
           >
           <input
-            v-model="passwordConfirmation"
+            v-model="auth.password_confirmation"
             type="password"
             id="password_confirmation"
             placeholder="Confirm Password"
@@ -139,7 +102,6 @@ export default {
 
       <div v-if="isLoading" class="text-center text-gray-600 mt-4">Registering...</div>
       <div v-if="errorMessage" class="text-center text-red-600 mt-4">{{ errorMessage }}</div>
-      <div v-if="successMessage" class="text-center text-green-600 mt-4">{{ successMessage }}</div>
 
       <p class="text-center mt-4 text-lightblue">
         <router-link to="/" class="font-semibold">
