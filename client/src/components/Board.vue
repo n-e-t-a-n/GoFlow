@@ -88,7 +88,7 @@ export default defineComponent({
       isViewMemberModalOpen,
       isCreateListModalOpen,
       isCreateMemberModalOpen,
-      
+
       handleViewMemberModal,
       handleCreateListModal,
       handleCreateMemberModal,
