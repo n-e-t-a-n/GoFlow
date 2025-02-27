@@ -20,7 +20,7 @@ export default {
 
     const handleRegister = () => {
       register(auth.value, isLoading, errorMessage);
-    }
+    };
 
     return {
       auth,

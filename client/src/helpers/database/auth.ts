@@ -4,11 +4,7 @@ import type { Auth } from '@/types';
 import { useRouter } from 'vue-router';
 const router = useRouter();
 
-export async function login(
-  payload: Auth,
-  isLoading: Ref<boolean, boolean>,
-  errorMessage: Ref<string, string>,
-) {
+export async function login(payload: Auth, isLoading: Ref<boolean>, errorMessage: Ref<string>) {
   isLoading.value = true;
   errorMessage.value = '';
 
@@ -24,12 +20,12 @@ export async function login(
       }),
     });
 
+    const data = await response.json();
+
     if (!response.ok) {
-      const data = await response.json();
       throw new Error(data.message || 'Login failed');
     }
 
-    const data = await response.json();
     console.log('Login successful:', data);
     localStorage.setItem('token', data.token);
 
@@ -41,11 +37,7 @@ export async function login(
   }
 }
 
-export async function register(
-  payload: Auth,
-  isLoading: Ref<boolean, boolean>,
-  errorMessage: Ref<string, string>,
-) {
+export async function register(payload: Auth, isLoading: Ref<boolean>, errorMessage: Ref<string>) {
   isLoading.value = true;
   errorMessage.value = '';
 
@@ -63,12 +55,12 @@ export async function register(
       }),
     });
 
+    const data = await response.json();
+
     if (!response.ok) {
-      const data = await response.json();
       throw new Error(data.message || 'Registration failed');
     }
 
-    const data = await response.json();
     console.log('Registration successful:', data);
 
     localStorage.setItem('token', data.token);
@@ -93,8 +85,9 @@ export async function logout() {
       },
     });
 
+    const data = await response.json();
+
     if (!response.ok) {
-      const data = await response.json();
       throw new Error(data.message || 'Logout failed');
     }
 
