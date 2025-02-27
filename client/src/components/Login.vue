@@ -1,6 +1,8 @@
 <script lang="ts">
 import { ref } from 'vue';
 
+import { login } from '@/helpers/database';
+
 export default {
   name: 'Login',
   setup() {
@@ -9,40 +11,8 @@ export default {
     const isLoading = ref(false);
     const errorMessage = ref('');
 
-    const login = async () => {
-      isLoading.value = true;
-      errorMessage.value = '';
-
-      const formData = new URLSearchParams();
-
-      formData.append('email', email.value);
-      formData.append('password', password.value);
-
-      try {
-        const response = await fetch(`${import.meta.env.VITE_BASE_URL}/auth/login`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-          body: formData.toString(),
-          credentials: 'include',
-        });
-
-        if (!response.ok) {
-          const data = await response.json();
-          throw new Error(data.message || 'Login failed');
-        }
-
-        const data = await response.json();
-        console.log('Login successful:', data);
-        localStorage.setItem('token', data.token);
-
-        window.location.href = '/';
-      } catch (error: any) {
-        errorMessage.value = error.message || 'An error occurred. Please try again.';
-      } finally {
-        isLoading.value = false;
-      }
+    const handleLogin = () => {
+      login(email, password, isLoading, errorMessage);
     };
 
     return {
@@ -50,7 +20,7 @@ export default {
       password,
       isLoading,
       errorMessage,
-      login,
+      handleLogin,
     };
   },
 };
@@ -62,7 +32,7 @@ export default {
       <div class="flex justify-center mb-6">
         <img src="../assets/images/logo.png" alt="Logo" class="h-36" />
       </div>
-      <form @submit.prevent="login">
+      <form @submit.prevent="handleLogin">
         <div>
           <label for="email" class="block text-dark-blue font-semibold text-lg">Email</label>
           <input
