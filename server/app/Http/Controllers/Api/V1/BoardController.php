@@ -18,7 +18,16 @@ class BoardController extends Controller
     {
         $user = User::find(Auth::id());
 
-        return response()->json($user->boards);
+        $boards = $user->boards->map(function($board) {
+            return [
+                'id' => $board->id,
+                'name' => $board->name ?? 'N/A',
+                'description' => $board->description ?? '',
+                'role' => $board->pivot->role ?? 'Member',
+            ];
+        });
+    
+        return response()->json($boards);
     }
 
     public function create(Request $request) {
