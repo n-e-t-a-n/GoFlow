@@ -14,7 +14,7 @@ export default defineComponent({
   },
   setup() {
     const boards = ref<Board[]>([]);
-    const newBoard = ref({
+    const newBoard = ref<Board>({
       name: '',
       description: '',
     });
