@@ -1,8 +1,10 @@
 <script lang="ts">
 import { defineComponent, ref, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
 
 import { BoardCard, Modal } from '@/components/common';
+
+import { getBoards, logout } from '@/helpers/database';
+import type { Board } from '@/types';
 
 export default defineComponent({
   name: 'Home',
@@ -11,65 +13,12 @@ export default defineComponent({
     Modal,
   },
   setup() {
-    const boards = ref<any[]>([]);
+    const boards = ref<Board[]>([]);
     const isModalVisible = ref(false);
     const newBoard = ref({
       name: '',
       description: '',
     });
-
-    const router = useRouter();
-
-    const logout = () => {
-      const token = localStorage.getItem('token');
-
-      if (!token) {
-        router.push({ name: 'Login' });
-        return;
-      }
-
-      fetch(`${import.meta.env.VITE_BASE_URL}/auth/logout`, {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-      })
-        .then((response) => {
-          if (response.ok) {
-            localStorage.removeItem('token');
-            router.push({ name: 'Login' });
-          } else {
-            console.error('Logout failed');
-          }
-        })
-        .catch((error) => {
-          console.error('Error during logout:', error);
-        });
-    };
-
-    const getBoards = () => {
-      const token = localStorage.getItem('token');
-      if (!token) return;
-
-      fetch(`${import.meta.env.VITE_BASE_URL}/v1/board`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-        .then((response) => {
-          if (response.ok) {
-            response.json().then((data) => {
-              boards.value = data;
-            });
-          } else {
-            console.error('Failed to fetch boards.');
-          }
-        })
-        .catch((error) => {
-          console.error('Error fetching boards:', error);
-        });
-    };
 
     const createBoard = () => {
       const token = localStorage.getItem('token');
@@ -86,7 +35,7 @@ export default defineComponent({
         .then((response) => {
           if (response.ok) {
             response.json().then(() => {
-              getBoards();
+              getBoards(boards);
               isModalVisible.value = false;
             });
           } else {
@@ -109,7 +58,7 @@ export default defineComponent({
     };
 
     onMounted(() => {
-      getBoards();
+      getBoards(boards);
     });
 
     return {
