@@ -2,6 +2,8 @@
 import { defineComponent } from 'vue';
 import { useRouter } from 'vue-router';
 
+import { logout } from '@/helpers/database';
+
 export default defineComponent({
   name: 'Navbar',
   setup() {
@@ -9,34 +11,6 @@ export default defineComponent({
 
     const goToHome = () => {
       router.push({ name: 'Home' });
-    };
-
-    const logout = () => {
-      const token = localStorage.getItem('token');
-
-      if (!token) {
-        router.push({ name: 'Login' });
-        return;
-      }
-
-      fetch(`${import.meta.env.VITE_BASE_URL}/auth/logout`, {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-      })
-        .then((response) => {
-          if (response.ok) {
-            localStorage.removeItem('token');
-            router.push({ name: 'Login' });
-          } else {
-            console.error('Logout failed');
-          }
-        })
-        .catch((error) => {
-          console.error('Error during logout:', error);
-        });
     };
 
     return {
