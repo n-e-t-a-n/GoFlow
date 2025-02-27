@@ -4,7 +4,9 @@ import { useRoute } from 'vue-router';
 
 import { ListCard, Modal } from '@/components/common';
 
-import type { List, Task, BoardData, UserBoard } from '@/types';
+import type { List, Task, UserBoard } from '@/types';
+
+import { getMembers, getTasks, createMember, createList, removeMember } from '@/helpers/database';
 
 export default defineComponent({
   name: 'Board',
@@ -14,216 +16,85 @@ export default defineComponent({
   },
   setup() {
     const route = useRoute();
+
     const tasks = ref<Task[]>([]);
     const lists = ref<List[]>([]);
     const members = ref<UserBoard[]>([]);
-    const userIsAdmin = ref(false);
-    const isModalOpen = ref(false);
-    const isAddMemberModalOpen = ref(false);
-    const isCreateModalOpen = ref(false);
-    const newMemberEmail = ref('');
+
     const isAdmin = ref(false);
+    const userIsAdmin = ref(false);
+    
     const newListTitle = ref('');
+    const newMemberEmail = ref('');
+
+    const isViewMemberModalOpen = ref(false);
+    const isCreateListModalOpen = ref(false);
+    const isCreateMemberModalOpen = ref(false);
+
+    const boardID = ref(Array.isArray(route.params.id) ? route.params.id[0] : route.params.id);
 
     onMounted(() => {
-      const boardID = Array.isArray(route.params.id) ? route.params.id[0] : route.params.id;
-
-      if (boardID) {
-        fetchBoardData(boardID);
-      }
+      getTasks(tasks, lists, userIsAdmin, boardID);
     });
 
-    const fetchBoardData = async (boardID: string) => {
-      try {
-        const token = localStorage.getItem('token');
+    const handleCreateList = () => {
+      createList(lists, newListTitle, boardID, isCreateListModalOpen);
+    };
 
-        const response = await fetch(`${import.meta.env.VITE_BASE_URL}/v1/task/${boardID}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        if (response.ok) {
-          const data: BoardData = await response.json();
-
-          lists.value = data.lists;
-          tasks.value = data.tasks;
-
-          userIsAdmin.value = data.isAdmin;
-        } else {
-          console.error('Failed to fetch lists');
-        }
-      } catch (error) {
-        console.error('Error fetching board data:', error);
+    const handleCreateListModal = () => {
+      if (!isCreateListModalOpen) {
+        newListTitle.value = '';
       }
+
+      isCreateListModalOpen.value = !isCreateListModalOpen.value;
     };
 
-    const fetchMembers = async () => {
-      try {
-        const token = localStorage.getItem('token');
-
-        const boardID = Array.isArray(route.params.id) ? route.params.id[0] : route.params.id;
-
-        const response = await fetch(`${import.meta.env.VITE_BASE_URL}/v1/user-board/${boardID}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          members.value = data;
-        } else {
-          console.error('Failed to fetch members');
-        }
-      } catch (error) {
-        console.error('Error fetching members:', error);
+    const handleViewMemberModal = async () => {
+      if (!isViewMemberModalOpen.value) {
+        await getMembers(members, boardID);
       }
+
+      isViewMemberModalOpen.value = !isViewMemberModalOpen.value;
     };
 
-    const createNewList = async () => {
-      try {
-        const token = localStorage.getItem('token');
+    const handleCreateMember = () => {
+      createMember(boardID, newMemberEmail, isAdmin, isCreateMemberModalOpen);
+    };
 
-        const boardID = Array.isArray(route.params.id) ? route.params.id[0] : route.params.id;
+    const handleRemoveMember = () => {
+      removeMember(boardID, newMemberEmail, isCreateMemberModalOpen, members);
+    };
 
-        const response = await fetch(`${import.meta.env.VITE_BASE_URL}/v1/list/`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            board_id: boardID,
-            name: newListTitle.value,
-            priority: 100,
-          }),
-        });
-
-        if (response.ok) {
-          console.log('Successfully added new board.');
-          fetchBoardData(boardID);
-          closeCreateModal();
-        } else {
-          console.error('Failed to add new board.');
-        }
-      } catch (error) {
-        console.error('Error adding new board:', error);
+    const handleCreateMemberModal = () => {
+      if (!isCreateMemberModalOpen) {
+        newMemberEmail.value = '';
+        isAdmin.value = false;
       }
-    };
 
-    const openModal = async () => {
-      await fetchMembers();
-      isModalOpen.value = true;
-    };
-
-    const closeModal = () => {
-      isModalOpen.value = false;
-    };
-
-    const openAddMemberModal = () => {
-      isAddMemberModalOpen.value = true;
-    };
-
-    const closeAddMemberModal = () => {
-      isAddMemberModalOpen.value = false;
-      newMemberEmail.value = '';
-      isAdmin.value = false;
-    };
-
-    const openCreateModal = () => {
-      isCreateModalOpen.value = true;
-    };
-
-    const closeCreateModal = () => {
-      isCreateModalOpen.value = false;
-      newListTitle.value = '';
-    };
-
-    const addMember = async () => {
-      try {
-        const token = localStorage.getItem('token');
-        const boardID = Array.isArray(route.params.id) ? route.params.id[0] : route.params.id;
-
-        const role = isAdmin.value ? 'admin' : 'member';
-
-        const response = await fetch(`${import.meta.env.VITE_BASE_URL}/v1/user-board/${boardID}`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            board_id: boardID,
-            email: newMemberEmail.value,
-            role: role,
-          }),
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          console.log('Member added:', data);
-          closeAddMemberModal();
-          fetchMembers();
-        } else {
-          console.error('Failed to add member');
-        }
-      } catch (error) {
-        console.error('Error adding member:', error);
-      }
-    };
-
-    const removeMember = async () => {
-      try {
-        const token = localStorage.getItem('token');
-
-        const boardID = Array.isArray(route.params.id) ? route.params.id[0] : route.params.id;
-
-        const response = await fetch(`${import.meta.env.VITE_BASE_URL}/v1/user-board/${boardID}`, {
-          method: 'DELETE',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            email: newMemberEmail.value,
-          }),
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          console.log('Member removed:', data);
-
-          closeAddMemberModal();
-          fetchMembers();
-        } else {
-          console.error('Failed to remove member.');
-        }
-      } catch (error) {
-        console.error('Error removing member:', error);
-      }
+      isCreateMemberModalOpen.value = !isCreateMemberModalOpen.value;
     };
 
     return {
       tasks,
       lists,
       members,
-      isModalOpen,
-      isAddMemberModalOpen,
-      newMemberEmail,
+
       isAdmin,
-      openModal,
-      closeModal,
-      openAddMemberModal,
-      closeAddMemberModal,
-      addMember,
-      removeMember,
       userIsAdmin,
-      isCreateModalOpen,
-      openCreateModal,
-      closeCreateModal,
+
       newListTitle,
-      createNewList,
+      newMemberEmail,
+
+      isViewMemberModalOpen,
+      isCreateListModalOpen,
+      isCreateMemberModalOpen,
+      handleViewMemberModal,
+      handleCreateListModal,
+      handleCreateMemberModal,
+
+      handleCreateList,
+      handleCreateMember,
+      handleRemoveMember,
     };
   },
 });
@@ -234,7 +105,7 @@ export default defineComponent({
     <div class="flex">
       <div class="mt-6 mr-6">
         <button
-          @click="openModal"
+          @click="handleViewMemberModal"
           class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none transition duration-200"
         >
           View Board Members
@@ -244,7 +115,7 @@ export default defineComponent({
       <div class="mt-6">
         <button
           v-if="userIsAdmin"
-          @click="openAddMemberModal"
+          @click="handleCreateMemberModal"
           class="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-400 focus:outline-none transition duration-200"
         >
           Add/Remove Member
@@ -259,14 +130,14 @@ export default defineComponent({
         </div>
         <div
           v-if="userIsAdmin"
-          @click="openCreateModal"
+          @click="handleCreateListModal"
           class="flex items-center justify-center p-4 rounded-lg border-3 min-h-[80vh] max-h-[80vh] min-w-[250px] max-w-[250px] mb-4 flex-shrink-0 w-full"
         >
           <img src="../assets/images/add.png" alt="add" class="w-24" />
         </div>
       </div>
 
-      <Modal :isOpen="isModalOpen" @update:isOpen="closeModal">
+      <Modal :isOpen="isViewMemberModalOpen" :handleModal="handleViewMemberModal">
         <div class="bg-white rounded-lg w-full max-w-lg mx-auto p-6 space-y-6">
           <h2 class="text-xl font-semibold text-gray-800">Board Members</h2>
 
@@ -294,7 +165,7 @@ export default defineComponent({
 
           <div class="flex justify-end">
             <button
-              @click="closeModal"
+              @click="handleViewMemberModal"
               class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 focus:outline-none"
             >
               Close
@@ -303,7 +174,7 @@ export default defineComponent({
         </div>
       </Modal>
 
-      <Modal :isOpen="isAddMemberModalOpen" @update:isOpen="closeAddMemberModal">
+      <Modal :isOpen="isCreateMemberModalOpen" :handleModal="handleCreateMemberModal">
         <div class="bg-white rounded-lg w-full max-w-md mx-auto p-3 space-y-6">
           <div class="space-y-4">
             <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
@@ -328,7 +199,7 @@ export default defineComponent({
 
           <div class="flex justify-between space-x-4">
             <button
-              @click="closeAddMemberModal"
+              @click="handleCreateMemberModal"
               class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600"
             >
               Cancel
@@ -336,14 +207,14 @@ export default defineComponent({
 
             <div class="flex space-x-4">
               <button
-                @click="removeMember"
+                @click="handleRemoveMember"
                 class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
               >
                 Remove
               </button>
 
               <button
-                @click="addMember"
+                @click="handleCreateMember"
                 class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
               >
                 Invite
@@ -353,7 +224,7 @@ export default defineComponent({
         </div>
       </Modal>
 
-      <Modal :isOpen="isCreateModalOpen" @update:isOpen="closeCreateModal">
+      <Modal :isOpen="isCreateListModalOpen" :handleModal="handleCreateListModal">
         <h2 class="text-2xl font-bold text-gray-800 mb-4">Create New List</h2>
 
         <div class="mb-4">
@@ -367,13 +238,13 @@ export default defineComponent({
 
         <div class="flex justify-between">
           <button
-            @click="closeCreateModal"
+            @click="handleCreateListModal"
             class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition"
           >
             Cancel
           </button>
           <button
-            @click="createNewList"
+            @click="handleCreateList"
             class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition"
           >
             Save
