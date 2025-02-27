@@ -1,6 +1,9 @@
 import type { Ref } from 'vue';
 import type { Auth } from '@/types';
 
+import { useRouter } from 'vue-router';
+const router = useRouter();
+
 export async function login(
   payload: Auth,
   isLoading: Ref<boolean, boolean>,
@@ -74,5 +77,32 @@ export async function register(
     errorMessage.value = error.message || 'An error occurred. Please try again.';
   } finally {
     isLoading.value = false;
+  }
+}
+
+export async function logout() {
+  const token = localStorage.getItem('token');
+
+  if (!token) return;
+
+  try {
+    const response = await fetch(`${import.meta.env.VITE_BASE_URL}/auth/logout`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      const data = await response.json();
+      throw new Error(data.message || 'Logout failed');
+    }
+
+    localStorage.removeItem('token');
+    router.push({ name: 'Login' });
+  } catch (error) {
+    console.error('Error during logout:', error);
+  } finally {
+    console.log('Logged out successfully.');
   }
 }
