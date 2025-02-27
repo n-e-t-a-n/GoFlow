@@ -9,7 +9,7 @@ export async function createBoard(
 ) {
   const token = localStorage.getItem('token');
 
-  if (!token || !newBoard.value.name || !newBoard.value.description) return;
+  if (!token || !newBoard.value.name) return;
 
   try {
     const response = await fetch(`${import.meta.env.VITE_BASE_URL}/v1/board`, {
