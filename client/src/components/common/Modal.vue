@@ -6,10 +6,14 @@ export default {
       type: Boolean,
       default: false,
     },
+    handleModal: {
+      type: Function,
+      required: true,
+    },
   },
   methods: {
     closeModal() {
-      this.$emit('update:isOpen', false);
+      this.handleModal();
     },
   },
 };
