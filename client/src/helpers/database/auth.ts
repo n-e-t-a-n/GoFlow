@@ -1,27 +1,24 @@
 import type { Ref } from 'vue';
+import type { Auth } from '@/types';
 
-export default async function login(
-  email: Ref<string, string>,
-  password: Ref<string, string>,
+export async function login(
+  payload: Auth,
   isLoading: Ref<boolean, boolean>,
   errorMessage: Ref<string, string>,
 ) {
   isLoading.value = true;
   errorMessage.value = '';
 
-  const formData = new URLSearchParams();
-
-  formData.append('email', email.value);
-  formData.append('password', password.value);
-
   try {
     const response = await fetch(`${import.meta.env.VITE_BASE_URL}/auth/login`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
+        'Content-Type': 'application/json',
       },
-      body: formData.toString(),
-      credentials: 'include',
+      body: JSON.stringify({
+        email: payload.email,
+        password: payload.password,
+      }),
     });
 
     if (!response.ok) {
@@ -39,4 +36,8 @@ export default async function login(
   } finally {
     isLoading.value = false;
   }
+}
+
+export async function register() {
+
 }
