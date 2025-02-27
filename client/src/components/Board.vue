@@ -23,7 +23,7 @@ export default defineComponent({
 
     const isAdmin = ref(false);
     const userIsAdmin = ref(false);
-    
+
     const newListTitle = ref('');
     const newMemberEmail = ref('');
 
@@ -88,6 +88,7 @@ export default defineComponent({
       isViewMemberModalOpen,
       isCreateListModalOpen,
       isCreateMemberModalOpen,
+      
       handleViewMemberModal,
       handleCreateListModal,
       handleCreateMemberModal,
