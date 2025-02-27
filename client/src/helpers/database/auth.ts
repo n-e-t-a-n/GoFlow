@@ -29,7 +29,7 @@ export async function login(payload: Auth, isLoading: Ref<boolean>, errorMessage
     console.log('Login successful:', data);
     localStorage.setItem('token', data.token);
 
-    window.location.href = '/';
+    window.location.reload();
   } catch (error: any) {
     errorMessage.value = error.message || 'An error occurred. Please try again.';
   } finally {
@@ -92,7 +92,7 @@ export async function logout() {
     }
 
     localStorage.removeItem('token');
-    router.push({ name: 'Login' });
+    window.location.reload();
   } catch (error) {
     console.error('Error during logout:', error);
   } finally {
