@@ -1,3 +1,4 @@
+export * from './Auth';
 export * from './Board';
 export * from './List';
 export * from './Task';
