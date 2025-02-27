@@ -6,6 +6,8 @@ import { useRouter } from 'vue-router';
 
 import { Modal } from '@/components/common';
 
+import { updateBoard } from '@/helpers/database';
+
 export default defineComponent({
   name: 'BoardCard',
   components: {
@@ -14,10 +16,10 @@ export default defineComponent({
   props: {
     board: {
       type: Object as PropType<{
-        id: string;
-        name: string;
-        description: string;
-        role: string;
+        id?: string;
+        name?: string;
+        description?: string;
+        role?: string;
       }>,
       required: true,
     },
@@ -25,61 +27,51 @@ export default defineComponent({
   setup(props) {
     const router = useRouter();
 
-    const isModalOpen = ref(false);
-    const editedName = ref(props.board.name);
-    const editedDescription = ref(props.board.description);
+    const name = ref(props.board.name || '');
+    const description = ref(props.board.description || '');
+    const role = props.board.role;
+
+    const editedName = ref(props.board.name || '');
+    const editedDescription = ref(props.board.description || '');
+
+    const isUpdateBoardModalOpen = ref(false);
     const isAdmin = ref(props.board.role);
 
     const viewBoard = () => {
-      router.push({ name: 'Board', params: { id: props.board.id } });
+      router.push(`/board/${props.board.id}`);
     };
 
-    const openEditModal = () => {
-      isModalOpen.value = true;
+    const handleUpdateBoard = () => {
+      updateBoard(
+        name,
+        description,
+        editedName,
+        editedDescription,
+        isUpdateBoardModalOpen,
+        props.board.id,
+      );
     };
 
-    const saveChanges = async () => {
-      try {
-        const token = localStorage.getItem('token');
-
-        const response = await fetch(
-          `${import.meta.env.VITE_BASE_URL}/v1/board/${props.board.id}`,
-          {
-            method: 'PUT',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify({
-              name: editedName.value,
-              description: editedDescription.value,
-            }),
-          },
-        );
-
-        if (response.ok) {
-          const updatedBoard = await response.json();
-
-          props.board.name = updatedBoard.board.name;
-          props.board.description = updatedBoard.board.description;
-
-          isModalOpen.value = false;
-        } else {
-          console.error('Failed to update board details');
-        }
-      } catch (error) {
-        console.error('Error updating board details:', error);
+    const handleUpdateBoardModal = () => {
+      if (!isUpdateBoardModalOpen) {
+        editedName.value = props.board.name || '';
+        editedDescription.value = props.board.description || '';
       }
+
+      isUpdateBoardModalOpen.value = !isUpdateBoardModalOpen.value;
     };
 
     return {
-      isModalOpen,
+      isUpdateBoardModalOpen,
+      handleUpdateBoardModal,
+      handleUpdateBoard,
       editedName,
       editedDescription,
       viewBoard,
-      openEditModal,
-      saveChanges,
       isAdmin,
+      name,
+      description,
+      role,
     };
   },
 });
@@ -91,11 +83,10 @@ export default defineComponent({
   >
     <div>
       <div class="flex justify-between">
-        <h1 class="font-bold text-3xl">{{ board.name }}</h1>
-        <h1 v-if="isAdmin === 'admin'" class="font-semibold">Admin</h1>
-        <h1 v-else>Member</h1>
+        <h1 class="font-bold text-3xl">{{ name }}</h1>
+        <h1 class="font-semibold">{{ role === 'admin' ? 'Admin' : 'Member' }}</h1>
       </div>
-      <p class="text-sm text-gray-800">{{ board.description }}</p>
+      <p class="text-sm text-gray-800">{{ description }}</p>
     </div>
 
     <div class="flex space-x-4 mt-auto">
@@ -107,7 +98,7 @@ export default defineComponent({
       </button>
       <button
         v-if="board.role === 'admin'"
-        @click="openEditModal"
+        @click="handleUpdateBoardModal"
         class="px-4 py-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-600 transition duration-200"
       >
         Edit Details
@@ -115,7 +106,7 @@ export default defineComponent({
     </div>
   </div>
 
-  <Modal :isOpen="isModalOpen" @update:isOpen="isModalOpen = $event">
+  <Modal :isOpen="isUpdateBoardModalOpen" :handleModal="handleUpdateBoardModal">
     <template #default>
       <div class="flex flex-col space-y-3 p-6">
         <h2 class="text-2xl font-semibold text-gray-800">Edit Board Details</h2>
@@ -139,13 +130,13 @@ export default defineComponent({
 
         <div class="flex justify-end space-x-4">
           <button
-            @click="isModalOpen = false"
+            @click="handleUpdateBoardModal"
             class="px-6 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 transition"
           >
             Cancel
           </button>
           <button
-            @click="saveChanges"
+            @click="handleUpdateBoard"
             class="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
           >
             Save Changes
