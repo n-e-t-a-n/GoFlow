@@ -27,7 +27,7 @@ export default {
       handleRegister,
 
       isLoading,
-      errorMessage
+      errorMessage,
     };
   },
 };
