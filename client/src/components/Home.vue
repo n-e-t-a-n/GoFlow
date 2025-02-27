@@ -42,6 +42,7 @@ export default defineComponent({
       boards,
       newBoard,
       isModalVisible,
+
       handleModal,
       handleCreateBoard,
     };

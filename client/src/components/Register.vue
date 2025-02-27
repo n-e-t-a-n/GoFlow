@@ -25,9 +25,9 @@ export default {
     return {
       auth,
       handleRegister,
+
       isLoading,
-      errorMessage,
-      register,
+      errorMessage
     };
   },
 };

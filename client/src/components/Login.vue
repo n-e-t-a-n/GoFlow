@@ -22,8 +22,10 @@ export default {
 
     return {
       auth,
+
       isLoading,
       errorMessage,
+      
       handleLogin,
     };
   },
