@@ -17,7 +17,7 @@ export default defineComponent({
         id: string;
         name: string;
         description: string;
-        pivot: { role: string };
+        role: string;
       }>,
       required: true,
     },
@@ -28,7 +28,7 @@ export default defineComponent({
     const isModalOpen = ref(false);
     const editedName = ref(props.board.name);
     const editedDescription = ref(props.board.description);
-    const isAdmin = ref(props.board.pivot.role);
+    const isAdmin = ref(props.board.role);
 
     const viewBoard = () => {
       router.push({ name: 'Board', params: { id: props.board.id } });
@@ -106,7 +106,7 @@ export default defineComponent({
         View Board
       </button>
       <button
-        v-if="board.pivot.role === 'admin'"
+        v-if="board.role === 'admin'"
         @click="openEditModal"
         class="px-4 py-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-600 transition duration-200"
       >
