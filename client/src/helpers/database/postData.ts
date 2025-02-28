@@ -67,13 +67,7 @@ export async function createList(
       console.error('Failed to add new board.');
     }
 
-    console.log('Successfully added new board.');
-    lists.value.push({
-      id: data.id,
-      board_id: data.board_id,
-      name: newListTitle.value,
-      priority: 0,
-    });
+    lists.value.push(data.taskList);
     isCreateListModalOpen.value = false;
     newListTitle.value = '';
   } catch (error) {
@@ -108,12 +102,12 @@ export async function createMember(
       },
     );
 
+    const data = await response.json();
+
     if (!response.ok) {
       throw new Error('Failed to add member');
     }
-    const data = await response.json();
     console.log('Member added:', data);
-
     isCreateMemberModalOpen.value = false;
     newMemberEmail.value = '';
   } catch (error) {
@@ -141,16 +135,16 @@ export async function createTask(
       },
       body: JSON.stringify(newTask.value),
     });
+    
+    const data = await response.json();
 
-    if (response.ok) {
-      const data = await response.json();
-      console.log('Successfully created new task:', data);
-
-      isCreateTaskModalOpen.value = false;
-      filteredTasks.value.push(data);
-    } else {
-      console.error('Failed to create new task');
+    if (!response.ok) {
+      throw new Error('Failed to create new task');
     }
+
+    isCreateTaskModalOpen.value = false;
+    filteredTasks.value.push(data);
+
   } catch (error) {
     console.error('Error creating new task:', error);
   }
