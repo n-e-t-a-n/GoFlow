@@ -27,11 +27,11 @@ export async function getBoards(board: Ref<Board[]>) {
 }
 
 export async function getMembers(members: Ref<UserBoard[]>, boardID: Ref<string>) {
+  const token = localStorage.getItem('token');
+
+  if (!token) return;
+
   try {
-    const token = localStorage.getItem('token');
-
-    if (!token) return;
-
     const response = await fetch(
       `${import.meta.env.VITE_BASE_URL}/v1/user-board/${boardID.value}`,
       {
@@ -58,9 +58,11 @@ export async function getTasks(
   userIsAdmin: Ref<boolean>,
   boardID: Ref<string>,
 ) {
-  try {
-    const token = localStorage.getItem('token');
+  const token = localStorage.getItem('token');
 
+  if (!token) return;
+
+  try {
     const response = await fetch(`${import.meta.env.VITE_BASE_URL}/v1/task/${boardID.value}`, {
       headers: {
         Authorization: `Bearer ${token}`,
