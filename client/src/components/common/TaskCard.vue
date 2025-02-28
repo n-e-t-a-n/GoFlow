@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent, ref, onMounted } from 'vue';
+import { defineComponent, ref, onMounted, inject } from 'vue';
 import type { PropType } from 'vue';
 
 import type { Task, UserBoard, List } from '@/types';
@@ -16,43 +16,36 @@ export default defineComponent({
       type: Object as PropType<Task>,
       required: true,
     },
-    listName: String,
-    members: {
-      type: Array as PropType<UserBoard[]>,
-      required: true,
-    },
-    list: {
-      type: Object as PropType<List>,
-      required: true,
-    },
-    role: Boolean,
   },
   setup(props) {
-    const isModalVisible = ref(false);
-    const isEditModalVisible = ref(false);
-    const taskDetails = ref<Task | null>(null);
+    const isViewTaskModalOpen = ref(false);
+    const isEditTaskModalOpen = ref(false);
 
+    const taskDetails = ref<Task | null>(null);
     const listArr = ref<List[]>([]);
     const listNames = ref<string[]>([]);
 
-    const viewTask = () => {
-      taskDetails.value = props.task;
-      isModalVisible.value = true;
+    const role = inject('role') as boolean;
+
+    const handleViewTaskModal = () => {
+      if (!isViewTaskModalOpen) {
+        taskDetails.value = props.task;
+      }
+
+      isViewTaskModalOpen.value = !isViewTaskModalOpen.value;
     };
 
-    const closeModal = () => {
-      isModalVisible.value = false;
-      taskDetails.value = null;
+    const handleViewTask = () => {};
+
+    const handleEditTaskModal = () => {
+      if (!isEditTaskModalOpen) {
+        isViewTaskModalOpen.value = false;
+      }
+
+      isEditTaskModalOpen.value = !isEditTaskModalOpen;
     };
 
-    const openEditModal = () => {
-      isModalVisible.value = false;
-      isEditModalVisible.value = true;
-    };
-
-    const closeEditModal = () => {
-      isEditModalVisible.value = false;
-    };
+    const handleEditTask = () => {};
 
     const editTask = async () => {
       try {
@@ -94,7 +87,7 @@ export default defineComponent({
         if (response.ok) {
           const data = await response.json();
           console.log('Successfully edited task:', data);
-          closeEditModal();
+          isEditTaskModalOpen.value = false;
           window.location.reload();
         } else {
           const errorData = await response.json();
@@ -102,15 +95,6 @@ export default defineComponent({
         }
       } catch (error) {
         console.error('Error occurred while editing task:', error);
-      }
-    };
-
-    const getNamesFromListArr = () => {
-      if (listArr.value) {
-        return listArr.value.map((item: { name: string }) => item.name);
-      } else {
-        console.log('listArr is undefined or empty');
-        return [];
       }
     };
 
@@ -153,16 +137,20 @@ export default defineComponent({
     });
 
     return {
-      viewTask,
-      closeModal,
-      isModalVisible,
+      role,
       taskDetails,
       formatString,
-      isEditModalVisible,
-      openEditModal,
-      closeEditModal,
       editTask,
       listNames,
+
+      isViewTaskModalOpen,
+      isEditTaskModalOpen,
+
+      handleViewTaskModal,
+      handleEditTaskModal,
+
+      handleViewTask,
+      handleEditTask,
     };
   },
 });
@@ -179,7 +167,7 @@ function formatString(str: string) {
 
 <template>
   <div
-    @click="viewTask"
+    @click="handleViewTaskModal"
     class="bg-white border-1 p-4 rounded-md transition-shadow duration-300 w-[85%] max-w-[300px] min-h-30 overflow-hidden cursor-pointer"
   >
     <h3 class="text-md font-semibold text-gray-800 truncate">{{ task.title }}</h3>
@@ -230,7 +218,7 @@ function formatString(str: string) {
     </div>
   </div>
 
-  <Modal :isOpen="isModalVisible" @update:isOpen="isModalVisible = $event">
+  <Modal :isOpen="isViewTaskModalOpen" :handleModal="handleViewTaskModal">
     <h2 class="text-2xl font-bold text-gray-800 mb-4">{{ taskDetails?.title }}</h2>
 
     <div class="mb-4">
@@ -291,13 +279,13 @@ function formatString(str: string) {
 
     <div class="flex">
       <button
-        @click="closeModal"
+        @click="handleViewTaskModal"
         class="mt-4 bg-gray-500 text-white p-2 rounded-lg w-full hover:bg-gray-600 transition"
       >
         Close
       </button>
       <button
-        @click="openEditModal"
+        @click="handleEditTaskModal"
         class="mt-4 ml-8 bg-lightblue text-white p-2 rounded-lg w-full hover:bg-darkblue transition"
       >
         Edit
@@ -305,7 +293,7 @@ function formatString(str: string) {
     </div>
   </Modal>
 
-  <Modal :isOpen="isEditModalVisible" @update:isOpen="isEditModalVisible = $event">
+  <Modal :isOpen="isEditTaskModalOpen" :handleModal="handleEditTaskModal">
     <h2 class="text-2xl font-bold text-gray-800 mb-4">Edit task</h2>
 
     <div class="task-form">
@@ -396,13 +384,13 @@ function formatString(str: string) {
 
     <div class="flex justify-between mt-6">
       <button
-        @click="closeEditModal"
+        @click="handleEditTaskModal"
         class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition"
       >
         Cancel
       </button>
       <button
-        @click="editTask"
+        @click="handleEditTask"
         class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition"
       >
         Save
