@@ -21,21 +21,12 @@ export default defineComponent({
   },
   setup(props) {
     const tasks = inject('tasks') as Ref<Task[]>;
-    const boardID = inject('boardID');
-    const role = inject('role') as boolean;
     const members = inject('members') as UserBoard[];
+    const role = inject('role') as boolean;
 
     provide('members', members);
 
     const filteredTasks = ref(tasks?.value.filter((task) => task.task_list_id === props.list.id));
-
-    watch(
-      () => tasks.value,
-      (newTasks) => {
-        filteredTasks.value = newTasks.filter((task) => task.task_list_id === props.list.id);
-      },
-      { immediate: true },
-    );
 
     const isUpdateListModalOpen = ref(false);
     const isCreateTaskModalOpen = ref(false);
