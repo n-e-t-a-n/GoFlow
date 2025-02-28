@@ -1,3 +1,4 @@
+import type { Task } from '@/types';
 import type { Ref } from 'vue';
 
 export async function updateBoard(
@@ -73,5 +74,42 @@ export async function updateList(
     listName.value = newListName.value;
   } catch (error) {
     console.error('Error changing list title:', error);
+  }
+}
+
+export async function updateTask(
+  taskDetails: Ref<Task>,
+  updatedTaskDetails: Ref<Task>,
+  handleEditTaskModal: () => void,
+) {
+  try {
+    const token = localStorage.getItem('token');
+
+    if (!token) return;
+
+    const response = await fetch(
+      `${import.meta.env.VITE_BASE_URL}/v1/task/${updatedTaskDetails.value.id}/edit`,
+      {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(updatedTaskDetails.value),
+      },
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error('Failed to edit task');
+    }
+
+    taskDetails.value = data;
+    updatedTaskDetails.value = data;
+
+    handleEditTaskModal();
+  } catch (error) {
+    console.error('Error occurred while editing task:', error);
   }
 }
