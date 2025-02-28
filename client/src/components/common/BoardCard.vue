@@ -7,6 +7,7 @@ import { useRouter } from 'vue-router';
 import { Modal } from '@/components/common';
 
 import { updateBoard } from '@/helpers/database';
+import type { Board } from '@/types';
 
 export default defineComponent({
   name: 'BoardCard',
@@ -15,12 +16,7 @@ export default defineComponent({
   },
   props: {
     board: {
-      type: Object as PropType<{
-        id?: string;
-        name?: string;
-        description?: string;
-        role?: string;
-      }>,
+      type: Object as PropType<Board>,
       required: true,
     },
   },
