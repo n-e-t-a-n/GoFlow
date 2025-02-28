@@ -1,10 +1,11 @@
 <script lang="ts">
-import { defineComponent, ref, onMounted, inject } from 'vue';
+import { defineComponent, ref, inject } from 'vue';
 import type { PropType } from 'vue';
 
-import type { Task, List } from '@/types';
+import type { Task } from '@/types';
 
 import { Modal } from '@/components/common';
+import { updateTask } from '@/helpers/database';
 
 export default defineComponent({
   name: 'TaskCard',
@@ -21,94 +22,39 @@ export default defineComponent({
     const isViewTaskModalOpen = ref(false);
     const isEditTaskModalOpen = ref(false);
 
-    const taskDetails = ref<Task | null>(null);
-    const listArr = ref<List[]>([]);
+    const taskDetails = ref<Task>({ ...props.task });
     const listNames = ref<string[]>([]);
 
     const role = inject('role') as boolean;
 
+    const updatedTaskDetails = ref<Task>({ ...props.task });
+
     const handleViewTaskModal = () => {
       if (!isViewTaskModalOpen) {
-        taskDetails.value = props.task;
+        taskDetails.value = { ...props.task };
       }
 
       isViewTaskModalOpen.value = !isViewTaskModalOpen.value;
     };
 
-    const handleViewTask = () => {};
+    const handleEditTask = () => {
+      updateTask(taskDetails, updatedTaskDetails, handleEditTaskModal);
+    };
 
     const handleEditTaskModal = () => {
       if (!isEditTaskModalOpen) {
         isViewTaskModalOpen.value = false;
+        updatedTaskDetails.value = { ...props.task };
       }
 
-      isEditTaskModalOpen.value = !isEditTaskModalOpen;
+      isEditTaskModalOpen.value = !isEditTaskModalOpen.value;
     };
-
-    const handleEditTask = () => {};
-
-    const editTask = async () => {
-      try {
-        const token = localStorage.getItem('token');
-
-        if (!token) {
-          console.error('No token found');
-          return;
-        }
-
-        const selectedList = listArr.value.find((list) => list.name === props.task.list_name);
-
-        if (!selectedList) {
-          console.error('Selected list not found');
-          return;
-        }
-
-        const updatedTaskData = {
-          title: props.task.title,
-          description: props.task.description,
-          status: props.task.status,
-          priority: props.task.priority,
-          due_date: props.task.due_date,
-          task_list_id: selectedList.id,
-        };
-
-        const response = await fetch(
-          `${import.meta.env.VITE_BASE_URL}/v1/task/${props.task.id}/edit`,
-          {
-            method: 'PUT',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify(updatedTaskData),
-          },
-        );
-
-        if (response.ok) {
-          const data = await response.json();
-          console.log('Successfully edited task:', data);
-          isEditTaskModalOpen.value = false;
-          window.location.reload();
-        } else {
-          const errorData = await response.json();
-          console.error('Failed to edit task:', errorData);
-        }
-      } catch (error) {
-        console.error('Error occurred while editing task:', error);
-      }
-    };
-
-    const updateListNames = () => {
-      listNames.value = listArr.value.map((list) => list.name);
-    };
-
-
 
     return {
       role,
       taskDetails,
+      updatedTaskDetails,
       formatString,
-      editTask,
       listNames,
 
       isViewTaskModalOpen,
@@ -117,7 +63,6 @@ export default defineComponent({
       handleViewTaskModal,
       handleEditTaskModal,
 
-      handleViewTask,
       handleEditTask,
     };
   },
@@ -138,7 +83,7 @@ function formatString(str: string) {
     @click="handleViewTaskModal"
     class="bg-white border-1 p-4 rounded-md transition-shadow duration-300 w-[85%] max-w-[300px] min-h-30 overflow-hidden cursor-pointer"
   >
-    <h3 class="text-md font-semibold text-gray-800 truncate">{{ task.title }}</h3>
+    <h3 class="text-md font-semibold text-gray-800 truncate">{{ taskDetails.title }}</h3>
     <div class="mt-2">
       <p class="text-sm text-gray-500">
         <strong>Priority:</strong>
@@ -146,13 +91,15 @@ function formatString(str: string) {
           :class="[
             'font-semibold',
             {
-              'text-red-500': task.priority === 'high',
-              'text-yellow-500': task.priority === 'medium',
-              'text-green-500': task.priority === 'low',
-              'text-black font-bold': task.priority === 'top',
+              'text-red-500': taskDetails.priority === 'high',
+              'text-yellow-500': taskDetails.priority === 'medium',
+              'text-green-500': taskDetails.priority === 'low',
+              'text-black font-bold': taskDetails.priority === 'top',
             },
           ]"
-          >{{ task?.priority ? formatString(task.priority) : ' No priority set' }}</span
+          >{{
+            taskDetails.priority ? formatString(taskDetails.priority) : ' No priority set'
+          }}</span
         >
       </p>
       <p class="text-sm text-gray-500">
@@ -167,14 +114,14 @@ function formatString(str: string) {
               'text-gray-500': task.status === 'on_hold',
             },
           ]"
-          >{{ task.status ? formatString(task.status) : 'No status set' }}</span
+          >{{ taskDetails.status ? formatString(taskDetails.status) : 'No status set' }}</span
         >
       </p>
       <p class="text-sm text-gray-500">
         <strong>Due Date:</strong>
         {{
-          task.due_date
-            ? new Date(task.due_date).toLocaleDateString('en-US', {
+          taskDetails.due_date
+            ? new Date(taskDetails.due_date).toLocaleDateString('en-US', {
                 weekday: 'short',
                 year: 'numeric',
                 month: 'short',
@@ -187,7 +134,7 @@ function formatString(str: string) {
   </div>
 
   <Modal :isOpen="isViewTaskModalOpen" :handleModal="handleViewTaskModal">
-    <h2 class="text-2xl font-bold text-gray-800 mb-4">{{ taskDetails?.title }}</h2>
+    <h2 class="text-2xl font-bold text-gray-800 mb-4">{{ taskDetails.title }}</h2>
 
     <div class="mb-4">
       <p class="mb-4">
@@ -203,7 +150,7 @@ function formatString(str: string) {
             },
           ]"
           >{{
-            taskDetails?.priority ? formatString(taskDetails.priority) : ' No priority set'
+            taskDetails.priority ? formatString(taskDetails.priority) : ' No priority set'
           }}</span
         >
       </p>
@@ -213,19 +160,19 @@ function formatString(str: string) {
           :class="[
             'font-semibold',
             {
-              'text-blue-500': taskDetails?.status === 'pending',
-              'text-yellow-500': taskDetails?.status === 'in_progress',
-              'text-green-500 font-bold': taskDetails?.status === 'completed',
-              'text-gray-500': taskDetails?.status === 'on_hold',
+              'text-blue-500': taskDetails.status === 'pending',
+              'text-yellow-500': taskDetails.status === 'in_progress',
+              'text-green-500 font-bold': taskDetails.status === 'completed',
+              'text-gray-500': taskDetails.status === 'on_hold',
             },
           ]"
-          >{{ taskDetails?.status ? formatString(taskDetails.status) : 'No status set' }}</span
+          >{{ taskDetails.status ? formatString(taskDetails.status) : 'No status set' }}</span
         >
       </p>
       <p class="mb-4">
         <strong>Due Date:</strong>
         {{
-          taskDetails?.due_date
+          taskDetails.due_date
             ? new Date(taskDetails.due_date).toLocaleDateString('en-US', {
                 weekday: 'long',
                 year: 'numeric',
@@ -237,7 +184,7 @@ function formatString(str: string) {
       </p>
       <p class="mb-4">
         <strong>Description:</strong>
-        {{ taskDetails?.description || 'No description available.' }}
+        {{ taskDetails.description || 'No description available.' }}
       </p>
       <!-- <p>
         <strong>Assignee:</strong>
@@ -268,7 +215,7 @@ function formatString(str: string) {
       <div>
         <label for="title" class="block text-sm font-semibold">Task Title</label>
         <input
-          v-model="task.title"
+          v-model="updatedTaskDetails.title"
           type="text"
           id="title"
           class="w-full p-2 border border-gray-300 rounded-lg"
@@ -279,7 +226,7 @@ function formatString(str: string) {
       <div class="mt-4">
         <label for="description" class="block text-sm font-semibold">Description</label>
         <textarea
-          v-model="task.description"
+          v-model="updatedTaskDetails.description"
           id="description"
           class="w-full p-2 border border-gray-300 rounded-lg"
           placeholder="Enter task description"
@@ -289,7 +236,7 @@ function formatString(str: string) {
       <div class="mt-4">
         <label for="status" class="block text-sm font-semibold">Status</label>
         <select
-          v-model="task.status"
+          v-model="updatedTaskDetails.status"
           id="status"
           class="w-full p-2 border border-gray-300 rounded-lg"
         >
@@ -314,7 +261,7 @@ function formatString(str: string) {
       <div v-if="role" class="mt-4">
         <label for="due_date" class="block text-sm font-semibold">Due Date</label>
         <input
-          v-model="task.due_date"
+          v-model="updatedTaskDetails.due_date"
           type="date"
           id="due_date"
           class="w-full p-2 border border-gray-300 rounded-lg"
@@ -324,7 +271,7 @@ function formatString(str: string) {
       <div v-if="role" class="mt-4">
         <label for="priority" class="block text-sm font-semibold">Priority</label>
         <select
-          v-model="task.priority"
+          v-model="updatedTaskDetails.priority"
           id="priority"
           class="w-full p-2 border border-gray-300 rounded-lg"
         >
@@ -339,7 +286,7 @@ function formatString(str: string) {
     <div class="mt-4">
       <label for="list" class="block text-sm font-semibold">List</label>
       <select
-        v-model="task.list_name"
+        v-model="updatedTaskDetails.list_name"
         id="list"
         class="w-full p-2 border border-gray-300 rounded-lg"
       >
