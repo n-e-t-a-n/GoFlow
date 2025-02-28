@@ -1,9 +1,6 @@
 import type { Ref } from 'vue';
 import type { Auth } from '@/types';
 
-import { useRouter } from 'vue-router';
-const router = useRouter();
-
 export async function login(payload: Auth, isLoading: Ref<boolean>, errorMessage: Ref<string>) {
   isLoading.value = true;
   errorMessage.value = '';
