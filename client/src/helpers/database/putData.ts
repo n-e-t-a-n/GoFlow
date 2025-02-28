@@ -8,9 +8,11 @@ export async function updateBoard(
   isUpdateBoardModalOpen: Ref<boolean>,
   boardID?: string,
 ) {
-  try {
-    const token = localStorage.getItem('token');
+  const token = localStorage.getItem('token');
 
+  if (!token) return;
+
+  try {
     const response = await fetch(`${import.meta.env.VITE_BASE_URL}/v1/board/${boardID}`, {
       method: 'PUT',
       headers: {
@@ -35,5 +37,41 @@ export async function updateBoard(
     isUpdateBoardModalOpen.value = false;
   } catch (error) {
     console.error('Error updating board details:', error);
+  }
+}
+
+export async function updateList(
+  listName: Ref<string>,
+  newListName: Ref<string>,
+  isUpdateListModalOpen: Ref<boolean>,
+  listID?: string,
+) {
+  const token = localStorage.getItem('token');
+
+  if (!token || !listID) return;
+
+  try {
+    const response = await fetch(`${import.meta.env.VITE_BASE_URL}/v1/list/${listID}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        name: newListName.value,
+      }),
+    });
+
+    if (!response.ok) {
+      console.error('Failed to edit list title');
+    }
+
+    const data = await response.json();
+    console.log('List title successfully edited:', data);
+
+    isUpdateListModalOpen.value = false;
+    listName.value = newListName.value;
+  } catch (error) {
+    console.error('Error changing list title:', error);
   }
 }
