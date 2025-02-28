@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent, onMounted, ref } from 'vue';
+import { defineComponent, onMounted, provide, ref } from 'vue';
 import { useRoute } from 'vue-router';
 
 import { ListCard, Modal } from '@/components/common';
@@ -74,6 +74,12 @@ export default defineComponent({
       isCreateMemberModalOpen.value = !isCreateMemberModalOpen.value;
     };
 
+    provide('tasks', tasks);
+    provide('lists', lists);
+    provide('boardID', boardID);
+    provide('members', members);
+    provide('role', userIsAdmin);
+
     return {
       tasks,
       lists,
@@ -127,7 +133,7 @@ export default defineComponent({
     <div>
       <div class="mt-6 flex overflow-x-auto gap-4 pb-2 justify-start min-w-[250px]">
         <div v-for="list in lists" :key="list.id" class="flex-shrink-0">
-          <ListCard :list="list" :tasks="tasks" :role="userIsAdmin" :members="members" />
+          <ListCard :list="list" />
         </div>
         <div
           v-if="userIsAdmin"
