@@ -102,39 +102,7 @@ export default defineComponent({
       listNames.value = listArr.value.map((list) => list.name);
     };
 
-    onMounted(async () => {
-      const token = localStorage.getItem('token');
 
-      if (!token) {
-        console.error('Token is missing');
-        return;
-      }
-
-      try {
-        const response = await fetch(
-          `${import.meta.env.VITE_BASE_URL}/v1/task/${props.task.board_id}`,
-          {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${token}`,
-            },
-          },
-        );
-
-        if (response.ok) {
-          const data = await response.json();
-          console.log('Successfully retrieved tasks:', data);
-          listArr.value = data.lists;
-          updateListNames();
-        } else {
-          const errorData = await response.json();
-          console.error('Failed to retrieve tasks:', errorData);
-        }
-      } catch (error) {
-        console.error('Error occurred while fetching tasks:', error);
-      }
-    });
 
     return {
       role,
