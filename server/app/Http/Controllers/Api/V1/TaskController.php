@@ -96,7 +96,7 @@ class TaskController extends Controller
             'status' => $validatedData['status'] ?? 'pending',
         ]);
 
-        return response()->json($task, 201);
+        return response()->json($task);
     }
 
     public function edit(Request $request, $taskId)
