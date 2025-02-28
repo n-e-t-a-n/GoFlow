@@ -28,7 +28,7 @@ export async function createBoard(
     }
 
     boards.value.push({
-      ...newBoard.value,
+      ...data.board,
       role: 'admin',
     });
     isModalVisible.value = false;
