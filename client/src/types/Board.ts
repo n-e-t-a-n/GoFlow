@@ -1,6 +1,6 @@
 export interface Board {
-  id?: string;
+  id: string;
   name: string;
-  description?: string;
+  description: string;
   role?: string;
 }
