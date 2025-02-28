@@ -1,9 +1,11 @@
 <script lang="ts">
-import { defineComponent, ref, watch } from 'vue';
-import type { PropType } from 'vue';
+import { defineComponent, inject, ref, watch, provide } from 'vue';
+import type { PropType, Ref } from 'vue';
 
 import { TaskCard, Modal } from '@/components/common';
 import type { List, Task, UserBoard } from '@/types';
+
+import { createTask, updateList } from '@/helpers/database';
 
 export default defineComponent({
   name: 'ListCard',
@@ -16,35 +18,35 @@ export default defineComponent({
       type: Object as PropType<List>,
       required: true,
     },
-    tasks: {
-      type: Array as PropType<Task[]>,
-      required: true,
-    },
-    role: Boolean,
-    members: {
-      type: Array as PropType<UserBoard[]>,
-      required: true,
-    },
   },
   setup(props) {
-    const filteredTasks = ref(props.tasks.filter((task) => task.task_list_id === props.list.id));
+    const tasks = inject('tasks') as Ref<Task[]>;
+    const boardID = inject('boardID');
+    const role = inject('role') as boolean;
+    const members = inject('members') as UserBoard[];
+
+    provide('members', members);
+
+    const filteredTasks = ref(tasks?.value.filter((task) => task.task_list_id === props.list.id));
 
     watch(
-      () => props.tasks,
+      () => tasks.value,
       (newTasks) => {
         filteredTasks.value = newTasks.filter((task) => task.task_list_id === props.list.id);
       },
       { immediate: true },
     );
 
-    const isEditModalVisible = ref(false);
-    const newListTitle = ref<string>(props.list.name);
+    const isUpdateListModalOpen = ref(false);
+    const isCreateTaskModalOpen = ref(false);
 
-    const isCreateTaskModalVisible = ref(false);
+    const listName = ref(props.list.name);
+    const newListName = ref(props.list.name);
+
     const newTask = ref<Task>({
-      id: '0',
-      board_id: '',
-      task_list_id: '',
+      id: '',
+      board_id: props.list?.board_id || '',
+      task_list_id: props.list?.id || '',
       title: '',
       description: null,
       status: 'pending',
@@ -53,105 +55,40 @@ export default defineComponent({
       priority: 'medium',
     });
 
-    const openEditModal = () => {
-      newListTitle.value = props.list.name;
-      isEditModalVisible.value = true;
+    const handleUpdateList = () => {
+      updateList(listName, newListName, isUpdateListModalOpen, props.list.id);
     };
 
-    const closeEditModal = () => {
-      isEditModalVisible.value = false;
-    };
-
-    const updateListTitle = async () => {
-      try {
-        const token = localStorage.getItem('token');
-
-        const response = await fetch(`${import.meta.env.VITE_BASE_URL}/v1/list/${props.list.id}`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            name: newListTitle.value,
-          }),
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          console.log('List title successfully edited:', data);
-
-          closeEditModal();
-          props.list.name = newListTitle.value;
-        } else {
-          console.error('Failed to edit list title');
-        }
-      } catch (error) {
-        console.error('Error changing list title:', error);
+    const handleUpdateListModal = () => {
+      if (isUpdateListModalOpen) {
+        newListName.value = listName.value;
       }
+
+      isUpdateListModalOpen.value = !isUpdateListModalOpen.value;
     };
 
-    const openCreateTaskModal = () => {
-      isCreateTaskModalVisible.value = true;
+    const handleCreateTask = () => {
+      createTask(newTask, isCreateTaskModalOpen, filteredTasks);
     };
 
-    const closeCreateTaskModal = () => {
-      isCreateTaskModalVisible.value = false;
-    };
-
-    const createNewTask = async () => {
-      try {
-        const token = localStorage.getItem('token');
-        const matchedUser = props.members.find(
-          (user) => user.email === newTask.value.assigned_user_id,
-        );
-
-        console.log(matchedUser);
-
-        const response = await fetch(`${import.meta.env.VITE_BASE_URL}/v1/task`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            board_id: props.list.board_id,
-            task_list_id: props.list.id,
-            title: newTask.value.title,
-            description: newTask.value.description,
-            assigned_user_id: null,
-            due_date: newTask.value.due_date,
-            priority: newTask.value.priority,
-            status: newTask.value.status,
-          }),
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          console.log('Successfully created new task:', data);
-
-          closeCreateTaskModal();
-          filteredTasks.value.push(data);
-        } else {
-          console.error('Failed to create new task');
-        }
-      } catch (error) {
-        console.error('Error creating new task:', error);
-      }
+    const handleCreateTaskModal = () => {
+      isCreateTaskModalOpen.value = !isCreateTaskModalOpen.value;
     };
 
     return {
-      filteredTasks,
-      isEditModalVisible,
-      newListTitle,
-      openEditModal,
-      closeEditModal,
-      updateListTitle,
+      role,
       newTask,
-      isCreateTaskModalVisible,
-      openCreateTaskModal,
-      closeCreateTaskModal,
-      createNewTask,
+      newListName,
+      filteredTasks,
+
+      isUpdateListModalOpen,
+      isCreateTaskModalOpen,
+
+      handleUpdateListModal,
+      handleCreateTaskModal,
+
+      handleUpdateList,
+      handleCreateTask,
     };
   },
 });
@@ -162,25 +99,17 @@ export default defineComponent({
     class="p-4 rounded-lg border-2 border-gray-400 min-w-[250px] max-w-[30vw] mb-4 flex-shrink-0 w-full"
   >
     <h3
-      @click="openEditModal"
+      @click="handleUpdateListModal"
       class="text-center text-xl font-semibold text-gray-800 mb-4 width-100 truncate max-w-full overflow-hidden text-ellipsis whitespace-nowrap"
     >
       {{ list.name }}
     </h3>
 
     <div class="overflow-y-auto flex flex-col items-center justify-start gap-4 max-h-[75vh]">
-      <TaskCard
-        v-for="task in filteredTasks"
-        :key="task.id"
-        :task="task"
-        :role="role"
-        :list="list"
-        :listName="$props.list.name"
-        :members="$props.members"
-      />
+      <TaskCard v-for="task in filteredTasks" :key="task.id" :task="task" />
 
       <div
-        @click="openCreateTaskModal"
+        @click="handleCreateTaskModal"
         class="flex items-center justify-center bg-white p-4 rounded-md border-3 transition-shadow duration-300 w-[85%] max-w-[300px] min-h-30 overflow-hidden cursor-pointer"
       >
         <img src="../assets/images/add.png" alt="add" class="w-8 h-8" />
@@ -189,12 +118,12 @@ export default defineComponent({
     </div>
   </div>
 
-  <Modal :isOpen="isEditModalVisible" @update:isOpen="isEditModalVisible = $event">
+  <Modal :isOpen="isUpdateListModalOpen" :handleModal="handleUpdateListModal">
     <h2 class="text-2xl font-bold text-gray-800 mb-4">Edit List Title</h2>
 
     <div class="mb-4">
       <input
-        v-model="newListTitle"
+        v-model="newListName"
         type="text"
         class="w-full p-2 border border-gray-300 rounded-lg"
         placeholder="Enter new list title"
@@ -203,13 +132,13 @@ export default defineComponent({
 
     <div class="flex justify-between">
       <button
-        @click="closeEditModal"
+        @click="handleUpdateListModal"
         class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition"
       >
         Cancel
       </button>
       <button
-        @click="updateListTitle"
+        @click="handleUpdateList"
         class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition"
       >
         Save
@@ -217,7 +146,7 @@ export default defineComponent({
     </div>
   </Modal>
 
-  <Modal :isOpen="isCreateTaskModalVisible" @update:isOpen="isCreateTaskModalVisible = $event">
+  <Modal :isOpen="isCreateTaskModalOpen" :handleModal="handleCreateTaskModal">
     <h2 class="text-2xl font-bold text-gray-800 mb-4">Create new task</h2>
 
     <div class="task-form">
@@ -294,13 +223,13 @@ export default defineComponent({
 
     <div class="flex justify-between mt-6">
       <button
-        @click="closeCreateTaskModal"
+        @click="handleCreateTaskModal"
         class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition"
       >
         Cancel
       </button>
       <button
-        @click="createNewTask"
+        @click="handleCreateTask"
         class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition"
       >
         Save
