@@ -2,7 +2,7 @@
 import { defineComponent, ref, onMounted, inject } from 'vue';
 import type { PropType } from 'vue';
 
-import type { Task, UserBoard, List } from '@/types';
+import type { Task, List } from '@/types';
 
 import { Modal } from '@/components/common';
 

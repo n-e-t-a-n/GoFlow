@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent, inject, ref, watch, provide } from 'vue';
+import { defineComponent, inject, ref, provide } from 'vue';
 import type { PropType, Ref } from 'vue';
 
 import { TaskCard, Modal } from '@/components/common';
