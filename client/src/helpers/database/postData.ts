@@ -135,7 +135,7 @@ export async function createTask(
       },
       body: JSON.stringify(newTask.value),
     });
-    
+
     const data = await response.json();
 
     if (!response.ok) {
@@ -144,7 +144,6 @@ export async function createTask(
 
     isCreateTaskModalOpen.value = false;
     filteredTasks.value.push(data);
-
   } catch (error) {
     console.error('Error creating new task:', error);
   }
