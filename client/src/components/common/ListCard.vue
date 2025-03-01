@@ -51,7 +51,7 @@ const handleUpdateListModal = () => {
 };
 
 const handleCreateTask = () => {
-  createTask(newTask, isCreateTaskModalOpen, filteredTasks);
+  createTask(newTask, tasks, isCreateTaskModalOpen);
 };
 
 const handleCreateTaskModal = () => {

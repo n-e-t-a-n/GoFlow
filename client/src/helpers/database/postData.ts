@@ -117,12 +117,10 @@ export async function createMember(
 
 export async function createTask(
   newTask: Ref<Task>,
+  tasks: Ref<Task[]>,
   isCreateTaskModalOpen: Ref<boolean>,
-  filteredTasks: Ref<Task[]>,
 ) {
   const token = localStorage.getItem('token');
-
-  console.log(newTask.value);
 
   if (!token) return;
 
@@ -143,7 +141,7 @@ export async function createTask(
     }
 
     isCreateTaskModalOpen.value = false;
-    filteredTasks.value.push(data);
+    tasks.value.push(data);
   } catch (error) {
     console.error('Error creating new task:', error);
   }
