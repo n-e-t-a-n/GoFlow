@@ -27,7 +27,7 @@ export default defineComponent({
     const role = inject('role') as Ref<boolean>;
     const lists = inject('lists') as Ref<List[]>;
 
-    const listNames = computed(() => lists.value.map(list => list.name));
+    const listNames = computed(() => lists.value.map(list => ({id: list.id, name: list.name})));
 
     const updatedTaskDetails = ref<Task>({ ...props.task });
 
@@ -297,9 +297,12 @@ function formatString(str: string) {
         id="list"
         class="w-full p-2 border border-gray-300 rounded-lg"
       >
-        <option value="" disabled>Select a list</option>
-        <option v-for="name in listNames" :key="name" :value="name">
-          {{ name }}
+        <option 
+        v-for="name in listNames" 
+        :key="name.id" 
+        :value="name.name"
+        :selected="name.name === $props.task.list_name">
+        {{ name.name }}
         </option>
       </select>
     </div>
