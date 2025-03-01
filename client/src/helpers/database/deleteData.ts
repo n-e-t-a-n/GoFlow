@@ -4,8 +4,8 @@ import type { Ref } from 'vue';
 export async function removeMember(
   boardID: Ref<string>,
   newMemberEmail: Ref<string>,
-  isCreateMemberModalOpen: Ref<boolean>,
   members: Ref<UserBoard[]>,
+  isCreateMemberModalOpen: Ref<boolean>,
 ) {
   try {
     const token = localStorage.getItem('token');
@@ -24,15 +24,11 @@ export async function removeMember(
       },
     );
 
-    if (response.ok) {
-      const data = await response.json();
-      console.log('Member removed:', data);
-
-      isCreateMemberModalOpen.value = false;
-      members.value = members.value.filter((member) => member.email !== newMemberEmail.value);
-    } else {
-      console.error('Failed to remove member.');
-    }
+    if (!response.ok) throw new Error('Failed to remove member.');
+  
+    isCreateMemberModalOpen.value = false;
+    
+    members.value = members.value.filter((member) => member.email !== newMemberEmail.value);
   } catch (error) {
     console.error('Error removing member:', error);
   }
