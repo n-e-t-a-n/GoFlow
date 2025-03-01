@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent, inject, ref, provide } from 'vue';
+import { defineComponent, inject, ref, provide, computed } from 'vue';
 import type { PropType, Ref } from 'vue';
 
 import { TaskCard, Modal } from '@/components/common';
@@ -24,10 +24,11 @@ export default defineComponent({
     const lists = inject('lists') as Ref<List[]>;
     const role = inject('role') as Ref<boolean>;
 
-    const filteredTasks = ref(
+    const filteredTasks = computed(() =>
       tasks?.value
-      .filter((task) => task.task_list_id === props.list.id)
-      .map(task => ({...task, list_name: props.list.name})));
+        .filter((task) => task.task_list_id === props.list.id)
+        .map((task) => ({ ...task, list_name: props.list.name })),
+    );
 
     const isUpdateListModalOpen = ref(false);
     const isCreateTaskModalOpen = ref(false);
@@ -95,7 +96,7 @@ export default defineComponent({
       @click="handleUpdateListModal"
       class="text-center text-xl font-semibold text-gray-800 mb-4 width-100 truncate max-w-full overflow-hidden text-ellipsis whitespace-nowrap"
     >
-      {{ lists.find(list => list.id === $props.list.id)?.name || '' }}
+      {{ lists.find((list) => list.id === $props.list.id)?.name || '' }}
     </h3>
 
     <div class="overflow-y-auto flex flex-col items-center justify-start gap-4 max-h-[75vh]">
