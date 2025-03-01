@@ -1,21 +1,11 @@
-<script lang="ts">
-export default {
-  name: 'Modal',
-  props: {
-    isOpen: {
-      type: Boolean,
-      default: false,
-    },
-    handleModal: {
-      type: Function,
-      required: true,
-    },
-  },
-  methods: {
-    closeModal() {
-      this.handleModal();
-    },
-  },
+<script lang="ts" setup>
+const props = defineProps<{
+  isOpen: boolean;
+  handleModal: () => void;
+}>();
+
+const closeModal = () => {
+  props.handleModal();
 };
 </script>
 

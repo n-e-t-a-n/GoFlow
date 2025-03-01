@@ -1,81 +1,52 @@
-<script lang="ts">
-import { defineComponent, ref } from 'vue';
-import type { PropType } from 'vue';
+<script lang="ts" setup>
+import { ref } from 'vue';
 
 import { useRouter } from 'vue-router';
 
 import { Modal } from '@/components/common';
 
 import { updateBoard } from '@/helpers/database';
+
 import type { Board } from '@/types';
 
-export default defineComponent({
-  name: 'BoardCard',
-  components: {
-    Modal,
-  },
-  props: {
-    board: {
-      type: Object as PropType<Board>,
-      required: true,
-    },
-  },
-  setup(props) {
-    const router = useRouter();
+const props = defineProps<{
+  board: Board;
+}>();
 
-    const name = ref(props.board.name || '');
-    const description = ref(props.board.description || '');
-    const role = props.board.role;
+const name = ref(props.board.name || '');
+const description = ref(props.board.description || '');
+const role = props.board.role;
 
-    const editedName = ref(props.board.name || '');
-    const editedDescription = ref(props.board.description || '');
+const editedName = ref(props.board.name || '');
+const editedDescription = ref(props.board.description || '');
 
-    const isUpdateBoardModalOpen = ref(false);
-    const isAdmin = ref(props.board.role);
+const isUpdateBoardModalOpen = ref(false);
 
-    const viewBoard = () => {
-      router.push(`/board/${props.board.id}`);
-    };
+const router = useRouter();
 
-    const handleUpdateBoard = () => {
-      updateBoard(
-        name,
-        description,
-        editedName,
-        editedDescription,
-        isUpdateBoardModalOpen,
-        props.board.id,
-      );
-    };
+const viewBoard = () => {
+  router.push(`/board/${props.board.id}`);
+};
 
-    const handleUpdateBoardModal = () => {
-      if (!isUpdateBoardModalOpen) {
-        editedName.value = props.board.name || '';
-        editedDescription.value = props.board.description || '';
-      }
+const handleUpdateBoard = () => {
+  updateBoard(
+    name,
+    description,
+    editedName,
+    editedDescription,
+    isUpdateBoardModalOpen,
+    props.board.id,
+  );
+};
 
-      isUpdateBoardModalOpen.value = !isUpdateBoardModalOpen.value;
-    };
+const handleUpdateBoardModal = () => {
+  if (!isUpdateBoardModalOpen.value) {
+    editedName.value = props.board.name || '';
+    editedDescription.value = props.board.description || '';
+  }
 
-    return {
-      name,
-      description,
-      role,
-
-      editedName,
-      editedDescription,
-      isAdmin,
-
-      isUpdateBoardModalOpen,
-
-      handleUpdateBoardModal,
-
-      handleUpdateBoard,
-
-      viewBoard,
-    };
-  },
-});
+  isUpdateBoardModalOpen.value = !isUpdateBoardModalOpen.value;
+};
 </script>
 
 <template>

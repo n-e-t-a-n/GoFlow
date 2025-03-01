@@ -1,34 +1,20 @@
-<script lang="ts">
+<script lang="ts" setup>
 import { ref } from 'vue';
 
 import { login } from '@/helpers/database';
 
 import type { Auth } from '@/types';
 
-export default {
-  name: 'Login',
-  setup() {
-    const auth = ref<Auth>({
-      email: '',
-      password: '',
-    });
+const auth = ref<Auth>({
+  email: '',
+  password: '',
+});
 
-    const isLoading = ref(false);
-    const errorMessage = ref('');
+const isLoading = ref(false);
+const errorMessage = ref('');
 
-    const handleLogin = () => {
-      login(auth.value, isLoading, errorMessage);
-    };
-
-    return {
-      auth,
-
-      isLoading,
-      errorMessage,
-
-      handleLogin,
-    };
-  },
+const handleLogin = () => {
+  login(auth.value, isLoading, errorMessage);
 };
 </script>
 

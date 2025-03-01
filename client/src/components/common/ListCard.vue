@@ -1,91 +1,62 @@
-<script lang="ts">
-import { defineComponent, inject, ref, provide, computed } from 'vue';
-import type { PropType, Ref } from 'vue';
+<script lang="ts" setup>
+import { ref, inject, computed, type Ref } from 'vue';
 
 import { TaskCard, Modal } from '@/components/common';
-import type { List, Task, UserBoard } from '@/types';
 
 import { createTask, updateList } from '@/helpers/database';
 
-export default defineComponent({
-  name: 'ListCard',
-  components: {
-    TaskCard,
-    Modal,
-  },
-  props: {
-    list: {
-      type: Object as PropType<List>,
-      required: true,
-    },
-  },
-  setup(props) {
-    const tasks = inject('tasks') as Ref<Task[]>;
-    const lists = inject('lists') as Ref<List[]>;
-    const role = inject('role') as Ref<boolean>;
+import type { List, Task } from '@/types';
 
-    const filteredTasks = computed(() =>
-      tasks?.value
-        .filter((task) => task.task_list_id === props.list.id)
-        .map((task) => ({ ...task, list_name: props.list.name })),
-    );
+const props = defineProps<{
+  list: List;
+}>();
 
-    const isUpdateListModalOpen = ref(false);
-    const isCreateTaskModalOpen = ref(false);
+const tasks = inject('tasks') as Ref<Task[]>;
+const lists = inject('lists') as Ref<List[]>;
+const role = inject('role') as Ref<boolean>;
 
-    const newListName = ref(props.list.name);
+const filteredTasks = computed(() =>
+  tasks.value
+    .filter((task) => task.task_list_id === props.list.id)
+    .map((task) => ({ ...task, list_name: props.list.name })),
+);
 
-    const newTask = ref<Task>({
-      id: '',
-      board_id: props.list?.board_id || '',
-      task_list_id: props.list?.id || '',
-      title: '',
-      description: null,
-      status: 'pending',
-      assigned_user_id: '',
-      due_date: null,
-      priority: 'medium',
-    });
+const isUpdateListModalOpen = ref(false);
+const isCreateTaskModalOpen = ref(false);
 
-    const handleUpdateList = () => {
-      updateList(lists, newListName, isUpdateListModalOpen, props.list.id);
-    };
+const newListName = ref(props.list.name);
 
-    const handleUpdateListModal = () => {
-      if (isUpdateListModalOpen) {
-        newListName.value = props.list.name;
-      }
-
-      isUpdateListModalOpen.value = !isUpdateListModalOpen.value;
-    };
-
-    const handleCreateTask = () => {
-      createTask(newTask, isCreateTaskModalOpen, filteredTasks);
-    };
-
-    const handleCreateTaskModal = () => {
-      isCreateTaskModalOpen.value = !isCreateTaskModalOpen.value;
-    };
-
-    return {
-      role,
-      lists,
-      filteredTasks,
-
-      newTask,
-      newListName,
-
-      isUpdateListModalOpen,
-      isCreateTaskModalOpen,
-
-      handleUpdateListModal,
-      handleCreateTaskModal,
-
-      handleUpdateList,
-      handleCreateTask,
-    };
-  },
+const newTask = ref<Task>({
+  id: '',
+  board_id: props.list?.board_id || '',
+  task_list_id: props.list?.id || '',
+  title: '',
+  description: null,
+  status: 'pending',
+  assigned_user_id: '',
+  due_date: null,
+  priority: 'medium',
 });
+
+const handleUpdateList = () => {
+  updateList(lists, newListName, isUpdateListModalOpen, props.list.id);
+};
+
+const handleUpdateListModal = () => {
+  if (isUpdateListModalOpen.value) {
+    newListName.value = props.list.name;
+  }
+
+  isUpdateListModalOpen.value = !isUpdateListModalOpen.value;
+};
+
+const handleCreateTask = () => {
+  createTask(newTask, isCreateTaskModalOpen, filteredTasks);
+};
+
+const handleCreateTaskModal = () => {
+  isCreateTaskModalOpen.value = !isCreateTaskModalOpen.value;
+};
 </script>
 
 <template>

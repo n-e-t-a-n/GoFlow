@@ -1,79 +1,52 @@
-<script lang="ts">
-import { defineComponent, ref, inject, computed } from 'vue';
-import type { ComputedRef, PropType, Ref } from 'vue';
-
-import type { List, Task } from '@/types';
+<script lang="ts" setup>
+import { ref, inject, computed, type Ref, type ComputedRef } from 'vue';
 
 import { Modal } from '@/components/common';
+
 import { updateTask } from '@/helpers/database';
 
-export default defineComponent({
-  name: 'TaskCard',
-  components: {
-    Modal,
-  },
-  props: {
-    task: {
-      type: Object as PropType<Task>,
-      required: true,
-    },
-  },
-  setup(props) {
-    const isViewTaskModalOpen = ref(false);
-    const isEditTaskModalOpen = ref(false);
+import type { Task, List } from '@/types';
 
-    const role = inject('role') as Ref<boolean>;
-    const tasks = inject('tasks') as Ref<Task[]>;
-    const lists = inject('lists') as Ref<List[]>;
+const props = defineProps<{
+  task: Task;
+}>();
 
-    const listNames = computed(() => lists.value.map((list) => ({ id: list.id, name: list.name })));
+const isViewTaskModalOpen = ref(false);
+const isEditTaskModalOpen = ref(false);
 
-    const taskDetails = computed(() =>
-      tasks.value.find((task) => task.id === props.task.id),
-    ) as ComputedRef<Task>;
-    const updatedTaskDetails = ref<Task>({ ...taskDetails.value });
+const role = inject('role') as Ref<boolean>;
+const tasks = inject('tasks') as Ref<Task[]>;
+const lists = inject('lists') as Ref<List[]>;
 
-    const handleViewTaskModal = () => {
-      isViewTaskModalOpen.value = !isViewTaskModalOpen.value;
-    };
+const listNames = computed(() => lists.value.map((list) => ({ id: list.id, name: list.name })));
 
-    const handleEditTask = () => {
-      const selectedList = lists.value.find(
-        (list) => list.name === updatedTaskDetails.value.list_name,
-      );
+const taskDetails = computed(() =>
+  tasks.value.find((task) => task.id === props.task.id),
+) as ComputedRef<Task>;
 
-      if (!selectedList) return;
+const updatedTaskDetails = ref<Task>({ ...taskDetails.value, list_name: props.task.list_name });
 
-      updatedTaskDetails.value.task_list_id = selectedList.id;
+const handleViewTaskModal = () => {
+  isViewTaskModalOpen.value = !isViewTaskModalOpen.value;
+};
 
-      updateTask(tasks, props.task.id, updatedTaskDetails, handleEditTaskModal);
-    };
+const handleEditTask = () => {
+  const selectedList = lists.value.find((list) => list.name === updatedTaskDetails.value.list_name);
 
-    const handleEditTaskModal = () => {
-      if (isEditTaskModalOpen) {
-        updatedTaskDetails.value = { ...props.task };
-      }
+  if (!selectedList) return;
 
-      isEditTaskModalOpen.value = !isEditTaskModalOpen.value;
-    };
+  updatedTaskDetails.value.task_list_id = selectedList.id;
 
-    return {
-      role,
-      taskDetails,
-      updatedTaskDetails,
-      formatString,
-      listNames,
+  updateTask(tasks, props.task.id, updatedTaskDetails, handleEditTaskModal);
+};
 
-      isViewTaskModalOpen,
-      isEditTaskModalOpen,
+const handleEditTaskModal = () => {
+  if (isEditTaskModalOpen.value) {
+    updatedTaskDetails.value = { ...props.task };
+  }
 
-      handleViewTaskModal,
-      handleEditTaskModal,
-
-      handleEditTask,
-    };
-  },
-});
+  isEditTaskModalOpen.value = !isEditTaskModalOpen.value;
+};
 
 function formatString(str: string) {
   let formattedStr = str.replace(/_/g, ' ');
@@ -303,7 +276,6 @@ function formatString(str: string) {
           v-for="name in listNames"
           :key="name.id"
           :value="name.name"
-          :selected="name.name === $props.task.list_name"
         >
           {{ name.name }}
         </option>

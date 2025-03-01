@@ -1,110 +1,78 @@
-<script lang="ts">
-import { defineComponent, onMounted, provide, ref } from 'vue';
+<script lang="ts" setup>
+import { onMounted, provide, ref } from 'vue';
+
 import { useRoute } from 'vue-router';
 
 import { ListCard, Modal } from '@/components/common';
 
-import type { List, Task, UserBoard } from '@/types';
-
 import { getMembers, getTasks, createMember, createList, removeMember } from '@/helpers/database';
 
-export default defineComponent({
-  name: 'Board',
-  components: {
-    ListCard,
-    Modal,
-  },
-  setup() {
-    const route = useRoute();
+import type { List, Task, UserBoard } from '@/types';
 
-    const tasks = ref<Task[]>([]);
-    const lists = ref<List[]>([]);
-    const members = ref<UserBoard[]>([]);
+const route = useRoute();
 
-    const isAdmin = ref(false);
-    const userIsAdmin = ref(false);
+const tasks = ref<Task[]>([]);
+const lists = ref<List[]>([]);
+const members = ref<UserBoard[]>([]);
 
-    const newListTitle = ref('');
-    const newMemberEmail = ref('');
+const isAdmin = ref(false);
+const userIsAdmin = ref(false);
 
-    const isViewMemberModalOpen = ref(false);
-    const isCreateListModalOpen = ref(false);
-    const isCreateMemberModalOpen = ref(false);
+const newListTitle = ref('');
+const newMemberEmail = ref('');
 
-    const boardID = ref(Array.isArray(route.params.id) ? route.params.id[0] : route.params.id);
+const isViewMemberModalOpen = ref(false);
+const isCreateListModalOpen = ref(false);
+const isCreateMemberModalOpen = ref(false);
 
-    onMounted(() => {
-      getTasks(tasks, lists, userIsAdmin, boardID);
-    });
+const boardID = ref(Array.isArray(route.params.id) ? route.params.id[0] : route.params.id);
 
-    const handleCreateList = () => {
-      createList(lists, newListTitle, boardID, isCreateListModalOpen);
-    };
-
-    const handleCreateListModal = () => {
-      if (!isCreateListModalOpen) {
-        newListTitle.value = '';
-      }
-
-      isCreateListModalOpen.value = !isCreateListModalOpen.value;
-    };
-
-    const handleViewMemberModal = async () => {
-      if (!isViewMemberModalOpen.value) {
-        await getMembers(members, boardID);
-      }
-
-      isViewMemberModalOpen.value = !isViewMemberModalOpen.value;
-    };
-
-    const handleCreateMember = () => {
-      createMember(boardID, newMemberEmail, isAdmin, isCreateMemberModalOpen);
-    };
-
-    const handleRemoveMember = () => {
-      removeMember(boardID, newMemberEmail, isCreateMemberModalOpen, members);
-    };
-
-    const handleCreateMemberModal = () => {
-      if (!isCreateMemberModalOpen) {
-        newMemberEmail.value = '';
-        isAdmin.value = false;
-      }
-
-      isCreateMemberModalOpen.value = !isCreateMemberModalOpen.value;
-    };
-
-    provide('tasks', tasks);
-    provide('lists', lists);
-    provide('boardID', boardID);
-    provide('members', members);
-    provide('role', userIsAdmin);
-
-    return {
-      tasks,
-      lists,
-      members,
-
-      isAdmin,
-      userIsAdmin,
-
-      newListTitle,
-      newMemberEmail,
-
-      isViewMemberModalOpen,
-      isCreateListModalOpen,
-      isCreateMemberModalOpen,
-
-      handleViewMemberModal,
-      handleCreateListModal,
-      handleCreateMemberModal,
-
-      handleCreateList,
-      handleCreateMember,
-      handleRemoveMember,
-    };
-  },
+onMounted(() => {
+  getTasks(tasks, lists, userIsAdmin, boardID);
 });
+
+const handleCreateList = () => {
+  createList(lists, newListTitle, boardID, isCreateListModalOpen);
+};
+
+const handleCreateListModal = () => {
+  if (!isCreateListModalOpen.value) {
+    newListTitle.value = '';
+  }
+
+  isCreateListModalOpen.value = !isCreateListModalOpen.value;
+};
+
+const handleViewMemberModal = async () => {
+  if (!isViewMemberModalOpen.value) {
+    await getMembers(members, boardID);
+  }
+
+  isViewMemberModalOpen.value = !isViewMemberModalOpen.value;
+};
+
+const handleCreateMember = () => {
+  createMember(boardID, newMemberEmail, isAdmin, isCreateMemberModalOpen);
+};
+
+const handleRemoveMember = () => {
+  removeMember(boardID, newMemberEmail, isCreateMemberModalOpen, members);
+};
+
+const handleCreateMemberModal = () => {
+  if (!isCreateMemberModalOpen.value) {
+    newMemberEmail.value = '';
+    isAdmin.value = false;
+  }
+
+  isCreateMemberModalOpen.value = !isCreateMemberModalOpen.value;
+};
+
+provide('tasks', tasks);
+provide('lists', lists);
+provide('boardID', boardID);
+provide('members', members);
+provide('role', userIsAdmin);
 </script>
 
 <template>

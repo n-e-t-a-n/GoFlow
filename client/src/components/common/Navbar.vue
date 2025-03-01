@@ -1,24 +1,13 @@
-<script lang="ts">
-import { defineComponent } from 'vue';
+<script lang="ts" setup>
 import { useRouter } from 'vue-router';
 
 import { logout } from '@/helpers/database';
 
-export default defineComponent({
-  name: 'Navbar',
-  setup() {
-    const router = useRouter();
+const router = useRouter();
 
-    const goToHome = () => {
-      router.push({ name: 'Home' });
-    };
-
-    return {
-      goToHome,
-      logout,
-    };
-  },
-});
+const goToHome = () => {
+  router.push({ name: 'Home' });
+};
 </script>
 
 <template>

@@ -1,53 +1,36 @@
-<script lang="ts">
-import { defineComponent, ref, onMounted } from 'vue';
+<script lang="ts" setup>
+import { ref, onMounted } from 'vue';
 
 import { BoardCard, Modal } from '@/components/common';
 
 import { getBoards, createBoard } from '@/helpers/database';
+
 import type { Board } from '@/types';
 
-export default defineComponent({
-  name: 'Home',
-  components: {
-    BoardCard,
-    Modal,
-  },
-  setup() {
-    const boards = ref<Board[]>([]);
-    const newBoard = ref<Board>({
-      id: '',
-      name: '',
-      description: '',
-    });
+const boards = ref<Board[]>([]);
+const newBoard = ref<Board>({
+  id: '',
+  name: '',
+  description: '',
+});
 
-    const isModalVisible = ref(false);
+const isModalVisible = ref(false);
 
-    const handleModal = () => {
-      if (isModalVisible.value) {
-        newBoard.value.name = '';
-        newBoard.value.description = '';
-      }
+const handleModal = () => {
+  if (isModalVisible.value) {
+    newBoard.value.name = '';
+    newBoard.value.description = '';
+  }
 
-      isModalVisible.value = !isModalVisible.value;
-    };
+  isModalVisible.value = !isModalVisible.value;
+};
 
-    const handleCreateBoard = () => {
-      createBoard(boards, newBoard, isModalVisible);
-    };
+const handleCreateBoard = () => {
+  createBoard(boards, newBoard, isModalVisible);
+};
 
-    onMounted(() => {
-      getBoards(boards);
-    });
-
-    return {
-      boards,
-      newBoard,
-      isModalVisible,
-
-      handleModal,
-      handleCreateBoard,
-    };
-  },
+onMounted(() => {
+  getBoards(boards);
 });
 </script>
 

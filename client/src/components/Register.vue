@@ -1,35 +1,22 @@
-<script lang="ts">
+<script lang="ts" setup>
 import { ref } from 'vue';
 
 import { register } from '@/helpers/database';
 
 import type { Auth } from '@/types';
 
-export default {
-  name: 'Register',
-  setup() {
-    const auth = ref<Auth>({
-      name: '',
-      email: '',
-      password: '',
-      password_confirmation: '',
-    });
+const auth = ref<Auth>({
+  name: '',
+  email: '',
+  password: '',
+  password_confirmation: '',
+});
 
-    const isLoading = ref(false);
-    const errorMessage = ref('');
+const isLoading = ref(false);
+const errorMessage = ref('');
 
-    const handleRegister = () => {
-      register(auth.value, isLoading, errorMessage);
-    };
-
-    return {
-      auth,
-      handleRegister,
-
-      isLoading,
-      errorMessage,
-    };
-  },
+const handleRegister = () => {
+  register(auth.value, isLoading, errorMessage);
 };
 </script>
 
