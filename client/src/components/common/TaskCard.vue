@@ -1,8 +1,8 @@
 <script lang="ts">
-import { defineComponent, ref, inject } from 'vue';
-import type { PropType } from 'vue';
+import { defineComponent, ref, inject, computed } from 'vue';
+import type { PropType, Ref } from 'vue';
 
-import type { Task } from '@/types';
+import type { List, Task } from '@/types';
 
 import { Modal } from '@/components/common';
 import { updateTask } from '@/helpers/database';
@@ -23,9 +23,11 @@ export default defineComponent({
     const isEditTaskModalOpen = ref(false);
 
     const taskDetails = ref<Task>({ ...props.task });
-    const listNames = ref<string[]>([]);
 
-    const role = inject('role') as boolean;
+    const role = inject('role') as Ref<boolean>;
+    const lists = inject('lists') as Ref<List[]>;
+
+    const listNames = computed(() => lists.value.map(list => list.name));
 
     const updatedTaskDetails = ref<Task>({ ...props.task });
 
