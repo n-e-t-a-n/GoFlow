@@ -1,6 +1,6 @@
 <script lang="ts">
 import { defineComponent, ref, inject, computed } from 'vue';
-import type { PropType, Ref } from 'vue';
+import type { ComputedRef, PropType, Ref } from 'vue';
 
 import type { List, Task } from '@/types';
 
@@ -22,31 +22,31 @@ export default defineComponent({
     const isViewTaskModalOpen = ref(false);
     const isEditTaskModalOpen = ref(false);
 
-    const taskDetails = ref<Task>({ ...props.task });
-
     const role = inject('role') as Ref<boolean>;
+    const tasks = inject('tasks') as Ref<Task[]>;
     const lists = inject('lists') as Ref<List[]>;
 
-    const listNames = computed(() => lists.value.map(list => ({id: list.id, name: list.name})));
+    const listNames = computed(() => lists.value.map((list) => ({ id: list.id, name: list.name })));
 
-    const updatedTaskDetails = ref<Task>({ ...props.task });
+    const taskDetails = computed(() =>
+      tasks.value.find((task) => task.id === props.task.id),
+    ) as ComputedRef<Task>;
+    const updatedTaskDetails = ref<Task>({ ...taskDetails.value });
 
     const handleViewTaskModal = () => {
-      if (!isViewTaskModalOpen) {
-        taskDetails.value = { ...props.task };
-      }
-
       isViewTaskModalOpen.value = !isViewTaskModalOpen.value;
     };
 
     const handleEditTask = () => {
-      const selectedList = lists.value.find(list => list.name === updatedTaskDetails.value.list_name);
+      const selectedList = lists.value.find(
+        (list) => list.name === updatedTaskDetails.value.list_name,
+      );
 
       if (!selectedList) return;
 
       updatedTaskDetails.value.task_list_id = selectedList.id;
 
-      updateTask(taskDetails, updatedTaskDetails, handleEditTaskModal);
+      updateTask(tasks, props.task.id, updatedTaskDetails, handleEditTaskModal);
     };
 
     const handleEditTaskModal = () => {
@@ -297,12 +297,13 @@ function formatString(str: string) {
         id="list"
         class="w-full p-2 border border-gray-300 rounded-lg"
       >
-        <option 
-        v-for="name in listNames" 
-        :key="name.id" 
-        :value="name.name"
-        :selected="name.name === $props.task.list_name">
-        {{ name.name }}
+        <option
+          v-for="name in listNames"
+          :key="name.id"
+          :value="name.name"
+          :selected="name.name === $props.task.list_name"
+        >
+          {{ name.name }}
         </option>
       </select>
     </div>
