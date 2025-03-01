@@ -29,7 +29,7 @@ const boardID = ref(Array.isArray(route.params.id) ? route.params.id[0] : route.
 
 function handleCreateList() {
   createList(lists, newListTitle, boardID, isCreateListModalOpen);
-};
+}
 
 function handleCreateListModal() {
   if (!isCreateListModalOpen.value) {
@@ -37,23 +37,19 @@ function handleCreateListModal() {
   }
 
   isCreateListModalOpen.value = !isCreateListModalOpen.value;
-};
+}
 
-async function handleViewMemberModal() {
-  if (!isViewMemberModalOpen.value) {
-    await getMembers(members, boardID);
-  }
-
+function handleViewMemberModal() {
   isViewMemberModalOpen.value = !isViewMemberModalOpen.value;
-};
+}
 
 function handleCreateMember() {
-  createMember(boardID, newMemberEmail, isAdmin, isCreateMemberModalOpen);
-};
+  createMember(boardID, newMemberEmail, isAdmin, members, handleCreateMemberModal);
+}
 
 function handleRemoveMember() {
-  removeMember(boardID, newMemberEmail, isCreateMemberModalOpen, members);
-};
+  removeMember(boardID, newMemberEmail, members, isCreateMemberModalOpen);
+}
 
 function handleCreateMemberModal() {
   if (!isCreateMemberModalOpen.value) {
@@ -62,10 +58,11 @@ function handleCreateMemberModal() {
   }
 
   isCreateMemberModalOpen.value = !isCreateMemberModalOpen.value;
-};
+}
 
 onMounted(() => {
   getTasks(tasks, lists, userIsAdmin, boardID);
+  getMembers(members, boardID);
 });
 
 provide('tasks', tasks);
