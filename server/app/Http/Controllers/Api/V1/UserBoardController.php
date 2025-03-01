@@ -97,13 +97,13 @@ class UserBoardController extends Controller
             return response()->json(['message' => 'User already in board.'], 400);
         }
 
-        UserBoard::create([
+        $newUserBoard = UserBoard::create([
             'user_id' => $user->id,
             'board_id' => $boardId,
             'role' => $validatedData['role'] ?? 'member',
         ]);
 
-        return response()->json(['message' => 'User added to board successfully.'], 201);
+        return response()->json(['member' => $newUserBoard, 'name' => $user->name]);
     }
 
 
