@@ -27,10 +27,6 @@ const isCreateMemberModalOpen = ref(false);
 
 const boardID = ref(Array.isArray(route.params.id) ? route.params.id[0] : route.params.id);
 
-onMounted(() => {
-  getTasks(tasks, lists, userIsAdmin, boardID);
-});
-
 function handleCreateList() {
   createList(lists, newListTitle, boardID, isCreateListModalOpen);
 };
@@ -67,6 +63,10 @@ function handleCreateMemberModal() {
 
   isCreateMemberModalOpen.value = !isCreateMemberModalOpen.value;
 };
+
+onMounted(() => {
+  getTasks(tasks, lists, userIsAdmin, boardID);
+});
 
 provide('tasks', tasks);
 provide('lists', lists);
