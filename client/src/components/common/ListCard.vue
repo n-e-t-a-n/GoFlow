@@ -24,7 +24,10 @@ export default defineComponent({
     const lists = inject('lists') as Ref<List[]>;
     const role = inject('role') as Ref<boolean>;
 
-    const filteredTasks = ref(tasks?.value.filter((task) => task.task_list_id === props.list.id));
+    const filteredTasks = ref(
+      tasks?.value
+      .filter((task) => task.task_list_id === props.list.id)
+      .map(task => ({...task, list_name: props.list.name})));
 
     const isUpdateListModalOpen = ref(false);
     const isCreateTaskModalOpen = ref(false);
@@ -102,7 +105,7 @@ export default defineComponent({
         @click="handleCreateTaskModal"
         class="flex items-center justify-center bg-white p-4 rounded-md border-3 transition-shadow duration-300 w-[85%] max-w-[300px] min-h-30 overflow-hidden cursor-pointer"
       >
-        <img src="../assets/images/add.png" alt="add" class="w-8 h-8" />
+        <img src="@/assets/images/add.png" alt="add" class="w-8 h-8" />
         <div class="mt-2"></div>
       </div>
     </div>
