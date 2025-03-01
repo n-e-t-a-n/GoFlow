@@ -185,6 +185,8 @@ function formatString(str: string) {
                 year: 'numeric',
                 month: 'long',
                 day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
               })
             : 'N/A'
         }}
@@ -269,7 +271,7 @@ function formatString(str: string) {
         <label for="due_date" class="block text-sm font-semibold">Due Date</label>
         <input
           v-model="updatedTaskDetails.due_date"
-          type="date"
+          type="datetime-local"
           id="due_date"
           class="w-full p-2 border border-gray-300 rounded-lg"
         />
