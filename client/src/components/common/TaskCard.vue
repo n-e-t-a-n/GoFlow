@@ -40,6 +40,12 @@ export default defineComponent({
     };
 
     const handleEditTask = () => {
+      const selectedList = lists.value.find(list => list.name === updatedTaskDetails.value.list_name);
+
+      if (!selectedList) return;
+
+      updatedTaskDetails.value.task_list_id = selectedList.id;
+
       updateTask(taskDetails, updatedTaskDetails, handleEditTaskModal);
     };
 
