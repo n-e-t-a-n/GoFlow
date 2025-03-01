@@ -26,9 +26,7 @@ export async function updateBoard(
       }),
     });
 
-    if (!response.ok) {
-      throw new Error('Failed to update board details');
-    }
+    if (!response.ok) throw new Error('Failed to update board details');
 
     const updatedBoard = await response.json();
 
@@ -63,12 +61,7 @@ export async function updateList(
       }),
     });
 
-    if (!response.ok) {
-      console.error('Failed to edit list title');
-    }
-
-    const data = await response.json();
-    console.log('List title successfully edited:', data);
+    if (!response.ok) throw new Error('Failed to edit list title');
 
     isUpdateListModalOpen.value = false;
     const list = lists.value.find((list) => list.id === listID);
@@ -104,9 +97,7 @@ export async function updateTask(
 
     const data = await response.json();
 
-    if (!response.ok) {
-      throw new Error('Failed to edit task');
-    }
+    if (!response.ok) throw new Error('Failed to edit task');
 
     const task = tasks.value.find((task) => task.id === taskID);
 

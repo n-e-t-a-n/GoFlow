@@ -25,9 +25,9 @@ export async function removeMember(
     );
 
     if (!response.ok) throw new Error('Failed to remove member.');
-  
+
     isCreateMemberModalOpen.value = false;
-    
+
     members.value = members.value.filter((member) => member.email !== newMemberEmail.value);
   } catch (error) {
     console.error('Error removing member:', error);

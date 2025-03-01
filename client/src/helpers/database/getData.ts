@@ -16,9 +16,7 @@ export async function getBoards(board: Ref<Board[]>) {
 
     const data = await response.json();
 
-    if (!response.ok) {
-      throw new Error(data.message || 'Failed to fetch boards');
-    }
+    if (!response.ok) throw new Error(data.message || 'Failed to fetch boards');
 
     board.value = data;
   } catch (error) {
@@ -41,9 +39,7 @@ export async function getMembers(members: Ref<UserBoard[]>, boardID: Ref<string>
       },
     );
 
-    if (!response.ok) {
-      throw new Error('Failed to fetch members');
-    }
+    if (!response.ok) throw new Error('Failed to fetch members');
 
     const data = await response.json();
     members.value = data;
@@ -69,20 +65,18 @@ export async function getTasks(
       },
     });
 
-    if (response.ok) {
-      const data: {
-        tasks: Task[];
-        lists: List[];
-        isAdmin: boolean;
-      } = await response.json();
+    if (!response.ok) throw new Error('Failed to fetch lists');
 
-      lists.value = data.lists;
-      tasks.value = data.tasks;
+    const data: {
+      tasks: Task[];
+      lists: List[];
+      isAdmin: boolean;
+    } = await response.json();
 
-      userIsAdmin.value = data.isAdmin;
-    } else {
-      console.error('Failed to fetch lists');
-    }
+    lists.value = data.lists;
+    tasks.value = data.tasks;
+
+    userIsAdmin.value = data.isAdmin;
   } catch (error) {
     console.error('Error fetching board data:', error);
   }

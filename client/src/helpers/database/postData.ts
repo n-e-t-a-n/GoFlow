@@ -23,9 +23,7 @@ export async function createBoard(
 
     const data = await response.json();
 
-    if (!response.ok) {
-      throw new Error(data.message || 'Failed to create board.');
-    }
+    if (!response.ok) throw new Error(data.message || 'Failed to create board.');
 
     boards.value.push({
       ...data.board,
@@ -63,9 +61,7 @@ export async function createList(
 
     const data = await response.json();
 
-    if (!response.ok) {
-      console.error('Failed to add new board.');
-    }
+    if (!response.ok) throw new Error('Failed to add new board.');
 
     lists.value.push(data.taskList);
     isCreateListModalOpen.value = false;
@@ -105,9 +101,7 @@ export async function createMember(
 
     const data = await response.json();
 
-    if (!response.ok) {
-      throw new Error('Failed to add member');
-    }
+    if (!response.ok) throw new Error('Failed to add member');
 
     members.value.push({ ...data.member, name: data.name, email: newMemberEmail });
     handleCreateMemberModal();
@@ -137,9 +131,7 @@ export async function createTask(
 
     const data = await response.json();
 
-    if (!response.ok) {
-      throw new Error('Failed to create new task');
-    }
+    if (!response.ok) throw new Error('Failed to create new task');
 
     isCreateTaskModalOpen.value = false;
     tasks.value.push(data);
