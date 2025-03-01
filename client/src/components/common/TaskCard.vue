@@ -42,8 +42,7 @@ export default defineComponent({
     };
 
     const handleEditTaskModal = () => {
-      if (!isEditTaskModalOpen) {
-        isViewTaskModalOpen.value = false;
+      if (isEditTaskModalOpen) {
         updatedTaskDetails.value = { ...props.task };
       }
 
