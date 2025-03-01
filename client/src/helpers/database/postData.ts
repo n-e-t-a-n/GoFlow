@@ -1,6 +1,6 @@
 import type { Ref } from 'vue';
 
-import type { Board, List, Task } from '@/types';
+import type { Board, List, Task, UserBoard } from '@/types';
 
 export async function createBoard(
   boards: Ref<Board[]>,
@@ -79,7 +79,8 @@ export async function createMember(
   boardID: Ref<string>,
   newMemberEmail: Ref<string>,
   isAdmin: Ref<boolean>,
-  isCreateMemberModalOpen: Ref<boolean>,
+  members: Ref<UserBoard[]>,
+  handleCreateMemberModal: () => void,
 ) {
   const token = localStorage.getItem('token');
 
@@ -107,9 +108,9 @@ export async function createMember(
     if (!response.ok) {
       throw new Error('Failed to add member');
     }
-    console.log('Member added:', data);
-    isCreateMemberModalOpen.value = false;
-    newMemberEmail.value = '';
+
+    members.value.push({ ...data.member, name: data.name, email: newMemberEmail });
+    handleCreateMemberModal();
   } catch (error) {
     console.error('Error adding member:', error);
   }
