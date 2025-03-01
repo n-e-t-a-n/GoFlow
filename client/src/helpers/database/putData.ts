@@ -71,7 +71,7 @@ export async function updateList(
     console.log('List title successfully edited:', data);
 
     isUpdateListModalOpen.value = false;
-    const list = lists.value.find(list => list.id === listID);
+    const list = lists.value.find((list) => list.id === listID);
 
     if (list) list.name = newListName.value;
   } catch (error) {
@@ -80,7 +80,8 @@ export async function updateList(
 }
 
 export async function updateTask(
-  taskDetails: Ref<Task>,
+  tasks: Ref<Task[]>,
+  taskID: string,
   updatedTaskDetails: Ref<Task>,
   handleEditTaskModal: () => void,
 ) {
@@ -107,7 +108,19 @@ export async function updateTask(
       throw new Error('Failed to edit task');
     }
 
-    taskDetails.value = data;
+    const task = tasks.value.find((task) => task.id === taskID);
+
+    if (task) {
+      task.assigned_user_id = data.assigned_user_id;
+      task.title = data.title;
+      task.description = data.description;
+      task.status = data.status;
+      task.due_date = data.due_date;
+      task.priority = data.priority;
+      task.task_list_id = data.task_list_id;
+      task.board_id = data.board_id;
+    }
+
     updatedTaskDetails.value = data;
 
     handleEditTaskModal();
