@@ -28,7 +28,7 @@ const updatedTaskDetails = ref<Task>({ ...taskDetails.value, list_name: props.ta
 
 function handleViewTaskModal() {
   isViewTaskModalOpen.value = !isViewTaskModalOpen.value;
-};
+}
 
 function handleEditTask() {
   const selectedList = lists.value.find((list) => list.name === updatedTaskDetails.value.list_name);
@@ -38,7 +38,7 @@ function handleEditTask() {
   updatedTaskDetails.value.task_list_id = selectedList.id;
 
   updateTask(tasks, props.task.id, updatedTaskDetails, handleEditTaskModal);
-};
+}
 
 function handleEditTaskModal() {
   if (isEditTaskModalOpen.value) {
@@ -46,7 +46,7 @@ function handleEditTaskModal() {
   }
 
   isEditTaskModalOpen.value = !isEditTaskModalOpen.value;
-};
+}
 
 function formatString(str: string) {
   let formattedStr = str.replace(/_/g, ' ');
@@ -272,11 +272,7 @@ function formatString(str: string) {
         id="list"
         class="w-full p-2 border border-gray-300 rounded-lg"
       >
-        <option
-          v-for="name in listNames"
-          :key="name.id"
-          :value="name.name"
-        >
+        <option v-for="name in listNames" :key="name.id" :value="name.name">
           {{ name.name }}
         </option>
       </select>

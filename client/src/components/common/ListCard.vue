@@ -40,7 +40,7 @@ const newTask = ref<Task>({
 
 function handleUpdateList() {
   updateList(lists, newListName, isUpdateListModalOpen, props.list.id);
-};
+}
 
 function handleUpdateListModal() {
   if (isUpdateListModalOpen.value) {
@@ -48,15 +48,15 @@ function handleUpdateListModal() {
   }
 
   isUpdateListModalOpen.value = !isUpdateListModalOpen.value;
-};
+}
 
 function handleCreateTask() {
   createTask(newTask, tasks, isCreateTaskModalOpen);
-};
+}
 
 function handleCreateTaskModal() {
   isCreateTaskModalOpen.value = !isCreateTaskModalOpen.value;
-};
+}
 </script>
 
 <template>

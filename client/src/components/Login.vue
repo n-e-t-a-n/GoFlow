@@ -15,7 +15,7 @@ const errorMessage = ref('');
 
 function handleLogin() {
   login(auth.value, isLoading, errorMessage);
-};
+}
 </script>
 
 <template>

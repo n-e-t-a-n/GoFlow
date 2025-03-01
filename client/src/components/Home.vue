@@ -23,11 +23,11 @@ function handleModal() {
   }
 
   isModalVisible.value = !isModalVisible.value;
-};
+}
 
 function handleCreateBoard() {
   createBoard(boards, newBoard, isModalVisible);
-};
+}
 
 onMounted(() => {
   getBoards(boards);

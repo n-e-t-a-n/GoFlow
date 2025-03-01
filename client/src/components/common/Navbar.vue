@@ -7,7 +7,7 @@ const router = useRouter();
 
 function goToHome() {
   router.push({ name: 'Home' });
-};
+}
 </script>
 
 <template>

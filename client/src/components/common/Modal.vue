@@ -6,7 +6,7 @@ const props = defineProps<{
 
 function closeModal() {
   props.handleModal();
-};
+}
 </script>
 
 <template>

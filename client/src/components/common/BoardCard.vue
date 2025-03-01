@@ -26,7 +26,7 @@ const router = useRouter();
 
 function viewBoard() {
   router.push(`/board/${props.board.id}`);
-};
+}
 
 function handleUpdateBoard() {
   updateBoard(
@@ -37,7 +37,7 @@ function handleUpdateBoard() {
     isUpdateBoardModalOpen,
     props.board.id,
   );
-};
+}
 
 function handleUpdateBoardModal() {
   if (!isUpdateBoardModalOpen.value) {
@@ -46,7 +46,7 @@ function handleUpdateBoardModal() {
   }
 
   isUpdateBoardModalOpen.value = !isUpdateBoardModalOpen.value;
-};
+}
 </script>
 
 <template>

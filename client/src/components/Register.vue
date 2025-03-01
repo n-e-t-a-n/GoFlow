@@ -17,7 +17,7 @@ const errorMessage = ref('');
 
 function handleRegister() {
   register(auth.value, isLoading, errorMessage);
-};
+}
 </script>
 
 <template>
