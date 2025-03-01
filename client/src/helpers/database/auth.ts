@@ -1,10 +1,7 @@
 import type { Ref } from 'vue';
 import type { Auth } from '@/types';
 
-export async function login(payload: Auth, isLoading: Ref<boolean>, errorMessage: Ref<string>) {
-  isLoading.value = true;
-  errorMessage.value = '';
-
+export async function login(auth: Auth) {
   try {
     const response = await fetch(`${import.meta.env.VITE_BASE_URL}/auth/login`, {
       method: 'POST',
@@ -12,32 +9,24 @@ export async function login(payload: Auth, isLoading: Ref<boolean>, errorMessage
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        email: payload.email,
-        password: payload.password,
+        email: auth.email,
+        password: auth.password,
       }),
     });
 
     const data = await response.json();
 
-    if (!response.ok) {
-      throw new Error(data.message || 'Login failed');
-    }
+    if (!response.ok) throw new Error(data.message || 'Login failed');
 
-    console.log('Login successful:', data);
     localStorage.setItem('token', data.token);
 
     window.location.reload();
   } catch (error: any) {
-    errorMessage.value = error.message || 'An error occurred. Please try again.';
-  } finally {
-    isLoading.value = false;
+    console.error('Error during login:', error);
   }
 }
 
-export async function register(payload: Auth, isLoading: Ref<boolean>, errorMessage: Ref<string>) {
-  isLoading.value = true;
-  errorMessage.value = '';
-
+export async function register(payload: Auth) {
   try {
     const response = await fetch(`${import.meta.env.VITE_BASE_URL}/auth/register`, {
       method: 'POST',
@@ -54,18 +43,12 @@ export async function register(payload: Auth, isLoading: Ref<boolean>, errorMess
 
     const data = await response.json();
 
-    if (!response.ok) {
-      throw new Error(data.message || 'Registration failed');
-    }
-
-    console.log('Registration successful:', data);
+    if (!response.ok) throw new Error(data.message || 'Registration failed');
 
     localStorage.setItem('token', data.token);
     window.location.reload();
   } catch (error: any) {
-    errorMessage.value = error.message || 'An error occurred. Please try again.';
-  } finally {
-    isLoading.value = false;
+    console.error('Error during registration:', error);
   }
 }
 
@@ -92,7 +75,5 @@ export async function logout() {
     window.location.reload();
   } catch (error) {
     console.error('Error during logout:', error);
-  } finally {
-    console.log('Logged out successfully.');
   }
 }
