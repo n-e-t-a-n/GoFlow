@@ -1,4 +1,4 @@
-import type { Task } from '@/types';
+import type { List, Task } from '@/types';
 import type { Ref } from 'vue';
 
 export async function updateBoard(
@@ -42,7 +42,7 @@ export async function updateBoard(
 }
 
 export async function updateList(
-  listName: Ref<string>,
+  lists: Ref<List[]>,
   newListName: Ref<string>,
   isUpdateListModalOpen: Ref<boolean>,
   listID?: string,
@@ -71,7 +71,9 @@ export async function updateList(
     console.log('List title successfully edited:', data);
 
     isUpdateListModalOpen.value = false;
-    listName.value = newListName.value;
+    const list = lists.value.find(list => list.id === listID);
+
+    if (list) list.name = newListName.value;
   } catch (error) {
     console.error('Error changing list title:', error);
   }

@@ -21,17 +21,14 @@ export default defineComponent({
   },
   setup(props) {
     const tasks = inject('tasks') as Ref<Task[]>;
-    const members = inject('members') as UserBoard[];
-    const role = inject('role') as boolean;
-
-    provide('members', members);
+    const lists = inject('lists') as Ref<List[]>;
+    const role = inject('role') as Ref<boolean>;
 
     const filteredTasks = ref(tasks?.value.filter((task) => task.task_list_id === props.list.id));
 
     const isUpdateListModalOpen = ref(false);
     const isCreateTaskModalOpen = ref(false);
 
-    const listName = ref(props.list.name);
     const newListName = ref(props.list.name);
 
     const newTask = ref<Task>({
@@ -47,12 +44,12 @@ export default defineComponent({
     });
 
     const handleUpdateList = () => {
-      updateList(listName, newListName, isUpdateListModalOpen, props.list.id);
+      updateList(lists, newListName, isUpdateListModalOpen, props.list.id);
     };
 
     const handleUpdateListModal = () => {
       if (isUpdateListModalOpen) {
-        newListName.value = listName.value;
+        newListName.value = props.list.name;
       }
 
       isUpdateListModalOpen.value = !isUpdateListModalOpen.value;
@@ -68,9 +65,11 @@ export default defineComponent({
 
     return {
       role,
+      lists,
+      filteredTasks,
+
       newTask,
       newListName,
-      filteredTasks,
 
       isUpdateListModalOpen,
       isCreateTaskModalOpen,
@@ -93,7 +92,7 @@ export default defineComponent({
       @click="handleUpdateListModal"
       class="text-center text-xl font-semibold text-gray-800 mb-4 width-100 truncate max-w-full overflow-hidden text-ellipsis whitespace-nowrap"
     >
-      {{ list.name }}
+      {{ lists.find(list => list.id === $props.list.id)?.name || '' }}
     </h3>
 
     <div class="overflow-y-auto flex flex-col items-center justify-start gap-4 max-h-[75vh]">
