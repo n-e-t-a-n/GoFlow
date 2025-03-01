@@ -12,11 +12,8 @@ const auth = ref<Auth>({
   password_confirmation: '',
 });
 
-const isLoading = ref(false);
-const errorMessage = ref('');
-
 function handleRegister() {
-  register(auth.value, isLoading, errorMessage);
+  register(auth.value);
 }
 </script>
 
@@ -86,9 +83,6 @@ function handleRegister() {
           </button>
         </div>
       </form>
-
-      <div v-if="isLoading" class="text-center text-gray-600 mt-4">Registering...</div>
-      <div v-if="errorMessage" class="text-center text-red-600 mt-4">{{ errorMessage }}</div>
 
       <p class="text-center mt-4 text-lightblue">
         <router-link to="/" class="font-semibold">

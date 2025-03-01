@@ -10,11 +10,8 @@ const auth = ref<Auth>({
   password: '',
 });
 
-const isLoading = ref(false);
-const errorMessage = ref('');
-
 function handleLogin() {
-  login(auth.value, isLoading, errorMessage);
+  login(auth.value);
 }
 </script>
 
@@ -58,9 +55,6 @@ function handleLogin() {
           </button>
         </div>
       </form>
-
-      <div v-if="isLoading" class="text-center text-gray-600 mt-4">Logging in...</div>
-      <div v-if="errorMessage" class="text-center text-red-600 mt-4">{{ errorMessage }}</div>
 
       <p class="text-center mt-4 text-lightblue">
         <router-link to="/register" class="font-semibold">
