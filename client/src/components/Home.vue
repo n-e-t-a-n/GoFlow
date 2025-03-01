@@ -16,7 +16,7 @@ const newBoard = ref<Board>({
 
 const isModalVisible = ref(false);
 
-const handleModal = () => {
+function handleModal() {
   if (isModalVisible.value) {
     newBoard.value.name = '';
     newBoard.value.description = '';
@@ -25,7 +25,7 @@ const handleModal = () => {
   isModalVisible.value = !isModalVisible.value;
 };
 
-const handleCreateBoard = () => {
+function handleCreateBoard() {
   createBoard(boards, newBoard, isModalVisible);
 };
 

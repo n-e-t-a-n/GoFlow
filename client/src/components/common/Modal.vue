@@ -4,7 +4,7 @@ const props = defineProps<{
   handleModal: () => void;
 }>();
 
-const closeModal = () => {
+function closeModal() {
   props.handleModal();
 };
 </script>

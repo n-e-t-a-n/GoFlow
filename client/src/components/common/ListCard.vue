@@ -38,11 +38,11 @@ const newTask = ref<Task>({
   priority: 'medium',
 });
 
-const handleUpdateList = () => {
+function handleUpdateList() {
   updateList(lists, newListName, isUpdateListModalOpen, props.list.id);
 };
 
-const handleUpdateListModal = () => {
+function handleUpdateListModal() {
   if (isUpdateListModalOpen.value) {
     newListName.value = props.list.name;
   }
@@ -50,11 +50,11 @@ const handleUpdateListModal = () => {
   isUpdateListModalOpen.value = !isUpdateListModalOpen.value;
 };
 
-const handleCreateTask = () => {
+function handleCreateTask() {
   createTask(newTask, tasks, isCreateTaskModalOpen);
 };
 
-const handleCreateTaskModal = () => {
+function handleCreateTaskModal() {
   isCreateTaskModalOpen.value = !isCreateTaskModalOpen.value;
 };
 </script>

@@ -13,7 +13,7 @@ const auth = ref<Auth>({
 const isLoading = ref(false);
 const errorMessage = ref('');
 
-const handleLogin = () => {
+function handleLogin() {
   login(auth.value, isLoading, errorMessage);
 };
 </script>

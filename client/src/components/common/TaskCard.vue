@@ -26,11 +26,11 @@ const taskDetails = computed(() =>
 
 const updatedTaskDetails = ref<Task>({ ...taskDetails.value, list_name: props.task.list_name });
 
-const handleViewTaskModal = () => {
+function handleViewTaskModal() {
   isViewTaskModalOpen.value = !isViewTaskModalOpen.value;
 };
 
-const handleEditTask = () => {
+function handleEditTask() {
   const selectedList = lists.value.find((list) => list.name === updatedTaskDetails.value.list_name);
 
   if (!selectedList) return;
@@ -40,7 +40,7 @@ const handleEditTask = () => {
   updateTask(tasks, props.task.id, updatedTaskDetails, handleEditTaskModal);
 };
 
-const handleEditTaskModal = () => {
+function handleEditTaskModal() {
   if (isEditTaskModalOpen.value) {
     updatedTaskDetails.value = { ...props.task };
   }

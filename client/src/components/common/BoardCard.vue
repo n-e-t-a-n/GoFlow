@@ -24,11 +24,11 @@ const isUpdateBoardModalOpen = ref(false);
 
 const router = useRouter();
 
-const viewBoard = () => {
+function viewBoard() {
   router.push(`/board/${props.board.id}`);
 };
 
-const handleUpdateBoard = () => {
+function handleUpdateBoard() {
   updateBoard(
     name,
     description,
@@ -39,7 +39,7 @@ const handleUpdateBoard = () => {
   );
 };
 
-const handleUpdateBoardModal = () => {
+function handleUpdateBoardModal() {
   if (!isUpdateBoardModalOpen.value) {
     editedName.value = props.board.name || '';
     editedDescription.value = props.board.description || '';

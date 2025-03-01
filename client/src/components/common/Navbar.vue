@@ -5,7 +5,7 @@ import { logout } from '@/helpers/database';
 
 const router = useRouter();
 
-const goToHome = () => {
+function goToHome() {
   router.push({ name: 'Home' });
 };
 </script>

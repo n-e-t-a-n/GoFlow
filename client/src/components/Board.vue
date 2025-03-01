@@ -31,11 +31,11 @@ onMounted(() => {
   getTasks(tasks, lists, userIsAdmin, boardID);
 });
 
-const handleCreateList = () => {
+function handleCreateList() {
   createList(lists, newListTitle, boardID, isCreateListModalOpen);
 };
 
-const handleCreateListModal = () => {
+function handleCreateListModal() {
   if (!isCreateListModalOpen.value) {
     newListTitle.value = '';
   }
@@ -43,7 +43,7 @@ const handleCreateListModal = () => {
   isCreateListModalOpen.value = !isCreateListModalOpen.value;
 };
 
-const handleViewMemberModal = async () => {
+async function handleViewMemberModal() {
   if (!isViewMemberModalOpen.value) {
     await getMembers(members, boardID);
   }
@@ -51,15 +51,15 @@ const handleViewMemberModal = async () => {
   isViewMemberModalOpen.value = !isViewMemberModalOpen.value;
 };
 
-const handleCreateMember = () => {
+function handleCreateMember() {
   createMember(boardID, newMemberEmail, isAdmin, isCreateMemberModalOpen);
 };
 
-const handleRemoveMember = () => {
+function handleRemoveMember() {
   removeMember(boardID, newMemberEmail, isCreateMemberModalOpen, members);
 };
 
-const handleCreateMemberModal = () => {
+function handleCreateMemberModal() {
   if (!isCreateMemberModalOpen.value) {
     newMemberEmail.value = '';
     isAdmin.value = false;

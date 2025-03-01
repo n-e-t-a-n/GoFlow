@@ -15,7 +15,7 @@ const auth = ref<Auth>({
 const isLoading = ref(false);
 const errorMessage = ref('');
 
-const handleRegister = () => {
+function handleRegister() {
   register(auth.value, isLoading, errorMessage);
 };
 </script>
