@@ -1,16 +1,12 @@
 import type { Ref } from 'vue';
 
-import type { Board, List, Task, UserBoard } from '@/types';
+import type { Board, BoardData, List, Task, UserBoard } from '@/types';
 
 import { apiRequest } from '@/helpers/database';
 
 export async function getBoards(board: Ref<Board[]>) {
   try {
-    const response: Response = await apiRequest('/v1/board');
-
-    const data = await response.json();
-
-    if (!response.ok) throw new Error(data.message || 'Failed to fetch boards');
+    const data: Board[] = await apiRequest('/v1/board');
 
     board.value = data;
   } catch (error) {
@@ -20,11 +16,8 @@ export async function getBoards(board: Ref<Board[]>) {
 
 export async function getMembers(members: Ref<UserBoard[]>, boardID: Ref<string>) {
   try {
-    const response: Response = await apiRequest(`/v1/user-board/${boardID.value}`);
+    const data: UserBoard[] = await apiRequest(`/v1/user-board/${boardID.value}`);
 
-    if (!response.ok) throw new Error('Failed to fetch members');
-
-    const data = await response.json();
     members.value = data;
   } catch (error) {
     console.error('Error fetching members: ', error);
@@ -38,16 +31,12 @@ export async function getTasks(
   boardID: Ref<string>,
 ) {
   try {
-    const response: Response = await apiRequest(`/v1/task/${boardID.value}`);
+    const data: BoardData = await apiRequest(`/v1/task/${boardID.value}`);
 
-    if (!response.ok) throw new Error('Failed to fetch tasks and lists');
+    lists.value = data.lists as List[];
+    tasks.value = data.tasks as Task[];
 
-    const data = await response.json();
-
-    lists.value = data.lists;
-    tasks.value = data.tasks;
-
-    userIsAdmin.value = data.isAdmin;
+    userIsAdmin.value = data.isAdmin as boolean;
   } catch (error) {
     console.error('Error fetching board data: ', error);
   }

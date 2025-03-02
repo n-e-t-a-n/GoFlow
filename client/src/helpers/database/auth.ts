@@ -8,14 +8,15 @@ import { apiRequest } from '@/helpers/database';
 
 export async function login(auth: Ref<Auth>, router: Router) {
   try {
-    const response: Response = await apiRequest('/auth/login', 'POST', auth.value, 'NO_AUTH');
+    const data: { token: string; user: { email: string } } = await apiRequest(
+      '/auth/login',
+      'POST',
+      auth.value,
+      'NO_AUTH',
+    );
 
-    const data = await response.json();
-
-    if (!response.ok) throw new Error(data.message || 'Login failed');
-
-    localStorage.setItem('token', data.token);
-    localStorage.setItem('email', data.user.email);
+    localStorage.setItem('token', data.token as string);
+    data.user && localStorage.setItem('email', data.user.email);
 
     router.push({ name: 'Home' });
   } catch (error: any) {
@@ -25,14 +26,7 @@ export async function login(auth: Ref<Auth>, router: Router) {
 
 export async function register(auth: Ref<Auth>, router: Router) {
   try {
-    const response = await apiRequest('/auth/register', 'POST', auth.value, 'NO_AUTH');
-
-    const data = await response.json();
-
-    if (!response.ok) throw new Error(data.message || 'Registration failed');
-
-    localStorage.setItem('token', data.token);
-    localStorage.setItem('email', data.user.email);
+    await apiRequest('/auth/register', 'POST', auth.value, 'NO_AUTH');
 
     router.push({ name: 'Home' });
   } catch (error: any) {
@@ -42,11 +36,7 @@ export async function register(auth: Ref<Auth>, router: Router) {
 
 export async function logout(router: Router) {
   try {
-    const response = await apiRequest('/auth/logout', 'POST');
-
-    const data = await response.json();
-
-    if (!response.ok) throw new Error(data.message || 'Logout failed');
+    await apiRequest('/auth/logout', 'POST');
 
     localStorage.removeItem('token');
     localStorage.removeItem('email');

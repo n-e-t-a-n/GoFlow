@@ -14,11 +14,7 @@ export async function removeMember(
 
     if (userEmail === email.value) throw new Error('You cannot remove yourself from the board');
 
-    const response: Response = await apiRequest(`/v1/user-board/${boardID.value}`, 'DELETE', {
-      email: email.value,
-    });
-
-    if (!response.ok) throw new Error('Failed to remove member.');
+    await apiRequest(`/v1/user-board/${boardID.value}`, 'DELETE', { email: email.value });
 
     members.value = members.value.filter((member) => member.email !== email.value);
   } catch (error) {

@@ -6,11 +6,7 @@ import { apiRequest } from '@/helpers/database';
 
 export async function createBoard(boards: Ref<Board[]>, newBoard: Ref<Board>) {
   try {
-    const response: Response = await apiRequest('/v1/board', 'POST', newBoard.value);
-
-    const data = await response.json();
-
-    if (!response.ok) throw new Error(data.message || 'Failed to create board.');
+    const data: { board: Board } = await apiRequest('/v1/board', 'POST', newBoard.value);
 
     boards.value.push({ ...data.board, role: 'admin' });
   } catch (error) {
@@ -20,11 +16,7 @@ export async function createBoard(boards: Ref<Board[]>, newBoard: Ref<Board>) {
 
 export async function createList(lists: Ref<List[]>, newList: Ref<List>) {
   try {
-    const response: Response = await apiRequest('/v1/list', 'POST', newList.value);
-
-    const data = await response.json();
-
-    if (!response.ok) throw new Error('Failed to add new board.');
+    const data: { taskList: List } = await apiRequest('/v1/list', 'POST', newList.value);
 
     lists.value.push(data.taskList);
   } catch (error) {
@@ -39,16 +31,12 @@ export async function createMember(
   members: Ref<UserBoard[]>,
 ) {
   try {
-    const response: Response = await apiRequest(`/v1/user-board/${boardID.value}`, 'POST', {
+    const data: UserBoard = await apiRequest(`/v1/user-board/${boardID.value}`, 'POST', {
       email: email.value,
       role: isAdmin.value ? 'admin' : 'member',
     });
 
-    const data = await response.json();
-
-    if (!response.ok) throw new Error('Failed to add member');
-
-    members.value.push({ ...data.member, name: data.name, email: email });
+    members.value.push({ ...data, email: email.value });
   } catch (error) {
     console.error('Error adding member: ', error);
   }
@@ -56,11 +44,7 @@ export async function createMember(
 
 export async function createTask(newTask: Ref<Task>, tasks: Ref<Task[]>) {
   try {
-    const response: Response = await apiRequest('/v1/task', 'POST', newTask.value);
-
-    const data = await response.json();
-
-    if (!response.ok) throw new Error('Failed to create new task');
+    const data: Task = await apiRequest('/v1/task', 'POST', newTask.value);
 
     tasks.value.push(data);
   } catch (error) {

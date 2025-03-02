@@ -1,6 +1,6 @@
 import type { Ref } from 'vue';
 
-import type { List, Task } from '@/types';
+import type { Board, List, Task } from '@/types';
 
 import { apiRequest } from '@/helpers/database';
 
@@ -12,17 +12,13 @@ export async function updateBoard(
   boardID?: string,
 ) {
   try {
-    const response: Response = await apiRequest(`/v1/board/${boardID}`, 'PUT', {
+    const data: { board: Board } = await apiRequest(`/v1/board/${boardID}`, 'PUT', {
       name: editedName.value,
       description: editedDescription.value,
     });
 
-    if (!response.ok) throw new Error('Failed to update board details');
-
-    const updatedBoard = await response.json();
-
-    name.value = updatedBoard.board.name;
-    description.value = updatedBoard.board.description;
+    name.value = data.board.name;
+    description.value = data.board.description;
   } catch (error) {
     console.error('Error updating board details: ', error);
   }
@@ -30,11 +26,9 @@ export async function updateBoard(
 
 export async function updateList(lists: Ref<List[]>, newListName: Ref<string>, listID: string) {
   try {
-    const response: Response = await apiRequest(`/v1/list/${listID}`, 'PUT', {
+    await apiRequest(`/v1/list/${listID}`, 'PUT', {
       name: newListName.value,
     });
-
-    if (!response.ok) throw new Error('Failed to edit list title');
 
     const list = lists.value.find((list) => list.id === listID);
 
@@ -50,15 +44,11 @@ export async function updateTask(
   updatedTaskDetails: Ref<Task>,
 ) {
   try {
-    const response: Response = await apiRequest(
+    const data: Task = await apiRequest(
       `/v1/task/${updatedTaskDetails.value.id}/edit`,
       'PUT',
       updatedTaskDetails.value,
     );
-
-    const data = await response.json();
-
-    if (!response.ok) throw new Error('Failed to edit task');
 
     const task = tasks.value.find((task) => task.id === taskID);
 
