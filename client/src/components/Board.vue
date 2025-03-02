@@ -5,11 +5,22 @@ import { useRoute } from 'vue-router';
 
 import { ListCard, Modal } from '@/components/common';
 
-import { getMembers, getTasks, createMember, createList, removeMember } from '@/helpers/database';
+import {
+  getMembers,
+  getTasks,
+  createMember,
+  createList,
+  removeMember,
+  type ApiRequest,
+} from '@/helpers/database';
 
 import type { List, Task, UserBoard } from '@/types';
 
+import { useToastStore } from '@/stores';
+
 const route = useRoute();
+
+const { showToast } = useToastStore();
 
 const tasks = ref<Task[]>([]);
 const lists = ref<List[]>([]);
@@ -28,9 +39,11 @@ const boardID = ref(Array.isArray(route.params.id) ? route.params.id[0] : route.
 const newList = ref<List>({ id: '', board_id: boardID.value, name: '', priority: 0 });
 
 async function handleCreateList() {
-  await createList(lists, newList);
+  const { message, type }: ApiRequest = await createList(lists, newList);
 
   handleCreateListModal();
+
+  showToast(message, type);
 }
 
 function handleCreateListModal() {
@@ -46,9 +59,11 @@ function handleViewMemberModal() {
 }
 
 async function handleCreateMember() {
-  await createMember(email, boardID, isAdmin, members);
+  const { message, type }: ApiRequest = await createMember(email, boardID, isAdmin, members);
 
   handleCreateMemberModal();
+
+  showToast(message, type);
 }
 
 function handleCreateMemberModal() {
@@ -61,9 +76,11 @@ function handleCreateMemberModal() {
 }
 
 async function handleRemoveMember() {
-  await removeMember(email, boardID, members);
+  const { message, type }: ApiRequest = await removeMember(email, boardID, members);
 
   handleCreateMemberModal();
+
+  showToast(message, type);
 }
 
 onMounted(() => {

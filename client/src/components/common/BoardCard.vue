@@ -5,13 +5,17 @@ import { useRouter } from 'vue-router';
 
 import { Modal } from '@/components/common';
 
-import { updateBoard } from '@/helpers/database';
+import { updateBoard, type ApiRequest } from '@/helpers/database';
 
 import type { Board } from '@/types';
+
+import { useToastStore } from '@/stores';
 
 const props = defineProps<{
   board: Board;
 }>();
+
+const { showToast } = useToastStore();
 
 const name = ref(props.board.name || '');
 const description = ref(props.board.description || '');
@@ -29,9 +33,17 @@ function viewBoard() {
 }
 
 async function handleUpdateBoard() {
-  await updateBoard(name, description, editedName, editedDescription, props.board.id);
+  const { message, type }: ApiRequest = await updateBoard(
+    name,
+    description,
+    editedName,
+    editedDescription,
+    props.board.id,
+  );
 
   handleUpdateBoardModal();
+
+  showToast(message, type);
 }
 
 function handleUpdateBoardModal() {

@@ -3,13 +3,17 @@ import { ref, inject, computed, type Ref } from 'vue';
 
 import { TaskCard, Modal } from '@/components/common';
 
-import { createTask, updateList } from '@/helpers/database';
+import { createTask, updateList, type ApiRequest } from '@/helpers/database';
 
 import type { List, Task } from '@/types';
+
+import { useToastStore } from '@/stores';
 
 const props = defineProps<{
   list: List;
 }>();
+
+const { showToast } = useToastStore();
 
 const tasks = inject('tasks') as Ref<Task[]>;
 const lists = inject('lists') as Ref<List[]>;
@@ -39,9 +43,11 @@ const newTask = ref<Task>({
 });
 
 async function handleUpdateList() {
-  await updateList(lists, newListName, props.list.id);
+  const { message, type }: ApiRequest = await updateList(lists, newListName, props.list.id);
 
   handleUpdateListModal();
+
+  showToast(message, type);
 }
 
 function handleUpdateListModal() {
@@ -53,9 +59,11 @@ function handleUpdateListModal() {
 }
 
 async function handleCreateTask() {
-  await createTask(newTask, tasks);
+  const { message, type }: ApiRequest = await createTask(newTask, tasks);
 
   handleCreateTaskModal();
+
+  showToast(message, type);
 }
 
 function handleCreateTaskModal() {

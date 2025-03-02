@@ -3,13 +3,15 @@ import { ref, inject, computed, type Ref, type ComputedRef } from 'vue';
 
 import { Modal } from '@/components/common';
 
-import { updateTask } from '@/helpers/database';
+import { updateTask, type ApiRequest } from '@/helpers/database';
 
 import type { Task, List } from '@/types';
 
-const props = defineProps<{
-  task: Task;
-}>();
+import { useToastStore } from '@/stores';
+
+const props = defineProps<{ task: Task }>();
+
+const { showToast } = useToastStore();
 
 const isViewTaskModalOpen = ref(false);
 const isEditTaskModalOpen = ref(false);
@@ -37,9 +39,11 @@ async function handleEditTask() {
 
   updatedTaskDetails.value.task_list_id = selectedList.id;
 
-  await updateTask(tasks, props.task.id, updatedTaskDetails);
+  const { message, type }: ApiRequest = await updateTask(tasks, props.task.id, updatedTaskDetails);
 
   handleEditTaskModal();
+
+  showToast(message, type);
 }
 
 function handleEditTaskModal() {

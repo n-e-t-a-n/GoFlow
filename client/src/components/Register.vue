@@ -3,9 +3,11 @@ import { ref } from 'vue';
 
 import { useRouter } from 'vue-router';
 
-import { register } from '@/helpers/database';
+import { register, type ApiRequest } from '@/helpers/database';
 
 import type { Auth } from '@/types';
+
+import { useToastStore } from '@/stores';
 
 const auth = ref<Auth>({
   name: '',
@@ -16,8 +18,12 @@ const auth = ref<Auth>({
 
 const router = useRouter();
 
-function handleRegister() {
-  register(auth, router);
+const { showToast } = useToastStore();
+
+async function handleRegister() {
+  const { message, type }: ApiRequest = await register(auth, router);
+
+  showToast(message, type);
 }
 </script>
 

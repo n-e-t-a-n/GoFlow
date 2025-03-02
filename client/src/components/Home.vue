@@ -3,9 +3,11 @@ import { ref, onMounted } from 'vue';
 
 import { BoardCard, Modal } from '@/components/common';
 
-import { getBoards, createBoard } from '@/helpers/database';
+import { getBoards, createBoard, type ApiRequest } from '@/helpers/database';
 
 import type { Board } from '@/types';
+
+import { useToastStore } from '@/stores';
 
 const boards = ref<Board[]>([]);
 const newBoard = ref<Board>({
@@ -16,10 +18,14 @@ const newBoard = ref<Board>({
 
 const isModalVisible = ref(false);
 
+const { showToast } = useToastStore();
+
 async function handleCreateBoard() {
-  await createBoard(boards, newBoard);
+  const { message, type }: ApiRequest = await createBoard(boards, newBoard);
 
   handleCreateBoardModal();
+
+  showToast(message, type);
 }
 
 function handleCreateBoardModal() {

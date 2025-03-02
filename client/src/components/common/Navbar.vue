@@ -1,16 +1,22 @@
 <script lang="ts" setup>
 import { useRouter } from 'vue-router';
 
-import { logout } from '@/helpers/database';
+import { logout, type ApiRequest } from '@/helpers/database';
+
+import { useToastStore } from '@/stores';
 
 const router = useRouter();
+
+const { showToast } = useToastStore();
 
 function goToHome() {
   router.push({ name: 'Home' });
 }
 
-function handleLogout() {
-  logout(router);
+async function handleLogout() {
+  const { message, type }: ApiRequest = await logout(router);
+
+  showToast(message, type);
 }
 </script>
 

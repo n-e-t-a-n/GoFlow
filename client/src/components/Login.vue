@@ -3,9 +3,11 @@ import { ref } from 'vue';
 
 import { useRouter } from 'vue-router';
 
-import { login } from '@/helpers/database';
+import { login, type ApiRequest } from '@/helpers/database';
 
 import type { Auth } from '@/types';
+
+import { useToastStore } from '@/stores';
 
 const auth = ref<Auth>({
   email: '',
@@ -14,9 +16,13 @@ const auth = ref<Auth>({
 
 const router = useRouter();
 
-function handleLogin() {
-  login(auth, router);
+async function handleLogin() {
+  const { message, type }: ApiRequest = await login(auth, router);
+
+  showToast(message, type);
 }
+
+const { showToast } = useToastStore();
 </script>
 
 <template>
