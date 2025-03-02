@@ -3,7 +3,7 @@ import { computed } from 'vue';
 
 interface ToastProps {
   message: string;
-  type: 'info' | 'success' | 'error';
+  type: string;
   visible: boolean;
 }
 
