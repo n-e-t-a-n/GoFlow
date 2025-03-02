@@ -3,7 +3,7 @@ export async function apiRequest<T>(
   method: 'GET' | 'POST' | 'PUT' | 'DELETE' = 'GET',
   body?: object,
   authRequired: 'AUTH' | 'NO_AUTH' = 'AUTH',
-): Promise<Response> {
+): Promise<T> {
   let token: string | null = null;
 
   if (authRequired === 'AUTH') {
@@ -24,5 +24,9 @@ export async function apiRequest<T>(
     body: JSON.stringify(body),
   });
 
-  return response;
+  const data = await response.json();
+
+  if (!response.ok) throw new Error(data.message || 'Something went wrong');
+
+  return data;
 }
