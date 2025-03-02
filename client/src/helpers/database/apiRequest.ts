@@ -1,3 +1,8 @@
+export type ApiRequest = {
+  message: string;
+  type?: string;
+};
+
 export async function apiRequest<T>(
   url: string,
   method: 'GET' | 'POST' | 'PUT' | 'DELETE' = 'GET',
