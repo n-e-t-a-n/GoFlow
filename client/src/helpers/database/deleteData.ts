@@ -2,12 +2,16 @@ import type { UserBoard } from '@/types';
 import type { Ref } from 'vue';
 
 export async function removeMember(
+  email: Ref<string>,
   boardID: Ref<string>,
-  newMemberEmail: Ref<string>,
   members: Ref<UserBoard[]>,
-  isCreateMemberModalOpen: Ref<boolean>,
+  handleRemoveMemberModal: () => void,
 ) {
   try {
+    const userEmail = localStorage.getItem('email');
+
+    if (userEmail === email.value) throw new Error('You cannot remove yourself from the board');
+
     const token = localStorage.getItem('token');
 
     if (!token) throw new Error('User is not logged in');
@@ -21,16 +25,16 @@ export async function removeMember(
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
-          email: newMemberEmail.value,
+          email: email.value,
         }),
       },
     );
 
     if (!response.ok) throw new Error('Failed to remove member.');
 
-    isCreateMemberModalOpen.value = false;
+    handleRemoveMemberModal();
 
-    members.value = members.value.filter((member) => member.email !== newMemberEmail.value);
+    members.value = members.value.filter((member) => member.email !== email.value);
   } catch (error) {
     console.error('Error removing member: ', error);
   }
