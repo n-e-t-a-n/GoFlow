@@ -103,7 +103,9 @@ class UserBoardController extends Controller
             'role' => $validatedData['role'] ?? 'member',
         ]);
 
-        return response()->json(['member' => $newUserBoard, 'name' => $user->name]);
+        $newUserBoard['name'] = $user->name;
+
+        return response()->json($newUserBoard);
     }
 
 
