@@ -18,22 +18,22 @@ const members = ref<UserBoard[]>([]);
 const isAdmin = ref(false);
 const userIsAdmin = ref(false);
 
-const newListTitle = ref('');
-const newMemberEmail = ref('');
+const email = ref('');
 
 const isViewMemberModalOpen = ref(false);
 const isCreateListModalOpen = ref(false);
 const isCreateMemberModalOpen = ref(false);
 
 const boardID = ref(Array.isArray(route.params.id) ? route.params.id[0] : route.params.id);
+const newList = ref<List>({ id: '', board_id: boardID.value, name: '', priority: 0 });
 
 function handleCreateList() {
-  createList(lists, newListTitle, boardID, isCreateListModalOpen);
+  createList(lists, newList, handleCreateListModal);
 }
 
 function handleCreateListModal() {
   if (!isCreateListModalOpen.value) {
-    newListTitle.value = '';
+    newList.value = { id: '', board_id: boardID.value, name: '', priority: 0 };
   }
 
   isCreateListModalOpen.value = !isCreateListModalOpen.value;
@@ -44,25 +44,27 @@ function handleViewMemberModal() {
 }
 
 function handleCreateMember() {
-  createMember(boardID, newMemberEmail, isAdmin, members, handleCreateMemberModal);
-}
-
-function handleRemoveMember() {
-  removeMember(boardID, newMemberEmail, members, isCreateMemberModalOpen);
+  createMember(email, boardID, isAdmin, members, handleCreateMemberModal);
 }
 
 function handleCreateMemberModal() {
   if (!isCreateMemberModalOpen.value) {
-    newMemberEmail.value = '';
+    email.value = '';
     isAdmin.value = false;
   }
 
   isCreateMemberModalOpen.value = !isCreateMemberModalOpen.value;
 }
 
+function handleRemoveMember() {
+  removeMember(email, boardID, members, handleCreateMemberModal);
+}
+
 onMounted(() => {
   getTasks(tasks, lists, userIsAdmin, boardID);
   getMembers(members, boardID);
+
+  newList.value.board_id = boardID.value;
 });
 
 provide('tasks', tasks);
@@ -151,7 +153,7 @@ provide('role', userIsAdmin);
           <div class="space-y-4">
             <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
             <input
-              v-model="newMemberEmail"
+              v-model="email"
               type="email"
               id="email"
               class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -201,7 +203,7 @@ provide('role', userIsAdmin);
 
         <div class="mb-4">
           <input
-            v-model="newListTitle"
+            v-model="newList.name"
             type="text"
             class="w-full p-2 border border-gray-300 rounded-lg"
             placeholder="Enter list title"
