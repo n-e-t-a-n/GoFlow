@@ -2,24 +2,15 @@ import type { Ref } from 'vue';
 
 import type { Board, List, Task, UserBoard } from '@/types';
 
+import { apiRequest } from '@/helpers/database';
+
 export async function createBoard(
   boards: Ref<Board[]>,
   newBoard: Ref<Board>,
   handleCreateBoardModal: () => void,
 ) {
-  const token = localStorage.getItem('token');
-
-  if (!token) throw new Error('User is not logged in');
-
   try {
-    const response = await fetch(`${import.meta.env.VITE_BASE_URL}/v1/board`, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(newBoard.value),
-    });
+    const response: Response = await apiRequest('/v1/board', 'POST', newBoard.value);
 
     const data = await response.json();
 
@@ -38,19 +29,8 @@ export async function createList(
   newList: Ref<List>,
   handleCreateListModal: () => void,
 ) {
-  const token = localStorage.getItem('token');
-
-  if (!token) throw new Error('User is not logged in');
-
   try {
-    const response = await fetch(`${import.meta.env.VITE_BASE_URL}/v1/list/`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(newList.value),
-    });
+    const response: Response = await apiRequest('/v1/list', 'POST', newList.value);
 
     const data = await response.json();
 
@@ -71,25 +51,11 @@ export async function createMember(
   members: Ref<UserBoard[]>,
   handleCreateMemberModal: () => void,
 ) {
-  const token = localStorage.getItem('token');
-
-  if (!token) throw new Error('User is not logged in');
-
   try {
-    const response = await fetch(
-      `${import.meta.env.VITE_BASE_URL}/v1/user-board/${boardID.value}`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          email: email.value,
-          role: isAdmin.value ? 'admin' : 'member',
-        }),
-      },
-    );
+    const response: Response = await apiRequest(`/v1/user-board/${boardID.value}`, 'POST', {
+      email: email.value,
+      role: isAdmin.value ? 'admin' : 'member',
+    });
 
     const data = await response.json();
 
@@ -108,19 +74,8 @@ export async function createTask(
   tasks: Ref<Task[]>,
   handleCreateTaskModal: () => void,
 ) {
-  const token = localStorage.getItem('token');
-
-  if (!token) throw new Error('User is not logged in');
-
   try {
-    const response = await fetch(`${import.meta.env.VITE_BASE_URL}/v1/task`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(newTask.value),
-    });
+    const response: Response = await apiRequest('/v1/task', 'POST', newTask.value);
 
     const data = await response.json();
 

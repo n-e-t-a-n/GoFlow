@@ -1,5 +1,8 @@
-import type { UserBoard } from '@/types';
 import type { Ref } from 'vue';
+
+import type { UserBoard } from '@/types';
+
+import { apiRequest } from '@/helpers/database';
 
 export async function removeMember(
   email: Ref<string>,
@@ -12,23 +15,9 @@ export async function removeMember(
 
     if (userEmail === email.value) throw new Error('You cannot remove yourself from the board');
 
-    const token = localStorage.getItem('token');
-
-    if (!token) throw new Error('User is not logged in');
-
-    const response = await fetch(
-      `${import.meta.env.VITE_BASE_URL}/v1/user-board/${boardID.value}`,
-      {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          email: email.value,
-        }),
-      },
-    );
+    const response: Response = await apiRequest(`/v1/user-board/${boardID.value}`, 'DELETE', {
+      email: email.value,
+    });
 
     if (!response.ok) throw new Error('Failed to remove member.');
 

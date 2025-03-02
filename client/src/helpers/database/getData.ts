@@ -2,17 +2,11 @@ import type { Ref } from 'vue';
 
 import type { Board, List, Task, UserBoard } from '@/types';
 
+import { apiRequest } from '@/helpers/database';
+
 export async function getBoards(board: Ref<Board[]>) {
-  const token = localStorage.getItem('token');
-
-  if (!token) throw new Error('User is not logged in');
-
   try {
-    const response = await fetch(`${import.meta.env.VITE_BASE_URL}/v1/board`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response: Response = await apiRequest('/v1/board');
 
     const data = await response.json();
 
@@ -25,19 +19,8 @@ export async function getBoards(board: Ref<Board[]>) {
 }
 
 export async function getMembers(members: Ref<UserBoard[]>, boardID: Ref<string>) {
-  const token = localStorage.getItem('token');
-
-  if (!token) throw new Error('User is not logged in');
-
   try {
-    const response = await fetch(
-      `${import.meta.env.VITE_BASE_URL}/v1/user-board/${boardID.value}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      },
-    );
+    const response: Response = await apiRequest(`/v1/user-board/${boardID.value}`);
 
     if (!response.ok) throw new Error('Failed to fetch members');
 
@@ -54,16 +37,8 @@ export async function getTasks(
   userIsAdmin: Ref<boolean>,
   boardID: Ref<string>,
 ) {
-  const token = localStorage.getItem('token');
-
-  if (!token) throw new Error('User is not logged in');
-
   try {
-    const response = await fetch(`${import.meta.env.VITE_BASE_URL}/v1/task/${boardID.value}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response: Response = await apiRequest(`/v1/task/${boardID.value}`);
 
     if (!response.ok) throw new Error('Failed to fetch tasks and lists');
 

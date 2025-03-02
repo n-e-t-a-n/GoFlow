@@ -4,15 +4,11 @@ import type { Router } from 'vue-router';
 
 import type { Auth } from '@/types';
 
+import { apiRequest } from '@/helpers/database';
+
 export async function login(auth: Ref<Auth>, router: Router) {
   try {
-    const response = await fetch(`${import.meta.env.VITE_BASE_URL}/auth/login`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(auth.value),
-    });
+    const response: Response = await apiRequest('/auth/login', 'POST', auth.value, 'NO_AUTH');
 
     const data = await response.json();
 
@@ -29,13 +25,7 @@ export async function login(auth: Ref<Auth>, router: Router) {
 
 export async function register(auth: Ref<Auth>, router: Router) {
   try {
-    const response = await fetch(`${import.meta.env.VITE_BASE_URL}/auth/register`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(auth.value),
-    });
+    const response = await apiRequest('/auth/register', 'POST', auth.value, 'NO_AUTH');
 
     const data = await response.json();
 
@@ -51,17 +41,8 @@ export async function register(auth: Ref<Auth>, router: Router) {
 }
 
 export async function logout(router: Router) {
-  const token = localStorage.getItem('token');
-
-  if (!token) throw new Error('User is not logged in');
-
   try {
-    const response = await fetch(`${import.meta.env.VITE_BASE_URL}/auth/logout`, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response = await apiRequest('/auth/logout', 'POST');
 
     const data = await response.json();
 

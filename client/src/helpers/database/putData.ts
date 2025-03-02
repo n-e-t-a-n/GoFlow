@@ -1,5 +1,8 @@
-import type { List, Task } from '@/types';
 import type { Ref } from 'vue';
+
+import type { List, Task } from '@/types';
+
+import { apiRequest } from '@/helpers/database';
 
 export async function updateBoard(
   name: Ref<string>,
@@ -9,21 +12,10 @@ export async function updateBoard(
   isUpdateBoardModalOpen: Ref<boolean>,
   boardID?: string,
 ) {
-  const token = localStorage.getItem('token');
-
-  if (!token) throw new Error('User is not logged in');
-
   try {
-    const response = await fetch(`${import.meta.env.VITE_BASE_URL}/v1/board/${boardID}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({
-        name: editedName.value,
-        description: editedDescription.value,
-      }),
+    const response: Response = await apiRequest(`/v1/board/${boardID}`, 'PUT', {
+      name: editedName.value,
+      description: editedDescription.value,
     });
 
     if (!response.ok) throw new Error('Failed to update board details');
@@ -45,20 +37,9 @@ export async function updateList(
   isUpdateListModalOpen: Ref<boolean>,
   listID: string,
 ) {
-  const token = localStorage.getItem('token');
-
-  if (!token) throw new Error('User is not logged in');
-
   try {
-    const response = await fetch(`${import.meta.env.VITE_BASE_URL}/v1/list/${listID}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({
-        name: newListName.value,
-      }),
+    const response: Response = await apiRequest(`/v1/list/${listID}`, 'PUT', {
+      name: newListName.value,
     });
 
     if (!response.ok) throw new Error('Failed to edit list title');
@@ -79,20 +60,10 @@ export async function updateTask(
   handleEditTaskModal: () => void,
 ) {
   try {
-    const token = localStorage.getItem('token');
-
-    if (!token) throw new Error('User is not logged in');
-
-    const response = await fetch(
-      `${import.meta.env.VITE_BASE_URL}/v1/task/${updatedTaskDetails.value.id}/edit`,
-      {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(updatedTaskDetails.value),
-      },
+    const response: Response = await apiRequest(
+      `/v1/task/${updatedTaskDetails.value.id}/edit`,
+      'PUT',
+      updatedTaskDetails.value,
     );
 
     const data = await response.json();
