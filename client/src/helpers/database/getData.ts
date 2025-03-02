@@ -67,11 +67,7 @@ export async function getTasks(
 
     if (!response.ok) throw new Error('Failed to fetch tasks and lists');
 
-    const data: {
-      tasks: Task[];
-      lists: List[];
-      isAdmin: boolean;
-    } = await response.json();
+    const data = await response.json();
 
     lists.value = data.lists;
     tasks.value = data.tasks;
