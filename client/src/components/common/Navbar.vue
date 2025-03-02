@@ -8,6 +8,10 @@ const router = useRouter();
 function goToHome() {
   router.push({ name: 'Home' });
 }
+
+function handleLogout() {
+  logout(router);
+}
 </script>
 
 <template>
@@ -21,7 +25,7 @@ function goToHome() {
       GoFlow Kanban
     </button>
     <button
-      @click="logout"
+      @click="handleLogout"
       class="text-white bg-red-700 font-semibold text-2xl px-6 py-2 rounded-lg transition duration-200 transform hover:scale-105"
     >
       Logout

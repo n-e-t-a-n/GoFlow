@@ -1,6 +1,8 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 
+import { useRouter } from 'vue-router';
+
 import { register } from '@/helpers/database';
 
 import type { Auth } from '@/types';
@@ -12,8 +14,10 @@ const auth = ref<Auth>({
   password_confirmation: '',
 });
 
+const router = useRouter();
+
 function handleRegister() {
-  register(auth.value);
+  register(auth, router);
 }
 </script>
 

@@ -1,7 +1,10 @@
 import type { Ref } from 'vue';
+
+import type { Router } from 'vue-router';
+
 import type { Auth } from '@/types';
 
-export async function login(auth: Auth) {
+export async function login(auth: Ref<Auth>, router: Router) {
   try {
     const response = await fetch(`${import.meta.env.VITE_BASE_URL}/auth/login`, {
       method: 'POST',
@@ -9,8 +12,8 @@ export async function login(auth: Auth) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        email: auth.email,
-        password: auth.password,
+        email: auth.value.email,
+        password: auth.value.password,
       }),
     });
 
@@ -20,13 +23,13 @@ export async function login(auth: Auth) {
 
     localStorage.setItem('token', data.token);
 
-    window.location.reload();
+    router.push({ name: 'Home' });
   } catch (error: any) {
     console.error('Error during login:', error);
   }
 }
 
-export async function register(payload: Auth) {
+export async function register(auth: Ref<Auth>, router: Router) {
   try {
     const response = await fetch(`${import.meta.env.VITE_BASE_URL}/auth/register`, {
       method: 'POST',
@@ -34,10 +37,10 @@ export async function register(payload: Auth) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        name: payload.name,
-        email: payload.email,
-        password: payload.password,
-        password_confirmation: payload.password_confirmation,
+        name: auth.value.name,
+        email: auth.value.email,
+        password: auth.value.password,
+        password_confirmation: auth.value.password_confirmation,
       }),
     });
 
@@ -46,13 +49,14 @@ export async function register(payload: Auth) {
     if (!response.ok) throw new Error(data.message || 'Registration failed');
 
     localStorage.setItem('token', data.token);
-    window.location.reload();
+
+    router.push({ name: 'Home' });
   } catch (error: any) {
     console.error('Error during registration:', error);
   }
 }
 
-export async function logout() {
+export async function logout(router: Router) {
   const token = localStorage.getItem('token');
 
   if (!token) return;
@@ -72,7 +76,8 @@ export async function logout() {
     }
 
     localStorage.removeItem('token');
-    window.location.reload();
+
+    router.push({ name: 'Login' });
   } catch (error) {
     console.error('Error during logout:', error);
   }
