@@ -5,7 +5,7 @@ import type { Board, List, Task, UserBoard } from '@/types';
 export async function createBoard(
   boards: Ref<Board[]>,
   newBoard: Ref<Board>,
-  isModalVisible: Ref<boolean>,
+  handleCreateBoardModal: () => void,
 ) {
   const token = localStorage.getItem('token');
 
@@ -25,11 +25,9 @@ export async function createBoard(
 
     if (!response.ok) throw new Error(data.message || 'Failed to create board.');
 
-    boards.value.push({
-      ...data.board,
-      role: 'admin',
-    });
-    isModalVisible.value = false;
+    boards.value.push({ ...data.board, role: 'admin' });
+
+    handleCreateBoardModal();
   } catch (error) {
     console.error('Error creating board: ', error);
   }
@@ -37,9 +35,8 @@ export async function createBoard(
 
 export async function createList(
   lists: Ref<List[]>,
-  newListTitle: Ref<string>,
-  boardID: Ref<string>,
-  isCreateListModalOpen: Ref<boolean>,
+  newList: Ref<List>,
+  handleCreateListModal: () => void,
 ) {
   const token = localStorage.getItem('token');
 
@@ -52,11 +49,7 @@ export async function createList(
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({
-        board_id: boardID.value,
-        name: newListTitle.value,
-        priority: 100,
-      }),
+      body: JSON.stringify(newList.value),
     });
 
     const data = await response.json();
@@ -64,16 +57,16 @@ export async function createList(
     if (!response.ok) throw new Error('Failed to add new board.');
 
     lists.value.push(data.taskList);
-    isCreateListModalOpen.value = false;
-    newListTitle.value = '';
+
+    handleCreateListModal();
   } catch (error) {
     console.error('Error adding new board: ', error);
   }
 }
 
 export async function createMember(
+  email: Ref<string>,
   boardID: Ref<string>,
-  newMemberEmail: Ref<string>,
   isAdmin: Ref<boolean>,
   members: Ref<UserBoard[]>,
   handleCreateMemberModal: () => void,
@@ -92,7 +85,7 @@ export async function createMember(
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
-          email: newMemberEmail.value,
+          email: email.value,
           role: isAdmin.value ? 'admin' : 'member',
         }),
       },
@@ -102,7 +95,8 @@ export async function createMember(
 
     if (!response.ok) throw new Error('Failed to add member');
 
-    members.value.push({ ...data.member, name: data.name, email: newMemberEmail });
+    members.value.push({ ...data.member, name: data.name, email: email });
+
     handleCreateMemberModal();
   } catch (error) {
     console.error('Error adding member: ', error);
@@ -112,7 +106,7 @@ export async function createMember(
 export async function createTask(
   newTask: Ref<Task>,
   tasks: Ref<Task[]>,
-  isCreateTaskModalOpen: Ref<boolean>,
+  handleCreateTaskModal: () => void,
 ) {
   const token = localStorage.getItem('token');
 
@@ -132,7 +126,8 @@ export async function createTask(
 
     if (!response.ok) throw new Error('Failed to create new task');
 
-    isCreateTaskModalOpen.value = false;
+    handleCreateTaskModal();
+
     tasks.value.push(data);
   } catch (error) {
     console.error('Error creating new task: ', error);
