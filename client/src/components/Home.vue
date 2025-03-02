@@ -16,17 +16,17 @@ const newBoard = ref<Board>({
 
 const isModalVisible = ref(false);
 
-function handleModal() {
+function handleCreateBoard() {
+  createBoard(boards, newBoard, handleCreateBoardModal);
+}
+
+function handleCreateBoardModal() {
   if (isModalVisible.value) {
     newBoard.value.name = '';
     newBoard.value.description = '';
   }
 
   isModalVisible.value = !isModalVisible.value;
-}
-
-function handleCreateBoard() {
-  createBoard(boards, newBoard, isModalVisible);
 }
 
 onMounted(() => {
@@ -38,7 +38,7 @@ onMounted(() => {
   <div class="min-h-screen bg-gray-50">
     <div class="p-6">
       <button
-        @click="handleModal"
+        @click="handleCreateBoardModal"
         class="text-white font-semibold text-lg bg-lightblue px-6 py-3 rounded-lg shadow-md hover:bg-darkblue transition duration-200"
       >
         Create New Board
@@ -49,7 +49,7 @@ onMounted(() => {
       <BoardCard v-for="board in boards" :key="board.id" :board="board" />
     </div>
 
-    <Modal :isOpen="isModalVisible" :handleModal="handleModal">
+    <Modal :isOpen="isModalVisible" :handleModal="handleCreateBoardModal">
       <h2 class="text-2xl font-bold text-gray-800 mb-4">Create New Board</h2>
 
       <div class="mb-4">
@@ -73,7 +73,7 @@ onMounted(() => {
 
       <div class="flex justify-end gap-4 mt-4">
         <button
-          @click="handleModal"
+          @click="handleCreateBoardModal"
           class="bg-gray-500 text-white px-6 py-3 rounded-md hover:bg-gray-600 transition"
         >
           Cancel
