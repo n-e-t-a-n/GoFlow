@@ -3,4 +3,8 @@ export interface Auth {
   email: string;
   password: string;
   password_confirmation?: string;
+  token?: string;
+  user?: {
+    email: string;
+  };
 }
