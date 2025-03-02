@@ -8,12 +8,7 @@ import { apiRequest } from '@/helpers/database';
 
 export async function login(auth: Ref<Auth>, router: Router) {
   try {
-    const data: { token: string; user: { email: string } } = await apiRequest(
-      '/auth/login',
-      'POST',
-      auth.value,
-      'NO_AUTH',
-    );
+    const data: Auth = await apiRequest('/auth/login', 'POST', auth.value, 'NO_AUTH');
 
     localStorage.setItem('token', data.token as string);
     data.user && localStorage.setItem('email', data.user.email);
