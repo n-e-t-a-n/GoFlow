@@ -16,7 +16,7 @@ function handleLogout() {
 
 <template>
   <div
-    class="bg-lightblue min-h-[5vh] max-h-[5vh] py-10 px-8 flex justify-between items-center sticky top-0 z-50"
+    class="bg-lightblue min-h-[5vh] max-h-[5vh] py-10 px-8 flex justify-between items-center sticky top-0 z-40"
   >
     <button
       @click="goToHome"
