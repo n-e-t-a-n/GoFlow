@@ -51,7 +51,7 @@ function handleUpdateListModal() {
 }
 
 function handleCreateTask() {
-  createTask(newTask, tasks, isCreateTaskModalOpen);
+  createTask(newTask, tasks, handleCreateTaskModal);
 }
 
 function handleCreateTaskModal() {
