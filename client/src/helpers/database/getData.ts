@@ -5,7 +5,7 @@ import type { Board, List, Task, UserBoard } from '@/types';
 export async function getBoards(board: Ref<Board[]>) {
   const token = localStorage.getItem('token');
 
-  if (!token) return;
+  if (!token) throw new Error('User is not logged in');
 
   try {
     const response = await fetch(`${import.meta.env.VITE_BASE_URL}/v1/board`, {
@@ -20,14 +20,14 @@ export async function getBoards(board: Ref<Board[]>) {
 
     board.value = data;
   } catch (error) {
-    console.error('Error fetching boards:', error);
+    console.error('Error fetching boards: ', error);
   }
 }
 
 export async function getMembers(members: Ref<UserBoard[]>, boardID: Ref<string>) {
   const token = localStorage.getItem('token');
 
-  if (!token) return;
+  if (!token) throw new Error('User is not logged in');
 
   try {
     const response = await fetch(
@@ -44,7 +44,7 @@ export async function getMembers(members: Ref<UserBoard[]>, boardID: Ref<string>
     const data = await response.json();
     members.value = data;
   } catch (error) {
-    console.error('Error fetching members:', error);
+    console.error('Error fetching members: ', error);
   }
 }
 
@@ -56,7 +56,7 @@ export async function getTasks(
 ) {
   const token = localStorage.getItem('token');
 
-  if (!token) return;
+  if (!token) throw new Error('User is not logged in');
 
   try {
     const response = await fetch(`${import.meta.env.VITE_BASE_URL}/v1/task/${boardID.value}`, {
@@ -65,7 +65,7 @@ export async function getTasks(
       },
     });
 
-    if (!response.ok) throw new Error('Failed to fetch lists');
+    if (!response.ok) throw new Error('Failed to fetch tasks and lists');
 
     const data: {
       tasks: Task[];
@@ -78,6 +78,6 @@ export async function getTasks(
 
     userIsAdmin.value = data.isAdmin;
   } catch (error) {
-    console.error('Error fetching board data:', error);
+    console.error('Error fetching board data: ', error);
   }
 }

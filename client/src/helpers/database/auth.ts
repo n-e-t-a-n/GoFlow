@@ -25,7 +25,7 @@ export async function login(auth: Ref<Auth>, router: Router) {
 
     router.push({ name: 'Home' });
   } catch (error: any) {
-    console.error('Error during login:', error);
+    console.error('Error during login: ', error);
   }
 }
 
@@ -52,14 +52,14 @@ export async function register(auth: Ref<Auth>, router: Router) {
 
     router.push({ name: 'Home' });
   } catch (error: any) {
-    console.error('Error during registration:', error);
+    console.error('Error during registration: ', error);
   }
 }
 
 export async function logout(router: Router) {
   const token = localStorage.getItem('token');
 
-  if (!token) return;
+  if (!token) throw new Error('User is not logged in');
 
   try {
     const response = await fetch(`${import.meta.env.VITE_BASE_URL}/auth/logout`, {
@@ -77,6 +77,6 @@ export async function logout(router: Router) {
 
     router.push({ name: 'Login' });
   } catch (error) {
-    console.error('Error during logout:', error);
+    console.error('Error during logout: ', error);
   }
 }

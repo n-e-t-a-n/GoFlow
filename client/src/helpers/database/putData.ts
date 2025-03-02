@@ -11,7 +11,7 @@ export async function updateBoard(
 ) {
   const token = localStorage.getItem('token');
 
-  if (!token) return;
+  if (!token) throw new Error('User is not logged in');
 
   try {
     const response = await fetch(`${import.meta.env.VITE_BASE_URL}/v1/board/${boardID}`, {
@@ -35,7 +35,7 @@ export async function updateBoard(
 
     isUpdateBoardModalOpen.value = false;
   } catch (error) {
-    console.error('Error updating board details:', error);
+    console.error('Error updating board details: ', error);
   }
 }
 
@@ -43,11 +43,11 @@ export async function updateList(
   lists: Ref<List[]>,
   newListName: Ref<string>,
   isUpdateListModalOpen: Ref<boolean>,
-  listID?: string,
+  listID: string,
 ) {
   const token = localStorage.getItem('token');
 
-  if (!token || !listID) return;
+  if (!token) throw new Error('User is not logged in');
 
   try {
     const response = await fetch(`${import.meta.env.VITE_BASE_URL}/v1/list/${listID}`, {
@@ -68,7 +68,7 @@ export async function updateList(
 
     if (list) list.name = newListName.value;
   } catch (error) {
-    console.error('Error changing list title:', error);
+    console.error('Error changing list title: ', error);
   }
 }
 
@@ -81,7 +81,7 @@ export async function updateTask(
   try {
     const token = localStorage.getItem('token');
 
-    if (!token) return;
+    if (!token) throw new Error('User is not logged in');
 
     const response = await fetch(
       `${import.meta.env.VITE_BASE_URL}/v1/task/${updatedTaskDetails.value.id}/edit`,
@@ -116,6 +116,6 @@ export async function updateTask(
 
     handleEditTaskModal();
   } catch (error) {
-    console.error('Error occurred while editing task:', error);
+    console.error('Error occurred while editing task: ', error);
   }
 }

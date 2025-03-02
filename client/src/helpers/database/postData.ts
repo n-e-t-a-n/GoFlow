@@ -9,7 +9,7 @@ export async function createBoard(
 ) {
   const token = localStorage.getItem('token');
 
-  if (!token || !newBoard.value.name) return;
+  if (!token) throw new Error('User is not logged in');
 
   try {
     const response = await fetch(`${import.meta.env.VITE_BASE_URL}/v1/board`, {
@@ -31,7 +31,7 @@ export async function createBoard(
     });
     isModalVisible.value = false;
   } catch (error) {
-    console.error('Error creating board:', error);
+    console.error('Error creating board: ', error);
   }
 }
 
@@ -43,7 +43,7 @@ export async function createList(
 ) {
   const token = localStorage.getItem('token');
 
-  if (!token) return;
+  if (!token) throw new Error('User is not logged in');
 
   try {
     const response = await fetch(`${import.meta.env.VITE_BASE_URL}/v1/list/`, {
@@ -67,7 +67,7 @@ export async function createList(
     isCreateListModalOpen.value = false;
     newListTitle.value = '';
   } catch (error) {
-    console.error('Error adding new board:', error);
+    console.error('Error adding new board: ', error);
   }
 }
 
@@ -80,7 +80,7 @@ export async function createMember(
 ) {
   const token = localStorage.getItem('token');
 
-  if (!token) return;
+  if (!token) throw new Error('User is not logged in');
 
   try {
     const response = await fetch(
@@ -106,7 +106,7 @@ export async function createMember(
     members.value.push({ ...data.member, name: data.name, email: newMemberEmail });
     handleCreateMemberModal();
   } catch (error) {
-    console.error('Error adding member:', error);
+    console.error('Error adding member: ', error);
   }
 }
 
@@ -117,7 +117,7 @@ export async function createTask(
 ) {
   const token = localStorage.getItem('token');
 
-  if (!token) return;
+  if (!token) throw new Error('User is not logged in');
 
   try {
     const response = await fetch(`${import.meta.env.VITE_BASE_URL}/v1/task`, {
@@ -136,6 +136,6 @@ export async function createTask(
     isCreateTaskModalOpen.value = false;
     tasks.value.push(data);
   } catch (error) {
-    console.error('Error creating new task:', error);
+    console.error('Error creating new task: ', error);
   }
 }
