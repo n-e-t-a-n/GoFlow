@@ -92,7 +92,6 @@ export async function createMember(
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
-          board_id: boardID.value,
           email: newMemberEmail.value,
           role: isAdmin.value ? 'admin' : 'member',
         }),
