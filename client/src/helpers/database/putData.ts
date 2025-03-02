@@ -101,16 +101,7 @@ export async function updateTask(
 
     const task = tasks.value.find((task) => task.id === taskID);
 
-    if (task) {
-      task.assigned_user_id = data.assigned_user_id;
-      task.title = data.title;
-      task.description = data.description;
-      task.status = data.status;
-      task.due_date = data.due_date;
-      task.priority = data.priority;
-      task.task_list_id = data.task_list_id;
-      task.board_id = data.board_id;
-    }
+    if (task) Object.assign(task, data);
 
     updatedTaskDetails.value = data;
 
