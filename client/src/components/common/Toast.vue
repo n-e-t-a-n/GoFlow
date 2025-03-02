@@ -16,12 +16,12 @@ const emit = defineEmits<{
 const toastClass = computed(() => {
   switch (props.type) {
     case 'success':
-      return 'bg-green-600 text-white';
+      return 'bg-green-700 text-white';
     case 'error':
-      return 'bg-red-600 text-white';
+      return 'bg-red-700 text-white';
     case 'info':
     default:
-      return 'bg-blue-600 text-white';
+      return 'bg-blue-700 text-white';
   }
 });
 
