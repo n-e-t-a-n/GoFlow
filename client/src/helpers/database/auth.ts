@@ -11,10 +11,7 @@ export async function login(auth: Ref<Auth>, router: Router) {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        email: auth.value.email,
-        password: auth.value.password,
-      }),
+      body: JSON.stringify(auth.value),
     });
 
     const data = await response.json();
@@ -22,6 +19,7 @@ export async function login(auth: Ref<Auth>, router: Router) {
     if (!response.ok) throw new Error(data.message || 'Login failed');
 
     localStorage.setItem('token', data.token);
+    localStorage.setItem('email', data.user.email);
 
     router.push({ name: 'Home' });
   } catch (error: any) {
@@ -36,12 +34,7 @@ export async function register(auth: Ref<Auth>, router: Router) {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        name: auth.value.name,
-        email: auth.value.email,
-        password: auth.value.password,
-        password_confirmation: auth.value.password_confirmation,
-      }),
+      body: JSON.stringify(auth.value),
     });
 
     const data = await response.json();
@@ -49,6 +42,7 @@ export async function register(auth: Ref<Auth>, router: Router) {
     if (!response.ok) throw new Error(data.message || 'Registration failed');
 
     localStorage.setItem('token', data.token);
+    localStorage.setItem('email', data.user.email);
 
     router.push({ name: 'Home' });
   } catch (error: any) {
@@ -74,6 +68,7 @@ export async function logout(router: Router) {
     if (!response.ok) throw new Error(data.message || 'Logout failed');
 
     localStorage.removeItem('token');
+    localStorage.removeItem('email');
 
     router.push({ name: 'Login' });
   } catch (error) {
