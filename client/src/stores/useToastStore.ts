@@ -5,12 +5,12 @@ export const useToastStore = defineStore('toast', {
     toasts: [] as {
       id: number;
       message: string;
-      type: 'info' | 'success' | 'error';
+      type: string;
       visible: boolean;
     }[],
   }),
   actions: {
-    showToast(message: string, type: 'info' | 'success' | 'error' = 'success') {
+    showToast(message: string, type: string = 'success') {
       const toast = {
         id: Date.now(),
         message,
@@ -20,7 +20,7 @@ export const useToastStore = defineStore('toast', {
       this.toasts.push(toast);
       setTimeout(() => {
         this.hideToast(toast.id);
-      }, 4000);
+      }, 1500);
     },
     hideToast(id: number) {
       const toast = this.toasts.find((t) => t.id === id);
