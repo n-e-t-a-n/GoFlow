@@ -38,8 +38,8 @@ const newTask = ref<Task>({
   priority: 'medium',
 });
 
-function handleUpdateList() {
-  updateList(lists, newListName, props.list.id);
+async function handleUpdateList() {
+  await updateList(lists, newListName, props.list.id);
 
   handleUpdateListModal();
 }
@@ -52,8 +52,8 @@ function handleUpdateListModal() {
   isUpdateListModalOpen.value = !isUpdateListModalOpen.value;
 }
 
-function handleCreateTask() {
-  createTask(newTask, tasks);
+async function handleCreateTask() {
+  await createTask(newTask, tasks);
 
   handleCreateTaskModal();
 }

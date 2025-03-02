@@ -27,8 +27,8 @@ const isCreateMemberModalOpen = ref(false);
 const boardID = ref(Array.isArray(route.params.id) ? route.params.id[0] : route.params.id);
 const newList = ref<List>({ id: '', board_id: boardID.value, name: '', priority: 0 });
 
-function handleCreateList() {
-  createList(lists, newList);
+async function handleCreateList() {
+  await createList(lists, newList);
 
   handleCreateListModal();
 }
@@ -45,8 +45,8 @@ function handleViewMemberModal() {
   isViewMemberModalOpen.value = !isViewMemberModalOpen.value;
 }
 
-function handleCreateMember() {
-  createMember(email, boardID, isAdmin, members);
+async function handleCreateMember() {
+  await createMember(email, boardID, isAdmin, members);
 
   handleCreateMemberModal();
 }
@@ -60,8 +60,8 @@ function handleCreateMemberModal() {
   isCreateMemberModalOpen.value = !isCreateMemberModalOpen.value;
 }
 
-function handleRemoveMember() {
-  removeMember(email, boardID, members);
+async function handleRemoveMember() {
+  await removeMember(email, boardID, members);
 
   handleCreateMemberModal();
 }

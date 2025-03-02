@@ -28,8 +28,8 @@ function viewBoard() {
   router.push(`/board/${props.board.id}`);
 }
 
-function handleUpdateBoard() {
-  updateBoard(name, description, editedName, editedDescription, props.board.id);
+async function handleUpdateBoard() {
+  await updateBoard(name, description, editedName, editedDescription, props.board.id);
 
   handleUpdateBoardModal();
 }
