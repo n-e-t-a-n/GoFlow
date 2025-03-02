@@ -28,7 +28,9 @@ const boardID = ref(Array.isArray(route.params.id) ? route.params.id[0] : route.
 const newList = ref<List>({ id: '', board_id: boardID.value, name: '', priority: 0 });
 
 function handleCreateList() {
-  createList(lists, newList, handleCreateListModal);
+  createList(lists, newList);
+
+  handleCreateListModal();
 }
 
 function handleCreateListModal() {
@@ -44,7 +46,9 @@ function handleViewMemberModal() {
 }
 
 function handleCreateMember() {
-  createMember(email, boardID, isAdmin, members, handleCreateMemberModal);
+  createMember(email, boardID, isAdmin, members);
+
+  handleCreateMemberModal();
 }
 
 function handleCreateMemberModal() {
@@ -57,7 +61,9 @@ function handleCreateMemberModal() {
 }
 
 function handleRemoveMember() {
-  removeMember(email, boardID, members, handleCreateMemberModal);
+  removeMember(email, boardID, members);
+
+  handleCreateMemberModal();
 }
 
 onMounted(() => {

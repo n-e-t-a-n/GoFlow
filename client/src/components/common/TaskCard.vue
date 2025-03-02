@@ -37,7 +37,9 @@ function handleEditTask() {
 
   updatedTaskDetails.value.task_list_id = selectedList.id;
 
-  updateTask(tasks, props.task.id, updatedTaskDetails, handleEditTaskModal);
+  updateTask(tasks, props.task.id, updatedTaskDetails);
+
+  handleEditTaskModal();
 }
 
 function handleEditTaskModal() {

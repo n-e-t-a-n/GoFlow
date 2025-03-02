@@ -9,7 +9,6 @@ export async function updateBoard(
   description: Ref<string>,
   editedName: Ref<string>,
   editedDescription: Ref<string>,
-  isUpdateBoardModalOpen: Ref<boolean>,
   boardID?: string,
 ) {
   try {
@@ -24,19 +23,12 @@ export async function updateBoard(
 
     name.value = updatedBoard.board.name;
     description.value = updatedBoard.board.description;
-
-    isUpdateBoardModalOpen.value = false;
   } catch (error) {
     console.error('Error updating board details: ', error);
   }
 }
 
-export async function updateList(
-  lists: Ref<List[]>,
-  newListName: Ref<string>,
-  isUpdateListModalOpen: Ref<boolean>,
-  listID: string,
-) {
+export async function updateList(lists: Ref<List[]>, newListName: Ref<string>, listID: string) {
   try {
     const response: Response = await apiRequest(`/v1/list/${listID}`, 'PUT', {
       name: newListName.value,
@@ -44,7 +36,6 @@ export async function updateList(
 
     if (!response.ok) throw new Error('Failed to edit list title');
 
-    isUpdateListModalOpen.value = false;
     const list = lists.value.find((list) => list.id === listID);
 
     if (list) list.name = newListName.value;
@@ -57,7 +48,6 @@ export async function updateTask(
   tasks: Ref<Task[]>,
   taskID: string,
   updatedTaskDetails: Ref<Task>,
-  handleEditTaskModal: () => void,
 ) {
   try {
     const response: Response = await apiRequest(
@@ -75,8 +65,6 @@ export async function updateTask(
     if (task) Object.assign(task, data);
 
     updatedTaskDetails.value = data;
-
-    handleEditTaskModal();
   } catch (error) {
     console.error('Error occurred while editing task: ', error);
   }

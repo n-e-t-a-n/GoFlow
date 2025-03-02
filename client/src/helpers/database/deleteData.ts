@@ -8,7 +8,6 @@ export async function removeMember(
   email: Ref<string>,
   boardID: Ref<string>,
   members: Ref<UserBoard[]>,
-  handleRemoveMemberModal: () => void,
 ) {
   try {
     const userEmail = localStorage.getItem('email');
@@ -20,8 +19,6 @@ export async function removeMember(
     });
 
     if (!response.ok) throw new Error('Failed to remove member.');
-
-    handleRemoveMemberModal();
 
     members.value = members.value.filter((member) => member.email !== email.value);
   } catch (error) {

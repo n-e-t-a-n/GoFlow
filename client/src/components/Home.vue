@@ -17,7 +17,9 @@ const newBoard = ref<Board>({
 const isModalVisible = ref(false);
 
 function handleCreateBoard() {
-  createBoard(boards, newBoard, handleCreateBoardModal);
+  createBoard(boards, newBoard);
+
+  handleCreateBoardModal();
 }
 
 function handleCreateBoardModal() {

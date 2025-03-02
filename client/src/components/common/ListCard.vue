@@ -39,7 +39,9 @@ const newTask = ref<Task>({
 });
 
 function handleUpdateList() {
-  updateList(lists, newListName, isUpdateListModalOpen, props.list.id);
+  updateList(lists, newListName, props.list.id);
+
+  handleUpdateListModal();
 }
 
 function handleUpdateListModal() {
@@ -51,7 +53,9 @@ function handleUpdateListModal() {
 }
 
 function handleCreateTask() {
-  createTask(newTask, tasks, handleCreateTaskModal);
+  createTask(newTask, tasks);
+
+  handleCreateTaskModal();
 }
 
 function handleCreateTaskModal() {

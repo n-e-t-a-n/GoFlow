@@ -29,14 +29,9 @@ function viewBoard() {
 }
 
 function handleUpdateBoard() {
-  updateBoard(
-    name,
-    description,
-    editedName,
-    editedDescription,
-    isUpdateBoardModalOpen,
-    props.board.id,
-  );
+  updateBoard(name, description, editedName, editedDescription, props.board.id);
+
+  handleUpdateBoardModal();
 }
 
 function handleUpdateBoardModal() {
