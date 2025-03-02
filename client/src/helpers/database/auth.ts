@@ -71,9 +71,7 @@ export async function logout(router: Router) {
 
     const data = await response.json();
 
-    if (!response.ok) {
-      throw new Error(data.message || 'Logout failed');
-    }
+    if (!response.ok) throw new Error(data.message || 'Logout failed');
 
     localStorage.removeItem('token');
 
