@@ -13,9 +13,11 @@ export async function login(auth: Ref<Auth>, router: Router) {
     localStorage.setItem('token', data.token as string);
     data.user && localStorage.setItem('email', data.user.email);
 
-    router.push({ name: 'Home' });
+    await router.push({ name: 'Home' });
+
+    return { message: 'Logged in successfully' };
   } catch (error: any) {
-    console.error('Error during login: ', error);
+    return { message: 'Login failed', type: 'error' };
   }
 }
 
@@ -23,9 +25,11 @@ export async function register(auth: Ref<Auth>, router: Router) {
   try {
     await apiRequest('/auth/register', 'POST', auth.value, 'NO_AUTH');
 
-    router.push({ name: 'Home' });
+    await router.push({ name: 'Home' });
+
+    return { message: 'Registered successfully' };
   } catch (error: any) {
-    console.error('Error during registration: ', error);
+    return { message: 'Registration failed', type: 'error' };
   }
 }
 
@@ -36,8 +40,10 @@ export async function logout(router: Router) {
     localStorage.removeItem('token');
     localStorage.removeItem('email');
 
-    router.push({ name: 'Login' });
+    await router.push({ name: 'Login' });
+
+    return { message: 'Logged out successfully' };
   } catch (error) {
-    console.error('Error during logout: ', error);
+    return { message: 'Something went wrong', type: 'error' };
   }
 }

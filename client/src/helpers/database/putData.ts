@@ -19,8 +19,10 @@ export async function updateBoard(
 
     name.value = data.board.name;
     description.value = data.board.description;
+
+    return { message: 'Board edited successfully' };
   } catch (error) {
-    console.error('Error updating board details: ', error);
+    return { message: 'Something went wrong', type: 'error' };
   }
 }
 
@@ -33,8 +35,10 @@ export async function updateList(lists: Ref<List[]>, newListName: Ref<string>, l
     const list = lists.value.find((list) => list.id === listID);
 
     if (list) list.name = newListName.value;
+
+    return { message: 'List edited successfully' };
   } catch (error) {
-    console.error('Error changing list title: ', error);
+    return { message: 'Something went wrong', type: 'error' };
   }
 }
 
@@ -55,7 +59,9 @@ export async function updateTask(
     if (task) Object.assign(task, data);
 
     updatedTaskDetails.value = data;
+
+    return { message: 'Task edited successfully' };
   } catch (error) {
-    console.error('Error occurred while editing task: ', error);
+    return { message: 'Something went wrong', type: 'error' };
   }
 }

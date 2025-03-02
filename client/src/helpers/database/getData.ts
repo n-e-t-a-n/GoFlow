@@ -10,7 +10,7 @@ export async function getBoards(board: Ref<Board[]>) {
 
     board.value = data;
   } catch (error) {
-    console.error('Error fetching boards: ', error);
+    return { message: 'Something went wrong', type: 'error' };
   }
 }
 
@@ -20,7 +20,7 @@ export async function getMembers(members: Ref<UserBoard[]>, boardID: Ref<string>
 
     members.value = data;
   } catch (error) {
-    console.error('Error fetching members: ', error);
+    return { message: 'Something went wrong', type: 'error' };
   }
 }
 
@@ -38,6 +38,6 @@ export async function getTasks(
 
     userIsAdmin.value = data.isAdmin as boolean;
   } catch (error) {
-    console.error('Error fetching board data: ', error);
+    return { message: 'Something went wrong', type: 'error' };
   }
 }

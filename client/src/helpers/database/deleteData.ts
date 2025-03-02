@@ -17,7 +17,9 @@ export async function removeMember(
     await apiRequest(`/v1/user-board/${boardID.value}`, 'DELETE', { email: email.value });
 
     members.value = members.value.filter((member) => member.email !== email.value);
+
+    return { message: 'Successfully removed member' };
   } catch (error) {
-    console.error('Error removing member: ', error);
+    return { message: 'Something went wrong', type: 'error' };
   }
 }

@@ -9,8 +9,10 @@ export async function createBoard(boards: Ref<Board[]>, newBoard: Ref<Board>) {
     const data: { board: Board } = await apiRequest('/v1/board', 'POST', newBoard.value);
 
     boards.value.push({ ...data.board, role: 'admin' });
+
+    return { message: 'Board successfully created' };
   } catch (error) {
-    console.error('Error creating board: ', error);
+    return { message: 'Something went wrong', type: 'error' };
   }
 }
 
@@ -19,8 +21,10 @@ export async function createList(lists: Ref<List[]>, newList: Ref<List>) {
     const data: { taskList: List } = await apiRequest('/v1/list', 'POST', newList.value);
 
     lists.value.push(data.taskList);
+
+    return { message: 'List successfully created' };
   } catch (error) {
-    console.error('Error adding new board: ', error);
+    return { message: 'Something went wrong', type: 'error' };
   }
 }
 
@@ -37,8 +41,10 @@ export async function createMember(
     });
 
     members.value.push({ ...data, email: email.value });
+
+    return { message: 'Successfully added member to the board' };
   } catch (error) {
-    console.error('Error adding member: ', error);
+    return { message: 'Something went wrong', type: 'error' };
   }
 }
 
@@ -47,7 +53,9 @@ export async function createTask(newTask: Ref<Task>, tasks: Ref<Task[]>) {
     const data: Task = await apiRequest('/v1/task', 'POST', newTask.value);
 
     tasks.value.push(data);
+
+    return { message: 'Successfully added task' };
   } catch (error) {
-    console.error('Error creating new task: ', error);
+    return { message: 'Something went wrong', type: 'error' };
   }
 }
