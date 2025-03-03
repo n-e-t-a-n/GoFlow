@@ -23,7 +23,9 @@ export async function login(auth: Ref<Auth>, router: Router) {
 
 export async function register(auth: Ref<Auth>, router: Router) {
   try {
-    await apiRequest('/auth/register', 'POST', auth.value, 'NO_AUTH');
+    const data: Auth = await apiRequest('/auth/register', 'POST', auth.value, 'NO_AUTH');
+
+    localStorage.setItem('token', data.token as string);
 
     await router.push({ name: 'Home' });
 
