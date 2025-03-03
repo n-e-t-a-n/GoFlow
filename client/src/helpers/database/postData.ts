@@ -4,9 +4,9 @@ import type { Board, List, Task, UserBoard } from '@/types';
 
 import { apiRequest } from '@/helpers/database';
 
-export async function createBoard(boards: Ref<Board[]>, newBoard: Ref<Board>) {
+export async function createBoard(boards: Ref<Board[]>, newBoard: Board) {
   try {
-    const data: { board: Board } = await apiRequest('/v1/board', 'POST', newBoard.value);
+    const data: { board: Board } = await apiRequest('/v1/board', 'POST', newBoard);
 
     boards.value.push({ ...data.board, role: 'admin' });
 
@@ -16,9 +16,9 @@ export async function createBoard(boards: Ref<Board[]>, newBoard: Ref<Board>) {
   }
 }
 
-export async function createList(lists: Ref<List[]>, newList: Ref<List>) {
+export async function createList(lists: Ref<List[]>, newList: List) {
   try {
-    const data: { taskList: List } = await apiRequest('/v1/list', 'POST', newList.value);
+    const data: { taskList: List } = await apiRequest('/v1/list', 'POST', newList);
 
     lists.value.push(data.taskList);
 
@@ -29,18 +29,18 @@ export async function createList(lists: Ref<List[]>, newList: Ref<List>) {
 }
 
 export async function createMember(
-  email: Ref<string>,
-  boardID: Ref<string>,
-  isAdmin: Ref<boolean>,
   members: Ref<UserBoard[]>,
+  email: string,
+  boardID: string,
+  isAdmin: boolean,
 ) {
   try {
-    const data: UserBoard = await apiRequest(`/v1/user-board/${boardID.value}`, 'POST', {
-      email: email.value,
-      role: isAdmin.value ? 'admin' : 'member',
+    const data: UserBoard = await apiRequest(`/v1/user-board/${boardID}`, 'POST', {
+      email: email,
+      role: isAdmin ? 'admin' : 'member',
     });
 
-    members.value.push({ ...data, email: email.value });
+    members.value.push({ ...data, email: email });
 
     return { message: 'Successfully added member to the board' };
   } catch (error) {
@@ -48,9 +48,9 @@ export async function createMember(
   }
 }
 
-export async function createTask(newTask: Ref<Task>, tasks: Ref<Task[]>) {
+export async function createTask(tasks: Ref<Task[]>, newTask: Task) {
   try {
-    const data: Task = await apiRequest('/v1/task', 'POST', newTask.value);
+    const data: Task = await apiRequest('/v1/task', 'POST', newTask);
 
     tasks.value.push(data);
 

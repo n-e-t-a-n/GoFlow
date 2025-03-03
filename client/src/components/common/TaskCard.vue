@@ -26,20 +26,24 @@ const taskDetails = computed(() =>
   tasks.value.find((task) => task.id === props.task.id),
 ) as ComputedRef<Task>;
 
-const updatedTaskDetails = ref<Task>({ ...taskDetails.value, list_name: props.task.list_name });
+const editedTaskDetails = ref<Task>({ ...taskDetails.value, list_name: props.task.list_name });
 
 function handleViewTaskModal() {
   isViewTaskModalOpen.value = !isViewTaskModalOpen.value;
 }
 
 async function handleEditTask() {
-  const selectedList = lists.value.find((list) => list.name === updatedTaskDetails.value.list_name);
+  const selectedList = lists.value.find((list) => list.name === editedTaskDetails.value.list_name);
 
   if (!selectedList) return;
 
-  updatedTaskDetails.value.task_list_id = selectedList.id;
+  editedTaskDetails.value.task_list_id = selectedList.id;
 
-  const { message, type }: ApiRequest = await updateTask(tasks, props.task.id, updatedTaskDetails);
+  const { message, type }: ApiRequest = await updateTask(
+    tasks,
+    editedTaskDetails.value,
+    props.task.id,
+  );
 
   handleEditTaskModal();
 
@@ -48,7 +52,7 @@ async function handleEditTask() {
 
 function handleEditTaskModal() {
   if (isEditTaskModalOpen.value) {
-    updatedTaskDetails.value = { ...props.task };
+    editedTaskDetails.value = { ...props.task };
   }
 
   isEditTaskModalOpen.value = !isEditTaskModalOpen.value;
@@ -203,7 +207,7 @@ function formatString(str: string) {
       <div>
         <label for="title" class="block text-sm font-semibold">Task Title</label>
         <input
-          v-model="updatedTaskDetails.title"
+          v-model="editedTaskDetails.title"
           type="text"
           id="title"
           class="w-full p-2 border border-gray-300 rounded-lg"
@@ -214,7 +218,7 @@ function formatString(str: string) {
       <div class="mt-4">
         <label for="description" class="block text-sm font-semibold">Description</label>
         <textarea
-          v-model="updatedTaskDetails.description"
+          v-model="editedTaskDetails.description"
           id="description"
           class="w-full p-2 border border-gray-300 rounded-lg"
           placeholder="Enter task description"
@@ -224,7 +228,7 @@ function formatString(str: string) {
       <div class="mt-4">
         <label for="status" class="block text-sm font-semibold">Status</label>
         <select
-          v-model="updatedTaskDetails.status"
+          v-model="editedTaskDetails.status"
           id="status"
           class="w-full p-2 border border-gray-300 rounded-lg"
         >
@@ -249,7 +253,7 @@ function formatString(str: string) {
       <div v-if="role" class="mt-4">
         <label for="due_date" class="block text-sm font-semibold">Due Date</label>
         <input
-          v-model="updatedTaskDetails.due_date"
+          v-model="editedTaskDetails.due_date"
           type="datetime-local"
           id="due_date"
           class="w-full p-2 border border-gray-300 rounded-lg"
@@ -259,7 +263,7 @@ function formatString(str: string) {
       <div v-if="role" class="mt-4">
         <label for="priority" class="block text-sm font-semibold">Priority</label>
         <select
-          v-model="updatedTaskDetails.priority"
+          v-model="editedTaskDetails.priority"
           id="priority"
           class="w-full p-2 border border-gray-300 rounded-lg"
         >
@@ -274,7 +278,7 @@ function formatString(str: string) {
     <div class="mt-4">
       <label for="list" class="block text-sm font-semibold">List</label>
       <select
-        v-model="updatedTaskDetails.list_name"
+        v-model="editedTaskDetails.list_name"
         id="list"
         class="w-full p-2 border border-gray-300 rounded-lg"
       >

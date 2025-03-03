@@ -4,21 +4,13 @@ import type { Board, List, Task } from '@/types';
 
 import { apiRequest } from '@/helpers/database';
 
-export async function updateBoard(
-  name: Ref<string>,
-  description: Ref<string>,
-  editedName: Ref<string>,
-  editedDescription: Ref<string>,
-  boardID?: string,
-) {
+export async function updateBoard(boards: Ref<Board[]>, editedBoard: Board, boardID?: string) {
   try {
-    const data: { board: Board } = await apiRequest(`/v1/board/${boardID}`, 'PUT', {
-      name: editedName.value,
-      description: editedDescription.value,
-    });
+    const data: { board: Board } = await apiRequest(`/v1/board/${boardID}`, 'PUT', editedBoard);
 
-    name.value = data.board.name;
-    description.value = data.board.description;
+    const board = boards.value.find((board) => board.id === boardID);
+
+    if (board) Object.assign(board, data.board);
 
     return { message: 'Board edited successfully' };
   } catch (error) {
@@ -26,15 +18,15 @@ export async function updateBoard(
   }
 }
 
-export async function updateList(lists: Ref<List[]>, newListName: Ref<string>, listID: string) {
+export async function updateList(lists: Ref<List[]>, editedListName: string, listID: string) {
   try {
     await apiRequest(`/v1/list/${listID}`, 'PUT', {
-      name: newListName.value,
+      name: editedListName,
     });
 
     const list = lists.value.find((list) => list.id === listID);
 
-    if (list) list.name = newListName.value;
+    if (list) list.name = editedListName;
 
     return { message: 'List edited successfully' };
   } catch (error) {
@@ -42,23 +34,13 @@ export async function updateList(lists: Ref<List[]>, newListName: Ref<string>, l
   }
 }
 
-export async function updateTask(
-  tasks: Ref<Task[]>,
-  taskID: string,
-  updatedTaskDetails: Ref<Task>,
-) {
+export async function updateTask(tasks: Ref<Task[]>, editedTaskDetails: Task, taskID: string) {
   try {
-    const data: Task = await apiRequest(
-      `/v1/task/${updatedTaskDetails.value.id}/edit`,
-      'PUT',
-      updatedTaskDetails.value,
-    );
+    const data: Task = await apiRequest(`/v1/task/${taskID}/edit`, 'PUT', editedTaskDetails);
 
     const task = tasks.value.find((task) => task.id === taskID);
 
     if (task) Object.assign(task, data);
-
-    updatedTaskDetails.value = data;
 
     return { message: 'Task edited successfully' };
   } catch (error) {

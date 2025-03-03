@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, provide } from 'vue';
 
 import { BoardCard, Modal } from '@/components/common';
 
@@ -21,7 +21,7 @@ const isModalVisible = ref(false);
 const { showToast } = useToastStore();
 
 async function handleCreateBoard() {
-  const { message, type }: ApiRequest = await createBoard(boards, newBoard);
+  const { message, type }: ApiRequest = await createBoard(boards, newBoard.value);
 
   handleCreateBoardModal();
 
@@ -40,6 +40,8 @@ function handleCreateBoardModal() {
 onMounted(() => {
   getBoards(boards);
 });
+
+provide('boards', boards);
 </script>
 
 <template>

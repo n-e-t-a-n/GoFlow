@@ -14,9 +14,9 @@ export async function getBoards(board: Ref<Board[]>) {
   }
 }
 
-export async function getMembers(members: Ref<UserBoard[]>, boardID: Ref<string>) {
+export async function getMembers(members: Ref<UserBoard[]>, boardID: string) {
   try {
-    const data: UserBoard[] = await apiRequest(`/v1/user-board/${boardID.value}`);
+    const data: UserBoard[] = await apiRequest(`/v1/user-board/${boardID}`);
 
     members.value = data;
   } catch (error) {
@@ -28,10 +28,10 @@ export async function getTasks(
   tasks: Ref<Task[]>,
   lists: Ref<List[]>,
   userIsAdmin: Ref<boolean>,
-  boardID: Ref<string>,
+  boardID: string,
 ) {
   try {
-    const data: BoardData = await apiRequest(`/v1/task/${boardID.value}`);
+    const data: BoardData = await apiRequest(`/v1/task/${boardID}`);
 
     lists.value = data.lists as List[];
     tasks.value = data.tasks as Task[];

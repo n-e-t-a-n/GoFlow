@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { computed, inject, ref, type ComputedRef, type Ref } from 'vue';
 
 import { useRouter } from 'vue-router';
 
@@ -17,12 +17,12 @@ const props = defineProps<{
 
 const { showToast } = useToastStore();
 
-const name = ref(props.board.name || '');
-const description = ref(props.board.description || '');
-const role = props.board.role;
+const boards = inject('boards') as Ref<Board[]>;
 
-const editedName = ref(props.board.name || '');
-const editedDescription = ref(props.board.description || '');
+const board = computed(() =>
+  boards.value.find((board) => board.id === props.board.id),
+) as ComputedRef<Board>;
+const editedBoard = ref<Board>({ ...board.value });
 
 const isUpdateBoardModalOpen = ref(false);
 
@@ -34,10 +34,8 @@ function viewBoard() {
 
 async function handleUpdateBoard() {
   const { message, type }: ApiRequest = await updateBoard(
-    name,
-    description,
-    editedName,
-    editedDescription,
+    boards,
+    editedBoard.value,
     props.board.id,
   );
 
@@ -48,8 +46,7 @@ async function handleUpdateBoard() {
 
 function handleUpdateBoardModal() {
   if (!isUpdateBoardModalOpen.value) {
-    editedName.value = props.board.name || '';
-    editedDescription.value = props.board.description || '';
+    editedBoard.value = { ...board.value };
   }
 
   isUpdateBoardModalOpen.value = !isUpdateBoardModalOpen.value;
@@ -62,10 +59,10 @@ function handleUpdateBoardModal() {
   >
     <div>
       <div class="flex justify-between">
-        <h1 class="font-bold text-3xl">{{ name }}</h1>
-        <h1 class="font-semibold">{{ role === 'admin' ? 'Admin' : 'Member' }}</h1>
+        <h1 class="font-bold text-3xl">{{ board.name }}</h1>
+        <h1 class="font-semibold">{{ board.role === 'admin' ? 'Admin' : 'Member' }}</h1>
       </div>
-      <p class="text-sm text-gray-800">{{ description }}</p>
+      <p class="text-sm text-gray-800">{{ board.description }}</p>
     </div>
 
     <div class="flex space-x-4 mt-auto">
@@ -93,7 +90,7 @@ function handleUpdateBoardModal() {
         <label for="boardName" class="text-gray-700 mb-1">Board Name</label>
         <input
           id="boardName"
-          v-model="editedName"
+          v-model="editedBoard.name"
           type="text"
           class="px-4 py-3 border mb-6 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-lightblue"
           placeholder="Enter board name"
@@ -102,7 +99,7 @@ function handleUpdateBoardModal() {
         <label for="boardDescription" class="text-gray-700 mb-1">Board Description</label>
         <textarea
           id="boardDescription"
-          v-model="editedDescription"
+          v-model="editedBoard.description"
           class="px-4 py-3 border mb-8 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-lightblue"
           placeholder="Enter board description"
         ></textarea>

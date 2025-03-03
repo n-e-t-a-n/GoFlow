@@ -39,7 +39,7 @@ const boardID = ref(Array.isArray(route.params.id) ? route.params.id[0] : route.
 const newList = ref<List>({ id: '', board_id: boardID.value, name: '', priority: 0 });
 
 async function handleCreateList() {
-  const { message, type }: ApiRequest = await createList(lists, newList);
+  const { message, type }: ApiRequest = await createList(lists, newList.value);
 
   handleCreateListModal();
 
@@ -59,7 +59,12 @@ function handleViewMemberModal() {
 }
 
 async function handleCreateMember() {
-  const { message, type }: ApiRequest = await createMember(email, boardID, isAdmin, members);
+  const { message, type }: ApiRequest = await createMember(
+    members,
+    email.value,
+    boardID.value,
+    isAdmin.value,
+  );
 
   handleCreateMemberModal();
 
@@ -76,7 +81,7 @@ function handleCreateMemberModal() {
 }
 
 async function handleRemoveMember() {
-  const { message, type }: ApiRequest = await removeMember(email, boardID, members);
+  const { message, type }: ApiRequest = await removeMember(members, email.value, boardID.value);
 
   handleCreateMemberModal();
 
@@ -84,8 +89,8 @@ async function handleRemoveMember() {
 }
 
 onMounted(() => {
-  getTasks(tasks, lists, userIsAdmin, boardID);
-  getMembers(members, boardID);
+  getTasks(tasks, lists, userIsAdmin, boardID.value);
+  getMembers(members, boardID.value);
 
   newList.value.board_id = boardID.value;
 });

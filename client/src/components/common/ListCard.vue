@@ -28,7 +28,7 @@ const filteredTasks = computed(() =>
 const isUpdateListModalOpen = ref(false);
 const isCreateTaskModalOpen = ref(false);
 
-const newListName = ref(props.list.name);
+const editedListName = ref(props.list.name);
 
 const newTask = ref<Task>({
   id: '',
@@ -43,7 +43,11 @@ const newTask = ref<Task>({
 });
 
 async function handleUpdateList() {
-  const { message, type }: ApiRequest = await updateList(lists, newListName, props.list.id);
+  const { message, type }: ApiRequest = await updateList(
+    lists,
+    editedListName.value,
+    props.list.id,
+  );
 
   handleUpdateListModal();
 
@@ -52,14 +56,14 @@ async function handleUpdateList() {
 
 function handleUpdateListModal() {
   if (isUpdateListModalOpen.value) {
-    newListName.value = props.list.name;
+    editedListName.value = props.list.name;
   }
 
   isUpdateListModalOpen.value = !isUpdateListModalOpen.value;
 }
 
 async function handleCreateTask() {
-  const { message, type }: ApiRequest = await createTask(newTask, tasks);
+  const { message, type }: ApiRequest = await createTask(tasks, newTask.value);
 
   handleCreateTaskModal();
 
@@ -100,7 +104,7 @@ function handleCreateTaskModal() {
 
     <div class="mb-4">
       <input
-        v-model="newListName"
+        v-model="editedListName"
         type="text"
         class="w-full p-2 border border-gray-300 rounded-lg"
         placeholder="Enter new list title"
