@@ -6,9 +6,9 @@ import type { Auth } from '@/types';
 
 import { apiRequest } from '@/helpers/database';
 
-export async function login(auth: Ref<Auth>, router: Router) {
+export async function login(auth: Auth, router: Router) {
   try {
-    const data: Auth = await apiRequest('/auth/login', 'POST', auth.value, 'NO_AUTH');
+    const data: Auth = await apiRequest('/auth/login', 'POST', auth, 'NO_AUTH');
 
     localStorage.setItem('token', data.token as string);
     data.user && localStorage.setItem('email', data.user.email);
@@ -21,9 +21,9 @@ export async function login(auth: Ref<Auth>, router: Router) {
   }
 }
 
-export async function register(auth: Ref<Auth>, router: Router) {
+export async function register(auth: Auth, router: Router) {
   try {
-    const data: Auth = await apiRequest('/auth/register', 'POST', auth.value, 'NO_AUTH');
+    const data: Auth = await apiRequest('/auth/register', 'POST', auth, 'NO_AUTH');
 
     localStorage.setItem('token', data.token as string);
 
