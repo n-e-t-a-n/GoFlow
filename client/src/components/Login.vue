@@ -17,7 +17,7 @@ const auth = ref<Auth>({
 const router = useRouter();
 
 async function handleLogin() {
-  const { message, type }: ApiRequest = await login(auth, router);
+  const { message, type }: ApiRequest = await login(auth.value, router);
 
   showToast(message, type);
 }

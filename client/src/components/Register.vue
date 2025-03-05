@@ -21,7 +21,7 @@ const router = useRouter();
 const { showToast } = useToastStore();
 
 async function handleRegister() {
-  const { message, type }: ApiRequest = await register(auth, router);
+  const { message, type }: ApiRequest = await register(auth.value, router);
 
   showToast(message, type);
 }
